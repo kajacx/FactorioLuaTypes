@@ -1,5 +1,6 @@
 import * as fs from 'fs/promises';
 import { FactorioApiJson } from './definitions/types';
+import { processAliases } from './processors/aliasProcessor';
 import { processClasses } from './processors/classProcessor';
 import { processConcepts } from './processors/conceptProcessor';
 import { processDefines } from './processors/definesProcesor';
@@ -28,6 +29,7 @@ const work = async () => {
     processConcepts(folder, factorioApi),
     processEvents(folder, factorioApi),
     processDefines(folder, factorioApi),
+    processAliases(folder, factorioApi),
   ]);
 }
 work();

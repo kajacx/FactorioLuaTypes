@@ -9,7 +9,7 @@ export const processClasses = async (folder: string, factorioApi: FactorioApiJso
   for (const luaClass of factorioApi.classes.sort(sortByOrder)) {
     await classesFile.write(`---@class ${formatNameAndDescr(luaClass.name, luaClass.description)}\n`);
     for (const attribute of luaClass.attributes.sort(sortByOrder)) {
-    await classesFile.write(`---@field ${formatTypedNameAndDescr(attribute.name, attribute.type, attribute.description)}\n`);
+      await classesFile.write(`---@field ${formatTypedNameAndDescr(attribute.name, attribute.type, attribute.description)}\n`);
     }
     await classesFile.write('\n');
   }
