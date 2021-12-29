@@ -29,7 +29,7 @@ const processDefine = async(definesFile: fs.FileHandle, name: string, descriptio
 };
 
 export const processDefines = async (folder: string, factorioApi: FactorioApiJson) => {
-  const definesFile = await fs.open(`${folder}/defines.lua`, 'w');
+  const definesFile = await fs.open(`${folder}/defines.d.lua`, 'w');
 
   await processDefine(definesFile, 'Defines', 'This is the class of the `defines` object that will exist at runtime.', factorioApi.defines)
 

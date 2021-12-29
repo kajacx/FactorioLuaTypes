@@ -4,7 +4,7 @@ import { formatNameAndDescr, formatTypedNameAndDescr } from '../utils/formatters
 import { sortByOrder } from '../utils/sortByOrder';
 
 export const processEvents = async (folder: string, factorioApi: FactorioApiJson) => {
-  const eventsFile = await fs.open(`${folder}/events.lua`, 'w');
+  const eventsFile = await fs.open(`${folder}/events.d.lua`, 'w');
 
   for (const event of factorioApi.events.sort(sortByOrder)) {
     await eventsFile.write(`---@class ${formatNameAndDescr(event.name, event.description)}\n`);

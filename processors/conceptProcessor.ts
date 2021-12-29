@@ -4,7 +4,7 @@ import { formatTypedNameAndDescr } from '../utils/formatters';
 import { sortByOrder } from '../utils/sortByOrder';
 
 export const processConcepts = async (folder: string, factorioApi: FactorioApiJson) => {
-  const classesFile = await fs.open(`${folder}/concepts.lua`, 'w');
+  const classesFile = await fs.open(`${folder}/concepts.d.lua`, 'w');
 
   for (const concept of factorioApi.concepts.sort(sortByOrder)) {
     await classesFile.write(`---@alias ${formatTypedNameAndDescr(concept.name, concept.category, concept.description)}\n`);
