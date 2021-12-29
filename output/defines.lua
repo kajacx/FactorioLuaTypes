@@ -42,87 +42,105 @@
 ---@field wire_type wire_type
 
 ---@class alert_type
----@field custom number
----@field entity_destroyed number
----@field entity_under_attack number
----@field no_material_for_construction number
----@field no_storage number
----@field not_enough_construction_robots number
----@field not_enough_repair_packs number
----@field train_out_of_fuel number
----@field turret_fire number
+---@field custom alert_type_enum
+---@field entity_destroyed alert_type_enum
+---@field entity_under_attack alert_type_enum
+---@field no_material_for_construction alert_type_enum
+---@field no_storage alert_type_enum
+---@field not_enough_construction_robots alert_type_enum
+---@field not_enough_repair_packs alert_type_enum
+---@field train_out_of_fuel alert_type_enum
+---@field turret_fire alert_type_enum
+
+---@class alert_type_enum Enum value type for alert_type
 
 ---@class behavior_result AI command exit status. See [LuaEntity::set_command](LuaEntity::set_command)
----@field deleted number
----@field fail number
----@field in_progress number
----@field success number
+---@field deleted behavior_result_enum
+---@field fail behavior_result_enum
+---@field in_progress behavior_result_enum
+---@field success behavior_result_enum
+
+---@class behavior_result_enum Enum value type for behavior_result
 
 ---@class build_check_type
----@field blueprint_ghost number
----@field ghost_revive number
----@field manual number
----@field manual_ghost number
----@field script number
----@field script_ghost number
+---@field blueprint_ghost build_check_type_enum
+---@field ghost_revive build_check_type_enum
+---@field manual build_check_type_enum
+---@field manual_ghost build_check_type_enum
+---@field script build_check_type_enum
+---@field script_ghost build_check_type_enum
+
+---@class build_check_type_enum Enum value type for build_check_type
 
 ---@class chain_signal_state State of a chain signal.
----@field all_open number
----@field none number
----@field none_open number
----@field partially_open number
+---@field all_open chain_signal_state_enum
+---@field none chain_signal_state_enum
+---@field none_open chain_signal_state_enum
+---@field partially_open chain_signal_state_enum
+
+---@class chain_signal_state_enum Enum value type for chain_signal_state
 
 ---@class chunk_generated_status
----@field basic_tiles number
----@field corrected_tiles number
----@field custom_tiles number
----@field entities number
----@field nothing number
----@field tiles number
+---@field basic_tiles chunk_generated_status_enum
+---@field corrected_tiles chunk_generated_status_enum
+---@field custom_tiles chunk_generated_status_enum
+---@field entities chunk_generated_status_enum
+---@field nothing chunk_generated_status_enum
+---@field tiles chunk_generated_status_enum
+
+---@class chunk_generated_status_enum Enum value type for chunk_generated_status
 
 ---@class circuit_condition_index
----@field arithmetic_combinator number
----@field constant_combinator number
----@field decider_combinator number
----@field inserter_circuit number
----@field inserter_logistic number
----@field lamp number
----@field offshore_pump number
----@field pump number
+---@field arithmetic_combinator circuit_condition_index_enum
+---@field constant_combinator circuit_condition_index_enum
+---@field decider_combinator circuit_condition_index_enum
+---@field inserter_circuit circuit_condition_index_enum
+---@field inserter_logistic circuit_condition_index_enum
+---@field lamp circuit_condition_index_enum
+---@field offshore_pump circuit_condition_index_enum
+---@field pump circuit_condition_index_enum
+
+---@class circuit_condition_index_enum Enum value type for circuit_condition_index
 
 ---@class circuit_connector_id
----@field accumulator number
----@field combinator_input number
----@field combinator_output number
----@field constant_combinator number
----@field container number
----@field electric_pole number
----@field inserter number
----@field lamp number
----@field offshore_pump number
----@field programmable_speaker number
----@field pump number
----@field rail_chain_signal number
----@field rail_signal number
----@field roboport number
----@field storage_tank number
----@field wall number
+---@field accumulator circuit_connector_id_enum
+---@field combinator_input circuit_connector_id_enum
+---@field combinator_output circuit_connector_id_enum
+---@field constant_combinator circuit_connector_id_enum
+---@field container circuit_connector_id_enum
+---@field electric_pole circuit_connector_id_enum
+---@field inserter circuit_connector_id_enum
+---@field lamp circuit_connector_id_enum
+---@field offshore_pump circuit_connector_id_enum
+---@field programmable_speaker circuit_connector_id_enum
+---@field pump circuit_connector_id_enum
+---@field rail_chain_signal circuit_connector_id_enum
+---@field rail_signal circuit_connector_id_enum
+---@field roboport circuit_connector_id_enum
+---@field storage_tank circuit_connector_id_enum
+---@field wall circuit_connector_id_enum
+
+---@class circuit_connector_id_enum Enum value type for circuit_connector_id
 
 ---@class command Command given to units describing what they should do.
----@field attack number Attack another entity.
----@field attack_area number Go to a place and attack what you see.
----@field build_base number Go to a position and build a base there.
----@field compound number Chain commands together, see [defines.compound_command](defines.compound_command).
----@field flee number Flee from another entity.
----@field go_to_location number Go to a specific position.
----@field group number Do what your group wants you to do.
----@field stop number Stop moving and stay where you are.
----@field wander number Chill.
+---@field attack command_enum Attack another entity.
+---@field attack_area command_enum Go to a place and attack what you see.
+---@field build_base command_enum Go to a position and build a base there.
+---@field compound command_enum Chain commands together, see [defines.compound_command](defines.compound_command).
+---@field flee command_enum Flee from another entity.
+---@field go_to_location command_enum Go to a specific position.
+---@field group command_enum Do what your group wants you to do.
+---@field stop command_enum Stop moving and stay where you are.
+---@field wander command_enum Chill.
+
+---@class command_enum Enum value type for command
 
 ---@class compound_command How commands are joined together in a compound command (see [defines.command.compound](defines.command.compound)).
----@field logical_and number Fail on first failure. Only succeeds if all commands (executed one after another) succeed.
----@field logical_or number Succeed on first success. Only fails if all commands (executed one after another) fail.
----@field return_last number Execute all commands in sequence and fail or succeed depending on the return status of the last command.
+---@field logical_and compound_command_enum Fail on first failure. Only succeeds if all commands (executed one after another) succeed.
+---@field logical_or compound_command_enum Succeed on first success. Only fails if all commands (executed one after another) fail.
+---@field return_last compound_command_enum Execute all commands in sequence and fail or succeed depending on the return status of the last command.
+
+---@class compound_command_enum Enum value type for compound_command
 
 ---@class control_behavior
 ---@field inserter inserter
@@ -137,70 +155,86 @@
 ---@field hand_read_mode hand_read_mode
 
 ---@class circuit_mode_of_operation
----@field enable_disable number
----@field none number
----@field read_hand_contents number
----@field set_filters number
----@field set_stack_size number
+---@field enable_disable circuit_mode_of_operation_enum
+---@field none circuit_mode_of_operation_enum
+---@field read_hand_contents circuit_mode_of_operation_enum
+---@field set_filters circuit_mode_of_operation_enum
+---@field set_stack_size circuit_mode_of_operation_enum
+
+---@class circuit_mode_of_operation_enum Enum value type for circuit_mode_of_operation
 
 ---@class hand_read_mode
----@field hold number
----@field pulse number
+---@field hold hand_read_mode_enum
+---@field pulse hand_read_mode_enum
+
+---@class hand_read_mode_enum Enum value type for hand_read_mode
 
 ---@class logistic_container
 ---@field circuit_mode_of_operation circuit_mode_of_operation
 
 ---@class circuit_mode_of_operation
----@field send_contents number
----@field set_requests number
+---@field send_contents circuit_mode_of_operation_enum
+---@field set_requests circuit_mode_of_operation_enum
+
+---@class circuit_mode_of_operation_enum Enum value type for circuit_mode_of_operation
 
 ---@class lamp
 ---@field circuit_mode_of_operation circuit_mode_of_operation
 
 ---@class circuit_mode_of_operation
----@field use_colors number
+---@field use_colors circuit_mode_of_operation_enum
+
+---@class circuit_mode_of_operation_enum Enum value type for circuit_mode_of_operation
 
 ---@class mining_drill
 ---@field resource_read_mode resource_read_mode
 
 ---@class resource_read_mode
----@field entire_patch number
----@field this_miner number
+---@field entire_patch resource_read_mode_enum
+---@field this_miner resource_read_mode_enum
+
+---@class resource_read_mode_enum Enum value type for resource_read_mode
 
 ---@class transport_belt
 ---@field content_read_mode content_read_mode
 
 ---@class content_read_mode
----@field hold number
----@field pulse number
+---@field hold content_read_mode_enum
+---@field pulse content_read_mode_enum
+
+---@class content_read_mode_enum Enum value type for content_read_mode
 
 ---@class type
----@field accumulator number [LuaAccumulatorControlBehavior](LuaAccumulatorControlBehavior)
----@field arithmetic_combinator number [LuaArithmeticCombinatorControlBehavior](LuaArithmeticCombinatorControlBehavior)
----@field constant_combinator number [LuaConstantCombinatorControlBehavior](LuaConstantCombinatorControlBehavior)
----@field container number [LuaContainerControlBehavior](LuaContainerControlBehavior)
----@field decider_combinator number [LuaDeciderCombinatorControlBehavior](LuaDeciderCombinatorControlBehavior)
----@field generic_on_off number [LuaGenericOnOffControlBehavior](LuaGenericOnOffControlBehavior)
----@field inserter number [LuaInserterControlBehavior](LuaInserterControlBehavior)
----@field lamp number [LuaLampControlBehavior](LuaLampControlBehavior)
----@field logistic_container number [LuaLogisticContainerControlBehavior](LuaLogisticContainerControlBehavior)
----@field mining_drill number [LuaMiningDrillControlBehavior](LuaMiningDrillControlBehavior)
----@field programmable_speaker number [LuaProgrammableSpeakerControlBehavior](LuaProgrammableSpeakerControlBehavior)
----@field rail_chain_signal number [LuaRailChainSignalControlBehavior](LuaRailChainSignalControlBehavior)
----@field rail_signal number [LuaRailSignalControlBehavior](LuaRailSignalControlBehavior)
----@field roboport number [LuaRoboportControlBehavior](LuaRoboportControlBehavior)
----@field storage_tank number [LuaStorageTankControlBehavior](LuaStorageTankControlBehavior)
----@field train_stop number [LuaTrainStopControlBehavior](LuaTrainStopControlBehavior)
----@field transport_belt number [LuaTransportBeltControlBehavior](LuaTransportBeltControlBehavior)
----@field wall number [LuaWallControlBehavior](LuaWallControlBehavior)
+---@field accumulator type_enum [LuaAccumulatorControlBehavior](LuaAccumulatorControlBehavior)
+---@field arithmetic_combinator type_enum [LuaArithmeticCombinatorControlBehavior](LuaArithmeticCombinatorControlBehavior)
+---@field constant_combinator type_enum [LuaConstantCombinatorControlBehavior](LuaConstantCombinatorControlBehavior)
+---@field container type_enum [LuaContainerControlBehavior](LuaContainerControlBehavior)
+---@field decider_combinator type_enum [LuaDeciderCombinatorControlBehavior](LuaDeciderCombinatorControlBehavior)
+---@field generic_on_off type_enum [LuaGenericOnOffControlBehavior](LuaGenericOnOffControlBehavior)
+---@field inserter type_enum [LuaInserterControlBehavior](LuaInserterControlBehavior)
+---@field lamp type_enum [LuaLampControlBehavior](LuaLampControlBehavior)
+---@field logistic_container type_enum [LuaLogisticContainerControlBehavior](LuaLogisticContainerControlBehavior)
+---@field mining_drill type_enum [LuaMiningDrillControlBehavior](LuaMiningDrillControlBehavior)
+---@field programmable_speaker type_enum [LuaProgrammableSpeakerControlBehavior](LuaProgrammableSpeakerControlBehavior)
+---@field rail_chain_signal type_enum [LuaRailChainSignalControlBehavior](LuaRailChainSignalControlBehavior)
+---@field rail_signal type_enum [LuaRailSignalControlBehavior](LuaRailSignalControlBehavior)
+---@field roboport type_enum [LuaRoboportControlBehavior](LuaRoboportControlBehavior)
+---@field storage_tank type_enum [LuaStorageTankControlBehavior](LuaStorageTankControlBehavior)
+---@field train_stop type_enum [LuaTrainStopControlBehavior](LuaTrainStopControlBehavior)
+---@field transport_belt type_enum [LuaTransportBeltControlBehavior](LuaTransportBeltControlBehavior)
+---@field wall type_enum [LuaWallControlBehavior](LuaWallControlBehavior)
+
+---@class type_enum Enum value type for type
 
 ---@class controllers
----@field character number The controller controls a character. This is the default controller in freeplay.
----@field cutscene number The player can't interact with the world, and the camera pans around in a predefined manner.
----@field editor number The Editor Controller near ultimate power to do almost anything in the game.
----@field ghost number Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen.
----@field god number The controller isn't tied to a character. This is the default controller in sandbox.
----@field spectator number Can't change anything in the world but can view anything.
+---@field character controllers_enum The controller controls a character. This is the default controller in freeplay.
+---@field cutscene controllers_enum The player can't interact with the world, and the camera pans around in a predefined manner.
+---@field editor controllers_enum The Editor Controller near ultimate power to do almost anything in the game.
+---@field ghost controllers_enum Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen.
+---@field god controllers_enum The controller isn't tied to a character. This is the default controller in sandbox.
+---@field spectator controllers_enum Can't change anything in the world but can view anything.
+
+---@class controllers_enum Enum value type for controllers
 
 ---@class deconstruction_item
 ---@field entity_filter_mode entity_filter_mode
@@ -208,741 +242,807 @@
 ---@field tile_selection_mode tile_selection_mode
 
 ---@class entity_filter_mode
----@field blacklist number
----@field whitelist number
+---@field blacklist entity_filter_mode_enum
+---@field whitelist entity_filter_mode_enum
+
+---@class entity_filter_mode_enum Enum value type for entity_filter_mode
 
 ---@class tile_filter_mode
----@field blacklist number
----@field whitelist number
+---@field blacklist tile_filter_mode_enum
+---@field whitelist tile_filter_mode_enum
+
+---@class tile_filter_mode_enum Enum value type for tile_filter_mode
 
 ---@class tile_selection_mode
----@field always number
----@field never number
----@field normal number
----@field only number
+---@field always tile_selection_mode_enum
+---@field never tile_selection_mode_enum
+---@field normal tile_selection_mode_enum
+---@field only tile_selection_mode_enum
+
+---@class tile_selection_mode_enum Enum value type for tile_selection_mode
 
 ---@class difficulty
----@field easy number
----@field hard number
----@field normal number
+---@field easy difficulty_enum
+---@field hard difficulty_enum
+---@field normal difficulty_enum
+
+---@class difficulty_enum Enum value type for difficulty
 
 ---@class difficulty_settings
 ---@field recipe_difficulty recipe_difficulty
 ---@field technology_difficulty technology_difficulty
 
 ---@class recipe_difficulty
----@field expensive number
----@field normal number
+---@field expensive recipe_difficulty_enum
+---@field normal recipe_difficulty_enum
+
+---@class recipe_difficulty_enum Enum value type for recipe_difficulty
 
 ---@class technology_difficulty
----@field expensive number
----@field normal number
+---@field expensive technology_difficulty_enum
+---@field normal technology_difficulty_enum
+
+---@class technology_difficulty_enum Enum value type for technology_difficulty
 
 ---@class direction
----@field east number
----@field north number
----@field northeast number
----@field northwest number
----@field south number
----@field southeast number
----@field southwest number
----@field west number
+---@field east direction_enum
+---@field north direction_enum
+---@field northeast direction_enum
+---@field northwest direction_enum
+---@field south direction_enum
+---@field southeast direction_enum
+---@field southwest direction_enum
+---@field west direction_enum
+
+---@class direction_enum Enum value type for direction
 
 ---@class disconnect_reason
----@field afk number
----@field banned number
----@field cannot_keep_up number
----@field desync_limit_reached number
----@field dropped number
----@field kicked number
----@field kicked_and_deleted number
----@field quit number
----@field reconnect number
----@field switching_servers number
----@field wrong_input number
+---@field afk disconnect_reason_enum
+---@field banned disconnect_reason_enum
+---@field cannot_keep_up disconnect_reason_enum
+---@field desync_limit_reached disconnect_reason_enum
+---@field dropped disconnect_reason_enum
+---@field kicked disconnect_reason_enum
+---@field kicked_and_deleted disconnect_reason_enum
+---@field quit disconnect_reason_enum
+---@field reconnect disconnect_reason_enum
+---@field switching_servers disconnect_reason_enum
+---@field wrong_input disconnect_reason_enum
+
+---@class disconnect_reason_enum Enum value type for disconnect_reason
 
 ---@class distraction
----@field by_anything number Attack closer enemy entities, including entities "built" by player (belts, inserters, chests).
----@field by_damage number Attack when attacked.
----@field by_enemy number Attack closer enemy entities with force.
----@field none number Perform command even if someone attacks the unit.
+---@field by_anything distraction_enum Attack closer enemy entities, including entities "built" by player (belts, inserters, chests).
+---@field by_damage distraction_enum Attack when attacked.
+---@field by_enemy distraction_enum Attack closer enemy entities with force.
+---@field none distraction_enum Perform command even if someone attacks the unit.
+
+---@class distraction_enum Enum value type for distraction
 
 ---@class entity_status
----@field cant_divide_segments number Used by rail signals.
----@field charging number Used by accumulators.
----@field closed_by_circuit_network number
----@field disabled number Used by constant combinators: Combinator is turned off via switch in GUI.
----@field disabled_by_control_behavior number
----@field disabled_by_script number
----@field discharging number Used by accumulators.
----@field fluid_ingredient_shortage number Used by crafting machines.
----@field full_output number Used by crafting machines, boilers, burner energy sources and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox.
----@field fully_charged number Used by accumulators.
----@field item_ingredient_shortage number Used by crafting machines.
----@field launching_rocket number Used by the rocket silo.
----@field low_input_fluid number Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out.
----@field low_power number
----@field low_temperature number Used by heat energy sources.
----@field marked_for_deconstruction number
----@field missing_required_fluid number Used by mining drills when the mining fluid is missing.
----@field missing_science_packs number Used by labs.
----@field networks_connected number Used by power switches.
----@field networks_disconnected number Used by power switches.
----@field no_ammo number Used by ammo turrets.
----@field no_fuel number
----@field no_ingredients number Used by furnaces.
----@field no_input_fluid number Used by boilers, fluid turrets and fluid energy sources: Boiler has no fluid to work with.
----@field no_minable_resources number Used by mining drills.
----@field no_modules_to_transmit number Used by beacons.
----@field no_power number
----@field no_recipe number Used by assembling machines.
----@field no_research_in_progress number Used by labs.
----@field normal number
----@field not_connected_to_rail number Used by rail signals.
----@field not_plugged_in_electric_network number Used by generators and solar panels.
----@field opened_by_circuit_network number
----@field out_of_logistic_network number Used by logistic containers.
----@field preparing_rocket_for_launch number Used by the rocket silo.
----@field recharging_after_power_outage number Used by roboports.
----@field turned_off_during_daytime number Used by lamps.
----@field waiting_for_source_items number Used by inserters.
----@field waiting_for_space_in_destination number Used by inserters and mining drills.
----@field waiting_for_target_to_be_built number Used by inserters targeting entity ghosts.
----@field waiting_for_train number Used by inserters targeting rails.
----@field waiting_to_launch_rocket number Used by the rocket silo.
----@field working number
+---@field cant_divide_segments entity_status_enum Used by rail signals.
+---@field charging entity_status_enum Used by accumulators.
+---@field closed_by_circuit_network entity_status_enum
+---@field disabled entity_status_enum Used by constant combinators: Combinator is turned off via switch in GUI.
+---@field disabled_by_control_behavior entity_status_enum
+---@field disabled_by_script entity_status_enum
+---@field discharging entity_status_enum Used by accumulators.
+---@field fluid_ingredient_shortage entity_status_enum Used by crafting machines.
+---@field full_output entity_status_enum Used by crafting machines, boilers, burner energy sources and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox.
+---@field fully_charged entity_status_enum Used by accumulators.
+---@field item_ingredient_shortage entity_status_enum Used by crafting machines.
+---@field launching_rocket entity_status_enum Used by the rocket silo.
+---@field low_input_fluid entity_status_enum Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out.
+---@field low_power entity_status_enum
+---@field low_temperature entity_status_enum Used by heat energy sources.
+---@field marked_for_deconstruction entity_status_enum
+---@field missing_required_fluid entity_status_enum Used by mining drills when the mining fluid is missing.
+---@field missing_science_packs entity_status_enum Used by labs.
+---@field networks_connected entity_status_enum Used by power switches.
+---@field networks_disconnected entity_status_enum Used by power switches.
+---@field no_ammo entity_status_enum Used by ammo turrets.
+---@field no_fuel entity_status_enum
+---@field no_ingredients entity_status_enum Used by furnaces.
+---@field no_input_fluid entity_status_enum Used by boilers, fluid turrets and fluid energy sources: Boiler has no fluid to work with.
+---@field no_minable_resources entity_status_enum Used by mining drills.
+---@field no_modules_to_transmit entity_status_enum Used by beacons.
+---@field no_power entity_status_enum
+---@field no_recipe entity_status_enum Used by assembling machines.
+---@field no_research_in_progress entity_status_enum Used by labs.
+---@field normal entity_status_enum
+---@field not_connected_to_rail entity_status_enum Used by rail signals.
+---@field not_plugged_in_electric_network entity_status_enum Used by generators and solar panels.
+---@field opened_by_circuit_network entity_status_enum
+---@field out_of_logistic_network entity_status_enum Used by logistic containers.
+---@field preparing_rocket_for_launch entity_status_enum Used by the rocket silo.
+---@field recharging_after_power_outage entity_status_enum Used by roboports.
+---@field turned_off_during_daytime entity_status_enum Used by lamps.
+---@field waiting_for_source_items entity_status_enum Used by inserters.
+---@field waiting_for_space_in_destination entity_status_enum Used by inserters and mining drills.
+---@field waiting_for_target_to_be_built entity_status_enum Used by inserters targeting entity ghosts.
+---@field waiting_for_train entity_status_enum Used by inserters targeting rails.
+---@field waiting_to_launch_rocket entity_status_enum Used by the rocket silo.
+---@field working entity_status_enum
+
+---@class entity_status_enum Enum value type for entity_status
 
 ---@class events See the [events page](events.html) for more info on what events contain and when they get raised.
----@field on_ai_command_completed number
----@field on_area_cloned number
----@field on_biter_base_built number
----@field on_brush_cloned number
----@field on_build_base_arrived number
----@field on_built_entity number
----@field on_cancelled_deconstruction number
----@field on_cancelled_upgrade number
----@field on_character_corpse_expired number
----@field on_chart_tag_added number
----@field on_chart_tag_modified number
----@field on_chart_tag_removed number
----@field on_chunk_charted number
----@field on_chunk_deleted number
----@field on_chunk_generated number
----@field on_combat_robot_expired number
----@field on_console_chat number
----@field on_console_command number
----@field on_cutscene_cancelled number
----@field on_cutscene_waypoint_reached number
----@field on_difficulty_settings_changed number
----@field on_entity_cloned number
----@field on_entity_damaged number
----@field on_entity_destroyed number
----@field on_entity_died number
----@field on_entity_logistic_slot_changed number
----@field on_entity_renamed number
----@field on_entity_settings_pasted number
----@field on_entity_spawned number
----@field on_equipment_inserted number
----@field on_equipment_removed number
----@field on_force_cease_fire_changed number
----@field on_force_created number
----@field on_force_friends_changed number
----@field on_force_reset number
----@field on_forces_merged number
----@field on_forces_merging number
----@field on_game_created_from_scenario number
----@field on_gui_checked_state_changed number
----@field on_gui_click number
----@field on_gui_closed number
----@field on_gui_confirmed number
----@field on_gui_elem_changed number
----@field on_gui_location_changed number
----@field on_gui_opened number
----@field on_gui_selected_tab_changed number
----@field on_gui_selection_state_changed number
----@field on_gui_switch_state_changed number
----@field on_gui_text_changed number
----@field on_gui_value_changed number
----@field on_land_mine_armed number
----@field on_lua_shortcut number
----@field on_marked_for_deconstruction number
----@field on_marked_for_upgrade number
----@field on_market_item_purchased number
----@field on_mod_item_opened number
----@field on_permission_group_added number
----@field on_permission_group_deleted number
----@field on_permission_group_edited number
----@field on_permission_string_imported number
----@field on_picked_up_item number
----@field on_player_alt_selected_area number
----@field on_player_ammo_inventory_changed number
----@field on_player_armor_inventory_changed number
----@field on_player_banned number
----@field on_player_built_tile number
----@field on_player_cancelled_crafting number
----@field on_player_changed_force number
----@field on_player_changed_position number
----@field on_player_changed_surface number
----@field on_player_cheat_mode_disabled number
----@field on_player_cheat_mode_enabled number
----@field on_player_clicked_gps_tag number
----@field on_player_configured_blueprint number
----@field on_player_configured_spider_remote number
----@field on_player_crafted_item number
----@field on_player_created number
----@field on_player_cursor_stack_changed number
----@field on_player_deconstructed_area number
----@field on_player_demoted number
----@field on_player_died number
----@field on_player_display_resolution_changed number
----@field on_player_display_scale_changed number
----@field on_player_driving_changed_state number
----@field on_player_dropped_item number
----@field on_player_fast_transferred number
----@field on_player_flushed_fluid number
----@field on_player_gun_inventory_changed number
----@field on_player_joined_game number
----@field on_player_kicked number
----@field on_player_left_game number
----@field on_player_main_inventory_changed number
----@field on_player_mined_entity number
----@field on_player_mined_item number
----@field on_player_mined_tile number
----@field on_player_muted number
----@field on_player_pipette number
----@field on_player_placed_equipment number
----@field on_player_promoted number
----@field on_player_removed number
----@field on_player_removed_equipment number
----@field on_player_repaired_entity number
----@field on_player_respawned number
----@field on_player_rotated_entity number
----@field on_player_selected_area number
----@field on_player_set_quick_bar_slot number
----@field on_player_setup_blueprint number
----@field on_player_toggled_alt_mode number
----@field on_player_toggled_map_editor number
----@field on_player_trash_inventory_changed number
----@field on_player_unbanned number
----@field on_player_unmuted number
----@field on_player_used_capsule number
----@field on_player_used_spider_remote number
----@field on_post_entity_died number
----@field on_pre_build number
----@field on_pre_chunk_deleted number
----@field on_pre_entity_settings_pasted number
----@field on_pre_ghost_deconstructed number
----@field on_pre_permission_group_deleted number
----@field on_pre_permission_string_imported number
----@field on_pre_player_crafted_item number
----@field on_pre_player_died number
----@field on_pre_player_left_game number
----@field on_pre_player_mined_item number
----@field on_pre_player_removed number
----@field on_pre_player_toggled_map_editor number
----@field on_pre_robot_exploded_cliff number
----@field on_pre_script_inventory_resized number
----@field on_pre_surface_cleared number
----@field on_pre_surface_deleted number
----@field on_research_finished number
----@field on_research_reversed number
----@field on_research_started number
----@field on_resource_depleted number
----@field on_robot_built_entity number
----@field on_robot_built_tile number
----@field on_robot_exploded_cliff number
----@field on_robot_mined number
----@field on_robot_mined_entity number
----@field on_robot_mined_tile number
----@field on_robot_pre_mined number
----@field on_rocket_launch_ordered number
----@field on_rocket_launched number
----@field on_runtime_mod_setting_changed number
----@field on_script_inventory_resized number
----@field on_script_path_request_finished number
----@field on_script_trigger_effect number
----@field on_sector_scanned number
----@field on_selected_entity_changed number
----@field on_spider_command_completed number
----@field on_string_translated number
----@field on_surface_cleared number
----@field on_surface_created number
----@field on_surface_deleted number
----@field on_surface_imported number
----@field on_surface_renamed number
----@field on_technology_effects_reset number
----@field on_tick number
----@field on_train_changed_state number
----@field on_train_created number
----@field on_train_schedule_changed number
----@field on_trigger_created_entity number
----@field on_trigger_fired_artillery number
----@field on_unit_added_to_group number
----@field on_unit_group_created number
----@field on_unit_group_finished_gathering number
----@field on_unit_removed_from_group number
----@field on_worker_robot_expired number
----@field script_raised_built number
----@field script_raised_destroy number
----@field script_raised_revive number
----@field script_raised_set_tiles number
+---@field on_ai_command_completed events_enum
+---@field on_area_cloned events_enum
+---@field on_biter_base_built events_enum
+---@field on_brush_cloned events_enum
+---@field on_build_base_arrived events_enum
+---@field on_built_entity events_enum
+---@field on_cancelled_deconstruction events_enum
+---@field on_cancelled_upgrade events_enum
+---@field on_character_corpse_expired events_enum
+---@field on_chart_tag_added events_enum
+---@field on_chart_tag_modified events_enum
+---@field on_chart_tag_removed events_enum
+---@field on_chunk_charted events_enum
+---@field on_chunk_deleted events_enum
+---@field on_chunk_generated events_enum
+---@field on_combat_robot_expired events_enum
+---@field on_console_chat events_enum
+---@field on_console_command events_enum
+---@field on_cutscene_cancelled events_enum
+---@field on_cutscene_waypoint_reached events_enum
+---@field on_difficulty_settings_changed events_enum
+---@field on_entity_cloned events_enum
+---@field on_entity_damaged events_enum
+---@field on_entity_destroyed events_enum
+---@field on_entity_died events_enum
+---@field on_entity_logistic_slot_changed events_enum
+---@field on_entity_renamed events_enum
+---@field on_entity_settings_pasted events_enum
+---@field on_entity_spawned events_enum
+---@field on_equipment_inserted events_enum
+---@field on_equipment_removed events_enum
+---@field on_force_cease_fire_changed events_enum
+---@field on_force_created events_enum
+---@field on_force_friends_changed events_enum
+---@field on_force_reset events_enum
+---@field on_forces_merged events_enum
+---@field on_forces_merging events_enum
+---@field on_game_created_from_scenario events_enum
+---@field on_gui_checked_state_changed events_enum
+---@field on_gui_click events_enum
+---@field on_gui_closed events_enum
+---@field on_gui_confirmed events_enum
+---@field on_gui_elem_changed events_enum
+---@field on_gui_location_changed events_enum
+---@field on_gui_opened events_enum
+---@field on_gui_selected_tab_changed events_enum
+---@field on_gui_selection_state_changed events_enum
+---@field on_gui_switch_state_changed events_enum
+---@field on_gui_text_changed events_enum
+---@field on_gui_value_changed events_enum
+---@field on_land_mine_armed events_enum
+---@field on_lua_shortcut events_enum
+---@field on_marked_for_deconstruction events_enum
+---@field on_marked_for_upgrade events_enum
+---@field on_market_item_purchased events_enum
+---@field on_mod_item_opened events_enum
+---@field on_permission_group_added events_enum
+---@field on_permission_group_deleted events_enum
+---@field on_permission_group_edited events_enum
+---@field on_permission_string_imported events_enum
+---@field on_picked_up_item events_enum
+---@field on_player_alt_selected_area events_enum
+---@field on_player_ammo_inventory_changed events_enum
+---@field on_player_armor_inventory_changed events_enum
+---@field on_player_banned events_enum
+---@field on_player_built_tile events_enum
+---@field on_player_cancelled_crafting events_enum
+---@field on_player_changed_force events_enum
+---@field on_player_changed_position events_enum
+---@field on_player_changed_surface events_enum
+---@field on_player_cheat_mode_disabled events_enum
+---@field on_player_cheat_mode_enabled events_enum
+---@field on_player_clicked_gps_tag events_enum
+---@field on_player_configured_blueprint events_enum
+---@field on_player_configured_spider_remote events_enum
+---@field on_player_crafted_item events_enum
+---@field on_player_created events_enum
+---@field on_player_cursor_stack_changed events_enum
+---@field on_player_deconstructed_area events_enum
+---@field on_player_demoted events_enum
+---@field on_player_died events_enum
+---@field on_player_display_resolution_changed events_enum
+---@field on_player_display_scale_changed events_enum
+---@field on_player_driving_changed_state events_enum
+---@field on_player_dropped_item events_enum
+---@field on_player_fast_transferred events_enum
+---@field on_player_flushed_fluid events_enum
+---@field on_player_gun_inventory_changed events_enum
+---@field on_player_joined_game events_enum
+---@field on_player_kicked events_enum
+---@field on_player_left_game events_enum
+---@field on_player_main_inventory_changed events_enum
+---@field on_player_mined_entity events_enum
+---@field on_player_mined_item events_enum
+---@field on_player_mined_tile events_enum
+---@field on_player_muted events_enum
+---@field on_player_pipette events_enum
+---@field on_player_placed_equipment events_enum
+---@field on_player_promoted events_enum
+---@field on_player_removed events_enum
+---@field on_player_removed_equipment events_enum
+---@field on_player_repaired_entity events_enum
+---@field on_player_respawned events_enum
+---@field on_player_rotated_entity events_enum
+---@field on_player_selected_area events_enum
+---@field on_player_set_quick_bar_slot events_enum
+---@field on_player_setup_blueprint events_enum
+---@field on_player_toggled_alt_mode events_enum
+---@field on_player_toggled_map_editor events_enum
+---@field on_player_trash_inventory_changed events_enum
+---@field on_player_unbanned events_enum
+---@field on_player_unmuted events_enum
+---@field on_player_used_capsule events_enum
+---@field on_player_used_spider_remote events_enum
+---@field on_post_entity_died events_enum
+---@field on_pre_build events_enum
+---@field on_pre_chunk_deleted events_enum
+---@field on_pre_entity_settings_pasted events_enum
+---@field on_pre_ghost_deconstructed events_enum
+---@field on_pre_permission_group_deleted events_enum
+---@field on_pre_permission_string_imported events_enum
+---@field on_pre_player_crafted_item events_enum
+---@field on_pre_player_died events_enum
+---@field on_pre_player_left_game events_enum
+---@field on_pre_player_mined_item events_enum
+---@field on_pre_player_removed events_enum
+---@field on_pre_player_toggled_map_editor events_enum
+---@field on_pre_robot_exploded_cliff events_enum
+---@field on_pre_script_inventory_resized events_enum
+---@field on_pre_surface_cleared events_enum
+---@field on_pre_surface_deleted events_enum
+---@field on_research_finished events_enum
+---@field on_research_reversed events_enum
+---@field on_research_started events_enum
+---@field on_resource_depleted events_enum
+---@field on_robot_built_entity events_enum
+---@field on_robot_built_tile events_enum
+---@field on_robot_exploded_cliff events_enum
+---@field on_robot_mined events_enum
+---@field on_robot_mined_entity events_enum
+---@field on_robot_mined_tile events_enum
+---@field on_robot_pre_mined events_enum
+---@field on_rocket_launch_ordered events_enum
+---@field on_rocket_launched events_enum
+---@field on_runtime_mod_setting_changed events_enum
+---@field on_script_inventory_resized events_enum
+---@field on_script_path_request_finished events_enum
+---@field on_script_trigger_effect events_enum
+---@field on_sector_scanned events_enum
+---@field on_selected_entity_changed events_enum
+---@field on_spider_command_completed events_enum
+---@field on_string_translated events_enum
+---@field on_surface_cleared events_enum
+---@field on_surface_created events_enum
+---@field on_surface_deleted events_enum
+---@field on_surface_imported events_enum
+---@field on_surface_renamed events_enum
+---@field on_technology_effects_reset events_enum
+---@field on_tick events_enum
+---@field on_train_changed_state events_enum
+---@field on_train_created events_enum
+---@field on_train_schedule_changed events_enum
+---@field on_trigger_created_entity events_enum
+---@field on_trigger_fired_artillery events_enum
+---@field on_unit_added_to_group events_enum
+---@field on_unit_group_created events_enum
+---@field on_unit_group_finished_gathering events_enum
+---@field on_unit_removed_from_group events_enum
+---@field on_worker_robot_expired events_enum
+---@field script_raised_built events_enum
+---@field script_raised_destroy events_enum
+---@field script_raised_revive events_enum
+---@field script_raised_set_tiles events_enum
+
+---@class events_enum Enum value type for events
 
 ---@class flow_precision_index
----@field fifty_hours number
----@field five_seconds number
----@field one_hour number
----@field one_minute number
----@field one_thousand_hours number
----@field ten_hours number
----@field ten_minutes number
----@field two_hundred_fifty_hours number
+---@field fifty_hours flow_precision_index_enum
+---@field five_seconds flow_precision_index_enum
+---@field one_hour flow_precision_index_enum
+---@field one_minute flow_precision_index_enum
+---@field one_thousand_hours flow_precision_index_enum
+---@field ten_hours flow_precision_index_enum
+---@field ten_minutes flow_precision_index_enum
+---@field two_hundred_fifty_hours flow_precision_index_enum
+
+---@class flow_precision_index_enum Enum value type for flow_precision_index
 
 ---@class group_state
----@field attacking_distraction number
----@field attacking_target number
----@field finished number
----@field gathering number
----@field moving number
----@field pathfinding number
----@field wander_in_group number
+---@field attacking_distraction group_state_enum
+---@field attacking_target group_state_enum
+---@field finished group_state_enum
+---@field gathering group_state_enum
+---@field moving group_state_enum
+---@field pathfinding group_state_enum
+---@field wander_in_group group_state_enum
+
+---@class group_state_enum Enum value type for group_state
 
 ---@class gui_type
----@field achievement number
----@field blueprint_library number
----@field bonus number
----@field controller number
----@field custom number
----@field entity number
----@field equipment number
----@field item number
----@field logistic number
----@field none number
----@field other_player number
----@field permissions number
----@field player_management number
----@field production number
----@field research number
----@field server_management number
----@field tile number
----@field trains number
----@field tutorials number
+---@field achievement gui_type_enum
+---@field blueprint_library gui_type_enum
+---@field bonus gui_type_enum
+---@field controller gui_type_enum
+---@field custom gui_type_enum
+---@field entity gui_type_enum
+---@field equipment gui_type_enum
+---@field item gui_type_enum
+---@field logistic gui_type_enum
+---@field none gui_type_enum
+---@field other_player gui_type_enum
+---@field permissions gui_type_enum
+---@field player_management gui_type_enum
+---@field production gui_type_enum
+---@field research gui_type_enum
+---@field server_management gui_type_enum
+---@field tile gui_type_enum
+---@field trains gui_type_enum
+---@field tutorials gui_type_enum
+
+---@class gui_type_enum Enum value type for gui_type
 
 ---@class input_action
----@field activate_copy number
----@field activate_cut number
----@field activate_paste number
----@field add_permission_group number
----@field add_train_station number
----@field admin_action number
----@field alt_select_area number
----@field alt_select_blueprint_entities number
----@field alternative_copy number
----@field begin_mining number
----@field begin_mining_terrain number
----@field build number
----@field build_rail number
----@field build_terrain number
----@field cancel_craft number
----@field cancel_deconstruct number
----@field cancel_new_blueprint number
----@field cancel_research number
----@field cancel_upgrade number
----@field change_active_character_tab number
----@field change_active_item_group_for_crafting number
----@field change_active_item_group_for_filters number
----@field change_active_quick_bar number
----@field change_arithmetic_combinator_parameters number
----@field change_decider_combinator_parameters number
----@field change_entity_label number
----@field change_item_description number
----@field change_item_label number
----@field change_multiplayer_config number
----@field change_picking_state number
----@field change_programmable_speaker_alert_parameters number
----@field change_programmable_speaker_circuit_parameters number
----@field change_programmable_speaker_parameters number
----@field change_riding_state number
----@field change_shooting_state number
----@field change_train_stop_station number
----@field change_train_wait_condition number
----@field change_train_wait_condition_data number
----@field clear_cursor number
----@field connect_rolling_stock number
----@field copy number
----@field copy_entity_settings number
----@field copy_opened_blueprint number
----@field copy_opened_item number
----@field craft number
----@field cursor_split number
----@field cursor_transfer number
----@field custom_input number
----@field cycle_blueprint_book_backwards number
----@field cycle_blueprint_book_forwards number
----@field deconstruct number
----@field delete_blueprint_library number
----@field delete_blueprint_record number
----@field delete_custom_tag number
----@field delete_permission_group number
----@field destroy_item number
----@field destroy_opened_item number
----@field disconnect_rolling_stock number
----@field drag_train_schedule number
----@field drag_train_wait_condition number
----@field drop_blueprint_record number
----@field drop_item number
----@field edit_blueprint_tool_preview number
----@field edit_custom_tag number
----@field edit_permission_group number
----@field export_blueprint number
----@field fast_entity_split number
----@field fast_entity_transfer number
----@field flush_opened_entity_fluid number
----@field flush_opened_entity_specific_fluid number
----@field go_to_train_station number
----@field grab_blueprint_record number
----@field gui_checked_state_changed number
----@field gui_click number
----@field gui_confirmed number
----@field gui_elem_changed number
----@field gui_location_changed number
----@field gui_selected_tab_changed number
----@field gui_selection_state_changed number
----@field gui_switch_state_changed number
----@field gui_text_changed number
----@field gui_value_changed number
----@field import_blueprint number
----@field import_blueprint_string number
----@field import_blueprints_filtered number
----@field import_permissions_string number
----@field inventory_split number
----@field inventory_transfer number
----@field launch_rocket number
----@field lua_shortcut number
----@field map_editor_action number
----@field market_offer number
----@field mod_settings_changed number
----@field open_achievements_gui number
----@field open_blueprint_library_gui number
----@field open_blueprint_record number
----@field open_bonus_gui number
----@field open_character_gui number
----@field open_current_vehicle_gui number
----@field open_equipment number
----@field open_gui number
----@field open_item number
----@field open_logistic_gui number
----@field open_mod_item number
----@field open_parent_of_opened_item number
----@field open_production_gui number
----@field open_technology_gui number
----@field open_tips_and_tricks_gui number
----@field open_train_gui number
----@field open_train_station_gui number
----@field open_trains_gui number
----@field paste_entity_settings number
----@field place_equipment number
----@field quick_bar_pick_slot number
----@field quick_bar_set_selected_page number
----@field quick_bar_set_slot number
----@field reassign_blueprint number
----@field remove_cables number
----@field remove_train_station number
----@field reset_assembling_machine number
----@field reset_item number
----@field rotate_entity number
----@field select_area number
----@field select_blueprint_entities number
----@field select_entity_slot number
----@field select_item number
----@field select_mapper_slot number
----@field select_next_valid_gun number
----@field select_tile_slot number
----@field send_spidertron number
----@field set_auto_launch_rocket number
----@field set_autosort_inventory number
----@field set_behavior_mode number
----@field set_car_weapons_control number
----@field set_circuit_condition number
----@field set_circuit_mode_of_operation number
----@field set_controller_logistic_trash_filter_item number
----@field set_deconstruction_item_tile_selection_mode number
----@field set_deconstruction_item_trees_and_rocks_only number
----@field set_entity_color number
----@field set_entity_energy_property number
----@field set_entity_logistic_trash_filter_item number
----@field set_filter number
----@field set_flat_controller_gui number
----@field set_heat_interface_mode number
----@field set_heat_interface_temperature number
----@field set_infinity_container_filter_item number
----@field set_infinity_container_remove_unfiltered_items number
----@field set_infinity_pipe_filter number
----@field set_inserter_max_stack_size number
----@field set_inventory_bar number
----@field set_linked_container_link_i_d number
----@field set_logistic_filter_item number
----@field set_logistic_filter_signal number
----@field set_player_color number
----@field set_recipe_notifications number
----@field set_request_from_buffers number
----@field set_research_finished_stops_game number
----@field set_signal number
----@field set_splitter_priority number
----@field set_train_stopped number
----@field set_trains_limit number
----@field set_vehicle_automatic_targeting_parameters number
----@field setup_assembling_machine number
----@field setup_blueprint number
----@field setup_single_blueprint_record number
----@field smart_pipette number
----@field spawn_item number
----@field stack_split number
----@field stack_transfer number
----@field start_repair number
----@field start_research number
----@field start_walking number
----@field stop_building_by_moving number
----@field switch_connect_to_logistic_network number
----@field switch_constant_combinator_state number
----@field switch_inserter_filter_mode_state number
----@field switch_power_switch_state number
----@field switch_to_rename_stop_gui number
----@field take_equipment number
----@field toggle_deconstruction_item_entity_filter_mode number
----@field toggle_deconstruction_item_tile_filter_mode number
----@field toggle_driving number
----@field toggle_enable_vehicle_logistics_while_moving number
----@field toggle_entity_logistic_requests number
----@field toggle_equipment_movement_bonus number
----@field toggle_map_editor number
----@field toggle_personal_logistic_requests number
----@field toggle_personal_roboport number
----@field toggle_show_entity_info number
----@field translate_string number
----@field undo number
----@field upgrade number
----@field upgrade_opened_blueprint_by_item number
----@field upgrade_opened_blueprint_by_record number
----@field use_artillery_remote number
----@field use_item number
----@field wire_dragging number
----@field write_to_console number
+---@field activate_copy input_action_enum
+---@field activate_cut input_action_enum
+---@field activate_paste input_action_enum
+---@field add_permission_group input_action_enum
+---@field add_train_station input_action_enum
+---@field admin_action input_action_enum
+---@field alt_select_area input_action_enum
+---@field alt_select_blueprint_entities input_action_enum
+---@field alternative_copy input_action_enum
+---@field begin_mining input_action_enum
+---@field begin_mining_terrain input_action_enum
+---@field build input_action_enum
+---@field build_rail input_action_enum
+---@field build_terrain input_action_enum
+---@field cancel_craft input_action_enum
+---@field cancel_deconstruct input_action_enum
+---@field cancel_new_blueprint input_action_enum
+---@field cancel_research input_action_enum
+---@field cancel_upgrade input_action_enum
+---@field change_active_character_tab input_action_enum
+---@field change_active_item_group_for_crafting input_action_enum
+---@field change_active_item_group_for_filters input_action_enum
+---@field change_active_quick_bar input_action_enum
+---@field change_arithmetic_combinator_parameters input_action_enum
+---@field change_decider_combinator_parameters input_action_enum
+---@field change_entity_label input_action_enum
+---@field change_item_description input_action_enum
+---@field change_item_label input_action_enum
+---@field change_multiplayer_config input_action_enum
+---@field change_picking_state input_action_enum
+---@field change_programmable_speaker_alert_parameters input_action_enum
+---@field change_programmable_speaker_circuit_parameters input_action_enum
+---@field change_programmable_speaker_parameters input_action_enum
+---@field change_riding_state input_action_enum
+---@field change_shooting_state input_action_enum
+---@field change_train_stop_station input_action_enum
+---@field change_train_wait_condition input_action_enum
+---@field change_train_wait_condition_data input_action_enum
+---@field clear_cursor input_action_enum
+---@field connect_rolling_stock input_action_enum
+---@field copy input_action_enum
+---@field copy_entity_settings input_action_enum
+---@field copy_opened_blueprint input_action_enum
+---@field copy_opened_item input_action_enum
+---@field craft input_action_enum
+---@field cursor_split input_action_enum
+---@field cursor_transfer input_action_enum
+---@field custom_input input_action_enum
+---@field cycle_blueprint_book_backwards input_action_enum
+---@field cycle_blueprint_book_forwards input_action_enum
+---@field deconstruct input_action_enum
+---@field delete_blueprint_library input_action_enum
+---@field delete_blueprint_record input_action_enum
+---@field delete_custom_tag input_action_enum
+---@field delete_permission_group input_action_enum
+---@field destroy_item input_action_enum
+---@field destroy_opened_item input_action_enum
+---@field disconnect_rolling_stock input_action_enum
+---@field drag_train_schedule input_action_enum
+---@field drag_train_wait_condition input_action_enum
+---@field drop_blueprint_record input_action_enum
+---@field drop_item input_action_enum
+---@field edit_blueprint_tool_preview input_action_enum
+---@field edit_custom_tag input_action_enum
+---@field edit_permission_group input_action_enum
+---@field export_blueprint input_action_enum
+---@field fast_entity_split input_action_enum
+---@field fast_entity_transfer input_action_enum
+---@field flush_opened_entity_fluid input_action_enum
+---@field flush_opened_entity_specific_fluid input_action_enum
+---@field go_to_train_station input_action_enum
+---@field grab_blueprint_record input_action_enum
+---@field gui_checked_state_changed input_action_enum
+---@field gui_click input_action_enum
+---@field gui_confirmed input_action_enum
+---@field gui_elem_changed input_action_enum
+---@field gui_location_changed input_action_enum
+---@field gui_selected_tab_changed input_action_enum
+---@field gui_selection_state_changed input_action_enum
+---@field gui_switch_state_changed input_action_enum
+---@field gui_text_changed input_action_enum
+---@field gui_value_changed input_action_enum
+---@field import_blueprint input_action_enum
+---@field import_blueprint_string input_action_enum
+---@field import_blueprints_filtered input_action_enum
+---@field import_permissions_string input_action_enum
+---@field inventory_split input_action_enum
+---@field inventory_transfer input_action_enum
+---@field launch_rocket input_action_enum
+---@field lua_shortcut input_action_enum
+---@field map_editor_action input_action_enum
+---@field market_offer input_action_enum
+---@field mod_settings_changed input_action_enum
+---@field open_achievements_gui input_action_enum
+---@field open_blueprint_library_gui input_action_enum
+---@field open_blueprint_record input_action_enum
+---@field open_bonus_gui input_action_enum
+---@field open_character_gui input_action_enum
+---@field open_current_vehicle_gui input_action_enum
+---@field open_equipment input_action_enum
+---@field open_gui input_action_enum
+---@field open_item input_action_enum
+---@field open_logistic_gui input_action_enum
+---@field open_mod_item input_action_enum
+---@field open_parent_of_opened_item input_action_enum
+---@field open_production_gui input_action_enum
+---@field open_technology_gui input_action_enum
+---@field open_tips_and_tricks_gui input_action_enum
+---@field open_train_gui input_action_enum
+---@field open_train_station_gui input_action_enum
+---@field open_trains_gui input_action_enum
+---@field paste_entity_settings input_action_enum
+---@field place_equipment input_action_enum
+---@field quick_bar_pick_slot input_action_enum
+---@field quick_bar_set_selected_page input_action_enum
+---@field quick_bar_set_slot input_action_enum
+---@field reassign_blueprint input_action_enum
+---@field remove_cables input_action_enum
+---@field remove_train_station input_action_enum
+---@field reset_assembling_machine input_action_enum
+---@field reset_item input_action_enum
+---@field rotate_entity input_action_enum
+---@field select_area input_action_enum
+---@field select_blueprint_entities input_action_enum
+---@field select_entity_slot input_action_enum
+---@field select_item input_action_enum
+---@field select_mapper_slot input_action_enum
+---@field select_next_valid_gun input_action_enum
+---@field select_tile_slot input_action_enum
+---@field send_spidertron input_action_enum
+---@field set_auto_launch_rocket input_action_enum
+---@field set_autosort_inventory input_action_enum
+---@field set_behavior_mode input_action_enum
+---@field set_car_weapons_control input_action_enum
+---@field set_circuit_condition input_action_enum
+---@field set_circuit_mode_of_operation input_action_enum
+---@field set_controller_logistic_trash_filter_item input_action_enum
+---@field set_deconstruction_item_tile_selection_mode input_action_enum
+---@field set_deconstruction_item_trees_and_rocks_only input_action_enum
+---@field set_entity_color input_action_enum
+---@field set_entity_energy_property input_action_enum
+---@field set_entity_logistic_trash_filter_item input_action_enum
+---@field set_filter input_action_enum
+---@field set_flat_controller_gui input_action_enum
+---@field set_heat_interface_mode input_action_enum
+---@field set_heat_interface_temperature input_action_enum
+---@field set_infinity_container_filter_item input_action_enum
+---@field set_infinity_container_remove_unfiltered_items input_action_enum
+---@field set_infinity_pipe_filter input_action_enum
+---@field set_inserter_max_stack_size input_action_enum
+---@field set_inventory_bar input_action_enum
+---@field set_linked_container_link_i_d input_action_enum
+---@field set_logistic_filter_item input_action_enum
+---@field set_logistic_filter_signal input_action_enum
+---@field set_player_color input_action_enum
+---@field set_recipe_notifications input_action_enum
+---@field set_request_from_buffers input_action_enum
+---@field set_research_finished_stops_game input_action_enum
+---@field set_signal input_action_enum
+---@field set_splitter_priority input_action_enum
+---@field set_train_stopped input_action_enum
+---@field set_trains_limit input_action_enum
+---@field set_vehicle_automatic_targeting_parameters input_action_enum
+---@field setup_assembling_machine input_action_enum
+---@field setup_blueprint input_action_enum
+---@field setup_single_blueprint_record input_action_enum
+---@field smart_pipette input_action_enum
+---@field spawn_item input_action_enum
+---@field stack_split input_action_enum
+---@field stack_transfer input_action_enum
+---@field start_repair input_action_enum
+---@field start_research input_action_enum
+---@field start_walking input_action_enum
+---@field stop_building_by_moving input_action_enum
+---@field switch_connect_to_logistic_network input_action_enum
+---@field switch_constant_combinator_state input_action_enum
+---@field switch_inserter_filter_mode_state input_action_enum
+---@field switch_power_switch_state input_action_enum
+---@field switch_to_rename_stop_gui input_action_enum
+---@field take_equipment input_action_enum
+---@field toggle_deconstruction_item_entity_filter_mode input_action_enum
+---@field toggle_deconstruction_item_tile_filter_mode input_action_enum
+---@field toggle_driving input_action_enum
+---@field toggle_enable_vehicle_logistics_while_moving input_action_enum
+---@field toggle_entity_logistic_requests input_action_enum
+---@field toggle_equipment_movement_bonus input_action_enum
+---@field toggle_map_editor input_action_enum
+---@field toggle_personal_logistic_requests input_action_enum
+---@field toggle_personal_roboport input_action_enum
+---@field toggle_show_entity_info input_action_enum
+---@field translate_string input_action_enum
+---@field undo input_action_enum
+---@field upgrade input_action_enum
+---@field upgrade_opened_blueprint_by_item input_action_enum
+---@field upgrade_opened_blueprint_by_record input_action_enum
+---@field use_artillery_remote input_action_enum
+---@field use_item input_action_enum
+---@field wire_dragging input_action_enum
+---@field write_to_console input_action_enum
+
+---@class input_action_enum Enum value type for input_action
 
 ---@class inventory
----@field artillery_turret_ammo number
----@field artillery_wagon_ammo number
----@field assembling_machine_input number
----@field assembling_machine_modules number
----@field assembling_machine_output number
----@field beacon_modules number
----@field burnt_result number
----@field car_ammo number
----@field car_trunk number
----@field cargo_wagon number
----@field character_ammo number
----@field character_armor number
----@field character_corpse number
----@field character_guns number
----@field character_main number
----@field character_trash number
----@field character_vehicle number
----@field chest number
----@field editor_ammo number
----@field editor_armor number
----@field editor_guns number
----@field editor_main number
----@field fuel number
----@field furnace_modules number
----@field furnace_result number
----@field furnace_source number
----@field god_main number
----@field item_main number
----@field lab_input number
----@field lab_modules number
----@field mining_drill_modules number
----@field roboport_material number
----@field roboport_robot number
----@field robot_cargo number
----@field robot_repair number
----@field rocket number
----@field rocket_silo_result number
----@field rocket_silo_rocket number
----@field spider_ammo number
----@field spider_trash number
----@field spider_trunk number
----@field turret_ammo number
+---@field artillery_turret_ammo inventory_enum
+---@field artillery_wagon_ammo inventory_enum
+---@field assembling_machine_input inventory_enum
+---@field assembling_machine_modules inventory_enum
+---@field assembling_machine_output inventory_enum
+---@field beacon_modules inventory_enum
+---@field burnt_result inventory_enum
+---@field car_ammo inventory_enum
+---@field car_trunk inventory_enum
+---@field cargo_wagon inventory_enum
+---@field character_ammo inventory_enum
+---@field character_armor inventory_enum
+---@field character_corpse inventory_enum
+---@field character_guns inventory_enum
+---@field character_main inventory_enum
+---@field character_trash inventory_enum
+---@field character_vehicle inventory_enum
+---@field chest inventory_enum
+---@field editor_ammo inventory_enum
+---@field editor_armor inventory_enum
+---@field editor_guns inventory_enum
+---@field editor_main inventory_enum
+---@field fuel inventory_enum
+---@field furnace_modules inventory_enum
+---@field furnace_result inventory_enum
+---@field furnace_source inventory_enum
+---@field god_main inventory_enum
+---@field item_main inventory_enum
+---@field lab_input inventory_enum
+---@field lab_modules inventory_enum
+---@field mining_drill_modules inventory_enum
+---@field roboport_material inventory_enum
+---@field roboport_robot inventory_enum
+---@field robot_cargo inventory_enum
+---@field robot_repair inventory_enum
+---@field rocket inventory_enum
+---@field rocket_silo_result inventory_enum
+---@field rocket_silo_rocket inventory_enum
+---@field spider_ammo inventory_enum
+---@field spider_trash inventory_enum
+---@field spider_trunk inventory_enum
+---@field turret_ammo inventory_enum
+
+---@class inventory_enum Enum value type for inventory
 
 ---@class logistic_member_index
----@field character_provider number
----@field character_requester number
----@field character_storage number
----@field generic_on_off_behavior number
----@field logistic_container number
----@field vehicle_storage number
+---@field character_provider logistic_member_index_enum
+---@field character_requester logistic_member_index_enum
+---@field character_storage logistic_member_index_enum
+---@field generic_on_off_behavior logistic_member_index_enum
+---@field logistic_container logistic_member_index_enum
+---@field vehicle_storage logistic_member_index_enum
+
+---@class logistic_member_index_enum Enum value type for logistic_member_index
 
 ---@class logistic_mode
----@field active_provider number
----@field buffer number
----@field none number
----@field passive_provider number
----@field requester number
----@field storage number
+---@field active_provider logistic_mode_enum
+---@field buffer logistic_mode_enum
+---@field none logistic_mode_enum
+---@field passive_provider logistic_mode_enum
+---@field requester logistic_mode_enum
+---@field storage logistic_mode_enum
+
+---@class logistic_mode_enum Enum value type for logistic_mode
 
 ---@class mouse_button_type
----@field left number
----@field middle number
----@field none number
----@field right number
+---@field left mouse_button_type_enum
+---@field middle mouse_button_type_enum
+---@field none mouse_button_type_enum
+---@field right mouse_button_type_enum
+
+---@class mouse_button_type_enum Enum value type for mouse_button_type
 
 ---@class rail_connection_direction
----@field left number
----@field none number
----@field right number
----@field straight number
+---@field left rail_connection_direction_enum
+---@field none rail_connection_direction_enum
+---@field right rail_connection_direction_enum
+---@field straight rail_connection_direction_enum
+
+---@class rail_connection_direction_enum Enum value type for rail_connection_direction
 
 ---@class rail_direction
----@field back number
----@field front number
+---@field back rail_direction_enum
+---@field front rail_direction_enum
+
+---@class rail_direction_enum Enum value type for rail_direction
 
 ---@class relative_gui_position
----@field bottom number
----@field left number
----@field right number
----@field top number
+---@field bottom relative_gui_position_enum
+---@field left relative_gui_position_enum
+---@field right relative_gui_position_enum
+---@field top relative_gui_position_enum
+
+---@class relative_gui_position_enum Enum value type for relative_gui_position
 
 ---@class relative_gui_type
----@field accumulator_gui number
----@field achievement_gui number
----@field additional_entity_info_gui number
----@field admin_gui number
----@field arithmetic_combinator_gui number
----@field armor_gui number
----@field assembling_machine_gui number
----@field assembling_machine_select_recipe_gui number
----@field beacon_gui number
----@field blueprint_book_gui number
----@field blueprint_library_gui number
----@field blueprint_setup_gui number
----@field bonus_gui number
----@field burner_equipment_gui number
----@field car_gui number
----@field constant_combinator_gui number
----@field container_gui number
----@field controller_gui number
----@field decider_combinator_gui number
----@field deconstruction_item_gui number
----@field electric_energy_interface_gui number
----@field electric_network_gui number
----@field entity_variations_gui number
----@field entity_with_energy_source_gui number
----@field equipment_grid_gui number
----@field furnace_gui number
----@field generic_on_off_entity_gui number
----@field heat_interface_gui number
----@field infinity_pipe_gui number
----@field inserter_gui number
----@field item_with_inventory_gui number
----@field lab_gui number
----@field lamp_gui number
----@field linked_container_gui number
----@field loader_gui number
----@field logistic_gui number
----@field market_gui number
----@field mining_drill_gui number
----@field other_player_gui number
----@field permissions_gui number
----@field pipe_gui number
----@field power_switch_gui number
----@field production_gui number
----@field programmable_speaker_gui number
----@field rail_chain_signal_gui number
----@field rail_signal_gui number
----@field reactor_gui number
----@field rename_stop_gui number
----@field resource_entity_gui number
----@field roboport_gui number
----@field rocket_silo_gui number
----@field server_config_gui number
----@field spider_vehicle_gui number
----@field splitter_gui number
----@field standalone_character_gui number
----@field storage_tank_gui number
----@field tile_variations_gui number
----@field train_gui number
----@field train_stop_gui number
----@field trains_gui number
----@field transport_belt_gui number
----@field upgrade_item_gui number
----@field wall_gui number
+---@field accumulator_gui relative_gui_type_enum
+---@field achievement_gui relative_gui_type_enum
+---@field additional_entity_info_gui relative_gui_type_enum
+---@field admin_gui relative_gui_type_enum
+---@field arithmetic_combinator_gui relative_gui_type_enum
+---@field armor_gui relative_gui_type_enum
+---@field assembling_machine_gui relative_gui_type_enum
+---@field assembling_machine_select_recipe_gui relative_gui_type_enum
+---@field beacon_gui relative_gui_type_enum
+---@field blueprint_book_gui relative_gui_type_enum
+---@field blueprint_library_gui relative_gui_type_enum
+---@field blueprint_setup_gui relative_gui_type_enum
+---@field bonus_gui relative_gui_type_enum
+---@field burner_equipment_gui relative_gui_type_enum
+---@field car_gui relative_gui_type_enum
+---@field constant_combinator_gui relative_gui_type_enum
+---@field container_gui relative_gui_type_enum
+---@field controller_gui relative_gui_type_enum
+---@field decider_combinator_gui relative_gui_type_enum
+---@field deconstruction_item_gui relative_gui_type_enum
+---@field electric_energy_interface_gui relative_gui_type_enum
+---@field electric_network_gui relative_gui_type_enum
+---@field entity_variations_gui relative_gui_type_enum
+---@field entity_with_energy_source_gui relative_gui_type_enum
+---@field equipment_grid_gui relative_gui_type_enum
+---@field furnace_gui relative_gui_type_enum
+---@field generic_on_off_entity_gui relative_gui_type_enum
+---@field heat_interface_gui relative_gui_type_enum
+---@field infinity_pipe_gui relative_gui_type_enum
+---@field inserter_gui relative_gui_type_enum
+---@field item_with_inventory_gui relative_gui_type_enum
+---@field lab_gui relative_gui_type_enum
+---@field lamp_gui relative_gui_type_enum
+---@field linked_container_gui relative_gui_type_enum
+---@field loader_gui relative_gui_type_enum
+---@field logistic_gui relative_gui_type_enum
+---@field market_gui relative_gui_type_enum
+---@field mining_drill_gui relative_gui_type_enum
+---@field other_player_gui relative_gui_type_enum
+---@field permissions_gui relative_gui_type_enum
+---@field pipe_gui relative_gui_type_enum
+---@field power_switch_gui relative_gui_type_enum
+---@field production_gui relative_gui_type_enum
+---@field programmable_speaker_gui relative_gui_type_enum
+---@field rail_chain_signal_gui relative_gui_type_enum
+---@field rail_signal_gui relative_gui_type_enum
+---@field reactor_gui relative_gui_type_enum
+---@field rename_stop_gui relative_gui_type_enum
+---@field resource_entity_gui relative_gui_type_enum
+---@field roboport_gui relative_gui_type_enum
+---@field rocket_silo_gui relative_gui_type_enum
+---@field server_config_gui relative_gui_type_enum
+---@field spider_vehicle_gui relative_gui_type_enum
+---@field splitter_gui relative_gui_type_enum
+---@field standalone_character_gui relative_gui_type_enum
+---@field storage_tank_gui relative_gui_type_enum
+---@field tile_variations_gui relative_gui_type_enum
+---@field train_gui relative_gui_type_enum
+---@field train_stop_gui relative_gui_type_enum
+---@field trains_gui relative_gui_type_enum
+---@field transport_belt_gui relative_gui_type_enum
+---@field upgrade_item_gui relative_gui_type_enum
+---@field wall_gui relative_gui_type_enum
+
+---@class relative_gui_type_enum Enum value type for relative_gui_type
 
 ---@class render_mode
----@field chart number
----@field chart_zoomed_in number
----@field game number
+---@field chart render_mode_enum
+---@field chart_zoomed_in render_mode_enum
+---@field game render_mode_enum
+
+---@class render_mode_enum Enum value type for render_mode
 
 ---@class rich_text_setting
----@field disabled number
----@field enabled number
----@field highlight number
+---@field disabled rich_text_setting_enum
+---@field enabled rich_text_setting_enum
+---@field highlight rich_text_setting_enum
+
+---@class rich_text_setting_enum Enum value type for rich_text_setting
 
 ---@class riding
 ---@field acceleration acceleration
 ---@field direction direction
 
 ---@class acceleration
----@field accelerating number
----@field braking number
----@field nothing number
----@field reversing number
+---@field accelerating acceleration_enum
+---@field braking acceleration_enum
+---@field nothing acceleration_enum
+---@field reversing acceleration_enum
+
+---@class acceleration_enum Enum value type for acceleration
 
 ---@class direction
----@field left number
----@field right number
----@field straight number
+---@field left direction_enum
+---@field right direction_enum
+---@field straight direction_enum
+
+---@class direction_enum Enum value type for direction
 
 ---@class shooting
----@field not_shooting number
----@field shooting_enemies number
----@field shooting_selected number
+---@field not_shooting shooting_enum
+---@field shooting_enemies shooting_enum
+---@field shooting_selected shooting_enum
+
+---@class shooting_enum Enum value type for shooting
 
 ---@class signal_state State of an ordinary rail signal.
----@field closed number Red.
----@field open number Green.
----@field reserved number Orange.
----@field reserved_by_circuit_network number Red - From circuit network.
+---@field closed signal_state_enum Red.
+---@field open signal_state_enum Green.
+---@field reserved signal_state_enum Orange.
+---@field reserved_by_circuit_network signal_state_enum Red - From circuit network.
+
+---@class signal_state_enum Enum value type for signal_state
 
 ---@class train_state
----@field arrive_signal number Braking before a rail signal.
----@field arrive_station number Braking before a station.
----@field destination_full number Same as no_path but all candidate train stops are full
----@field manual_control number Can move if user explicitly sits in and rides the train.
----@field manual_control_stop number Switched to manual control and has to stop.
----@field no_path number Has no path and is stopped.
----@field no_schedule number Doesn't have anywhere to go.
----@field on_the_path number Normal state -- following the path.
----@field path_lost number Had path and lost it -- must stop.
----@field wait_signal number Waiting at a signal.
----@field wait_station number Waiting at a station.
+---@field arrive_signal train_state_enum Braking before a rail signal.
+---@field arrive_station train_state_enum Braking before a station.
+---@field destination_full train_state_enum Same as no_path but all candidate train stops are full
+---@field manual_control train_state_enum Can move if user explicitly sits in and rides the train.
+---@field manual_control_stop train_state_enum Switched to manual control and has to stop.
+---@field no_path train_state_enum Has no path and is stopped.
+---@field no_schedule train_state_enum Doesn't have anywhere to go.
+---@field on_the_path train_state_enum Normal state -- following the path.
+---@field path_lost train_state_enum Had path and lost it -- must stop.
+---@field wait_signal train_state_enum Waiting at a signal.
+---@field wait_station train_state_enum Waiting at a station.
+
+---@class train_state_enum Enum value type for train_state
 
 ---@class transport_line
----@field left_line number
----@field left_split_line number
----@field left_underground_line number
----@field right_line number
----@field right_split_line number
----@field right_underground_line number
----@field secondary_left_line number
----@field secondary_left_split_line number
----@field secondary_right_line number
----@field secondary_right_split_line number
+---@field left_line transport_line_enum
+---@field left_split_line transport_line_enum
+---@field left_underground_line transport_line_enum
+---@field right_line transport_line_enum
+---@field right_split_line transport_line_enum
+---@field right_underground_line transport_line_enum
+---@field secondary_left_line transport_line_enum
+---@field secondary_left_split_line transport_line_enum
+---@field secondary_right_line transport_line_enum
+---@field secondary_right_split_line transport_line_enum
+
+---@class transport_line_enum Enum value type for transport_line
 
 ---@class wire_connection_id
----@field electric_pole number
----@field power_switch_left number
----@field power_switch_right number
+---@field electric_pole wire_connection_id_enum
+---@field power_switch_left wire_connection_id_enum
+---@field power_switch_right wire_connection_id_enum
+
+---@class wire_connection_id_enum Enum value type for wire_connection_id
 
 ---@class wire_type
----@field copper number
----@field green number
----@field red number
+---@field copper wire_type_enum
+---@field green wire_type_enum
+---@field red wire_type_enum
+
+---@class wire_type_enum Enum value type for wire_type
 
