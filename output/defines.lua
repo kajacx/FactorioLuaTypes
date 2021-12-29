@@ -1,0 +1,948 @@
+---@class Defines This is the class of the `defines` object that will exist at runtime.
+---@field alert_type alert_type
+---@field behavior_result behavior_result AI command exit status. See [LuaEntity::set_command](LuaEntity::set_command)
+---@field build_check_type build_check_type
+---@field chain_signal_state chain_signal_state State of a chain signal.
+---@field chunk_generated_status chunk_generated_status
+---@field circuit_condition_index circuit_condition_index
+---@field circuit_connector_id circuit_connector_id
+---@field command command Command given to units describing what they should do.
+---@field compound_command compound_command How commands are joined together in a compound command (see [defines.command.compound](defines.command.compound)).
+---@field control_behavior control_behavior
+---@field controllers controllers
+---@field deconstruction_item deconstruction_item
+---@field difficulty difficulty
+---@field difficulty_settings difficulty_settings
+---@field direction direction
+---@field disconnect_reason disconnect_reason
+---@field distraction distraction
+---@field entity_status entity_status
+---@field events events See the [events page](events.html) for more info on what events contain and when they get raised.
+---@field flow_precision_index flow_precision_index
+---@field group_state group_state
+---@field gui_type gui_type
+---@field input_action input_action
+---@field inventory inventory
+---@field logistic_member_index logistic_member_index
+---@field logistic_mode logistic_mode
+---@field mouse_button_type mouse_button_type
+---@field prototypes prototypes A dictionary mapping all top-level prototypes by name to a list of their associated subtypes. This list is organized as a lookup table, meaning it maps the sub-prototype names to `0`. As an example, `defines.prototypes['entity']` looks like this: `{furnace=0, inserter=0, container=0, ...}`.
+---@field rail_connection_direction rail_connection_direction
+---@field rail_direction rail_direction
+---@field relative_gui_position relative_gui_position
+---@field relative_gui_type relative_gui_type
+---@field render_mode render_mode
+---@field rich_text_setting rich_text_setting
+---@field riding riding
+---@field shooting shooting
+---@field signal_state signal_state State of an ordinary rail signal.
+---@field train_state train_state
+---@field transport_line transport_line
+---@field wire_connection_id wire_connection_id
+---@field wire_type wire_type
+
+---@class alert_type
+---@field custom number
+---@field entity_destroyed number
+---@field entity_under_attack number
+---@field no_material_for_construction number
+---@field no_storage number
+---@field not_enough_construction_robots number
+---@field not_enough_repair_packs number
+---@field train_out_of_fuel number
+---@field turret_fire number
+
+---@class behavior_result AI command exit status. See [LuaEntity::set_command](LuaEntity::set_command)
+---@field deleted number
+---@field fail number
+---@field in_progress number
+---@field success number
+
+---@class build_check_type
+---@field blueprint_ghost number
+---@field ghost_revive number
+---@field manual number
+---@field manual_ghost number
+---@field script number
+---@field script_ghost number
+
+---@class chain_signal_state State of a chain signal.
+---@field all_open number
+---@field none number
+---@field none_open number
+---@field partially_open number
+
+---@class chunk_generated_status
+---@field basic_tiles number
+---@field corrected_tiles number
+---@field custom_tiles number
+---@field entities number
+---@field nothing number
+---@field tiles number
+
+---@class circuit_condition_index
+---@field arithmetic_combinator number
+---@field constant_combinator number
+---@field decider_combinator number
+---@field inserter_circuit number
+---@field inserter_logistic number
+---@field lamp number
+---@field offshore_pump number
+---@field pump number
+
+---@class circuit_connector_id
+---@field accumulator number
+---@field combinator_input number
+---@field combinator_output number
+---@field constant_combinator number
+---@field container number
+---@field electric_pole number
+---@field inserter number
+---@field lamp number
+---@field offshore_pump number
+---@field programmable_speaker number
+---@field pump number
+---@field rail_chain_signal number
+---@field rail_signal number
+---@field roboport number
+---@field storage_tank number
+---@field wall number
+
+---@class command Command given to units describing what they should do.
+---@field attack number Attack another entity.
+---@field attack_area number Go to a place and attack what you see.
+---@field build_base number Go to a position and build a base there.
+---@field compound number Chain commands together, see [defines.compound_command](defines.compound_command).
+---@field flee number Flee from another entity.
+---@field go_to_location number Go to a specific position.
+---@field group number Do what your group wants you to do.
+---@field stop number Stop moving and stay where you are.
+---@field wander number Chill.
+
+---@class compound_command How commands are joined together in a compound command (see [defines.command.compound](defines.command.compound)).
+---@field logical_and number Fail on first failure. Only succeeds if all commands (executed one after another) succeed.
+---@field logical_or number Succeed on first success. Only fails if all commands (executed one after another) fail.
+---@field return_last number Execute all commands in sequence and fail or succeed depending on the return status of the last command.
+
+---@class control_behavior
+---@field inserter inserter
+---@field logistic_container logistic_container
+---@field lamp lamp
+---@field mining_drill mining_drill
+---@field transport_belt transport_belt
+---@field type type
+
+---@class inserter
+---@field circuit_mode_of_operation circuit_mode_of_operation
+---@field hand_read_mode hand_read_mode
+
+---@class circuit_mode_of_operation
+---@field enable_disable number
+---@field none number
+---@field read_hand_contents number
+---@field set_filters number
+---@field set_stack_size number
+
+---@class hand_read_mode
+---@field hold number
+---@field pulse number
+
+---@class logistic_container
+---@field circuit_mode_of_operation circuit_mode_of_operation
+
+---@class circuit_mode_of_operation
+---@field send_contents number
+---@field set_requests number
+
+---@class lamp
+---@field circuit_mode_of_operation circuit_mode_of_operation
+
+---@class circuit_mode_of_operation
+---@field use_colors number
+
+---@class mining_drill
+---@field resource_read_mode resource_read_mode
+
+---@class resource_read_mode
+---@field entire_patch number
+---@field this_miner number
+
+---@class transport_belt
+---@field content_read_mode content_read_mode
+
+---@class content_read_mode
+---@field hold number
+---@field pulse number
+
+---@class type
+---@field accumulator number [LuaAccumulatorControlBehavior](LuaAccumulatorControlBehavior)
+---@field arithmetic_combinator number [LuaArithmeticCombinatorControlBehavior](LuaArithmeticCombinatorControlBehavior)
+---@field constant_combinator number [LuaConstantCombinatorControlBehavior](LuaConstantCombinatorControlBehavior)
+---@field container number [LuaContainerControlBehavior](LuaContainerControlBehavior)
+---@field decider_combinator number [LuaDeciderCombinatorControlBehavior](LuaDeciderCombinatorControlBehavior)
+---@field generic_on_off number [LuaGenericOnOffControlBehavior](LuaGenericOnOffControlBehavior)
+---@field inserter number [LuaInserterControlBehavior](LuaInserterControlBehavior)
+---@field lamp number [LuaLampControlBehavior](LuaLampControlBehavior)
+---@field logistic_container number [LuaLogisticContainerControlBehavior](LuaLogisticContainerControlBehavior)
+---@field mining_drill number [LuaMiningDrillControlBehavior](LuaMiningDrillControlBehavior)
+---@field programmable_speaker number [LuaProgrammableSpeakerControlBehavior](LuaProgrammableSpeakerControlBehavior)
+---@field rail_chain_signal number [LuaRailChainSignalControlBehavior](LuaRailChainSignalControlBehavior)
+---@field rail_signal number [LuaRailSignalControlBehavior](LuaRailSignalControlBehavior)
+---@field roboport number [LuaRoboportControlBehavior](LuaRoboportControlBehavior)
+---@field storage_tank number [LuaStorageTankControlBehavior](LuaStorageTankControlBehavior)
+---@field train_stop number [LuaTrainStopControlBehavior](LuaTrainStopControlBehavior)
+---@field transport_belt number [LuaTransportBeltControlBehavior](LuaTransportBeltControlBehavior)
+---@field wall number [LuaWallControlBehavior](LuaWallControlBehavior)
+
+---@class controllers
+---@field character number The controller controls a character. This is the default controller in freeplay.
+---@field cutscene number The player can't interact with the world, and the camera pans around in a predefined manner.
+---@field editor number The Editor Controller near ultimate power to do almost anything in the game.
+---@field ghost number Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen.
+---@field god number The controller isn't tied to a character. This is the default controller in sandbox.
+---@field spectator number Can't change anything in the world but can view anything.
+
+---@class deconstruction_item
+---@field entity_filter_mode entity_filter_mode
+---@field tile_filter_mode tile_filter_mode
+---@field tile_selection_mode tile_selection_mode
+
+---@class entity_filter_mode
+---@field blacklist number
+---@field whitelist number
+
+---@class tile_filter_mode
+---@field blacklist number
+---@field whitelist number
+
+---@class tile_selection_mode
+---@field always number
+---@field never number
+---@field normal number
+---@field only number
+
+---@class difficulty
+---@field easy number
+---@field hard number
+---@field normal number
+
+---@class difficulty_settings
+---@field recipe_difficulty recipe_difficulty
+---@field technology_difficulty technology_difficulty
+
+---@class recipe_difficulty
+---@field expensive number
+---@field normal number
+
+---@class technology_difficulty
+---@field expensive number
+---@field normal number
+
+---@class direction
+---@field east number
+---@field north number
+---@field northeast number
+---@field northwest number
+---@field south number
+---@field southeast number
+---@field southwest number
+---@field west number
+
+---@class disconnect_reason
+---@field afk number
+---@field banned number
+---@field cannot_keep_up number
+---@field desync_limit_reached number
+---@field dropped number
+---@field kicked number
+---@field kicked_and_deleted number
+---@field quit number
+---@field reconnect number
+---@field switching_servers number
+---@field wrong_input number
+
+---@class distraction
+---@field by_anything number Attack closer enemy entities, including entities "built" by player (belts, inserters, chests).
+---@field by_damage number Attack when attacked.
+---@field by_enemy number Attack closer enemy entities with force.
+---@field none number Perform command even if someone attacks the unit.
+
+---@class entity_status
+---@field cant_divide_segments number Used by rail signals.
+---@field charging number Used by accumulators.
+---@field closed_by_circuit_network number
+---@field disabled number Used by constant combinators: Combinator is turned off via switch in GUI.
+---@field disabled_by_control_behavior number
+---@field disabled_by_script number
+---@field discharging number Used by accumulators.
+---@field fluid_ingredient_shortage number Used by crafting machines.
+---@field full_output number Used by crafting machines, boilers, burner energy sources and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox.
+---@field fully_charged number Used by accumulators.
+---@field item_ingredient_shortage number Used by crafting machines.
+---@field launching_rocket number Used by the rocket silo.
+---@field low_input_fluid number Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out.
+---@field low_power number
+---@field low_temperature number Used by heat energy sources.
+---@field marked_for_deconstruction number
+---@field missing_required_fluid number Used by mining drills when the mining fluid is missing.
+---@field missing_science_packs number Used by labs.
+---@field networks_connected number Used by power switches.
+---@field networks_disconnected number Used by power switches.
+---@field no_ammo number Used by ammo turrets.
+---@field no_fuel number
+---@field no_ingredients number Used by furnaces.
+---@field no_input_fluid number Used by boilers, fluid turrets and fluid energy sources: Boiler has no fluid to work with.
+---@field no_minable_resources number Used by mining drills.
+---@field no_modules_to_transmit number Used by beacons.
+---@field no_power number
+---@field no_recipe number Used by assembling machines.
+---@field no_research_in_progress number Used by labs.
+---@field normal number
+---@field not_connected_to_rail number Used by rail signals.
+---@field not_plugged_in_electric_network number Used by generators and solar panels.
+---@field opened_by_circuit_network number
+---@field out_of_logistic_network number Used by logistic containers.
+---@field preparing_rocket_for_launch number Used by the rocket silo.
+---@field recharging_after_power_outage number Used by roboports.
+---@field turned_off_during_daytime number Used by lamps.
+---@field waiting_for_source_items number Used by inserters.
+---@field waiting_for_space_in_destination number Used by inserters and mining drills.
+---@field waiting_for_target_to_be_built number Used by inserters targeting entity ghosts.
+---@field waiting_for_train number Used by inserters targeting rails.
+---@field waiting_to_launch_rocket number Used by the rocket silo.
+---@field working number
+
+---@class events See the [events page](events.html) for more info on what events contain and when they get raised.
+---@field on_ai_command_completed number
+---@field on_area_cloned number
+---@field on_biter_base_built number
+---@field on_brush_cloned number
+---@field on_build_base_arrived number
+---@field on_built_entity number
+---@field on_cancelled_deconstruction number
+---@field on_cancelled_upgrade number
+---@field on_character_corpse_expired number
+---@field on_chart_tag_added number
+---@field on_chart_tag_modified number
+---@field on_chart_tag_removed number
+---@field on_chunk_charted number
+---@field on_chunk_deleted number
+---@field on_chunk_generated number
+---@field on_combat_robot_expired number
+---@field on_console_chat number
+---@field on_console_command number
+---@field on_cutscene_cancelled number
+---@field on_cutscene_waypoint_reached number
+---@field on_difficulty_settings_changed number
+---@field on_entity_cloned number
+---@field on_entity_damaged number
+---@field on_entity_destroyed number
+---@field on_entity_died number
+---@field on_entity_logistic_slot_changed number
+---@field on_entity_renamed number
+---@field on_entity_settings_pasted number
+---@field on_entity_spawned number
+---@field on_equipment_inserted number
+---@field on_equipment_removed number
+---@field on_force_cease_fire_changed number
+---@field on_force_created number
+---@field on_force_friends_changed number
+---@field on_force_reset number
+---@field on_forces_merged number
+---@field on_forces_merging number
+---@field on_game_created_from_scenario number
+---@field on_gui_checked_state_changed number
+---@field on_gui_click number
+---@field on_gui_closed number
+---@field on_gui_confirmed number
+---@field on_gui_elem_changed number
+---@field on_gui_location_changed number
+---@field on_gui_opened number
+---@field on_gui_selected_tab_changed number
+---@field on_gui_selection_state_changed number
+---@field on_gui_switch_state_changed number
+---@field on_gui_text_changed number
+---@field on_gui_value_changed number
+---@field on_land_mine_armed number
+---@field on_lua_shortcut number
+---@field on_marked_for_deconstruction number
+---@field on_marked_for_upgrade number
+---@field on_market_item_purchased number
+---@field on_mod_item_opened number
+---@field on_permission_group_added number
+---@field on_permission_group_deleted number
+---@field on_permission_group_edited number
+---@field on_permission_string_imported number
+---@field on_picked_up_item number
+---@field on_player_alt_selected_area number
+---@field on_player_ammo_inventory_changed number
+---@field on_player_armor_inventory_changed number
+---@field on_player_banned number
+---@field on_player_built_tile number
+---@field on_player_cancelled_crafting number
+---@field on_player_changed_force number
+---@field on_player_changed_position number
+---@field on_player_changed_surface number
+---@field on_player_cheat_mode_disabled number
+---@field on_player_cheat_mode_enabled number
+---@field on_player_clicked_gps_tag number
+---@field on_player_configured_blueprint number
+---@field on_player_configured_spider_remote number
+---@field on_player_crafted_item number
+---@field on_player_created number
+---@field on_player_cursor_stack_changed number
+---@field on_player_deconstructed_area number
+---@field on_player_demoted number
+---@field on_player_died number
+---@field on_player_display_resolution_changed number
+---@field on_player_display_scale_changed number
+---@field on_player_driving_changed_state number
+---@field on_player_dropped_item number
+---@field on_player_fast_transferred number
+---@field on_player_flushed_fluid number
+---@field on_player_gun_inventory_changed number
+---@field on_player_joined_game number
+---@field on_player_kicked number
+---@field on_player_left_game number
+---@field on_player_main_inventory_changed number
+---@field on_player_mined_entity number
+---@field on_player_mined_item number
+---@field on_player_mined_tile number
+---@field on_player_muted number
+---@field on_player_pipette number
+---@field on_player_placed_equipment number
+---@field on_player_promoted number
+---@field on_player_removed number
+---@field on_player_removed_equipment number
+---@field on_player_repaired_entity number
+---@field on_player_respawned number
+---@field on_player_rotated_entity number
+---@field on_player_selected_area number
+---@field on_player_set_quick_bar_slot number
+---@field on_player_setup_blueprint number
+---@field on_player_toggled_alt_mode number
+---@field on_player_toggled_map_editor number
+---@field on_player_trash_inventory_changed number
+---@field on_player_unbanned number
+---@field on_player_unmuted number
+---@field on_player_used_capsule number
+---@field on_player_used_spider_remote number
+---@field on_post_entity_died number
+---@field on_pre_build number
+---@field on_pre_chunk_deleted number
+---@field on_pre_entity_settings_pasted number
+---@field on_pre_ghost_deconstructed number
+---@field on_pre_permission_group_deleted number
+---@field on_pre_permission_string_imported number
+---@field on_pre_player_crafted_item number
+---@field on_pre_player_died number
+---@field on_pre_player_left_game number
+---@field on_pre_player_mined_item number
+---@field on_pre_player_removed number
+---@field on_pre_player_toggled_map_editor number
+---@field on_pre_robot_exploded_cliff number
+---@field on_pre_script_inventory_resized number
+---@field on_pre_surface_cleared number
+---@field on_pre_surface_deleted number
+---@field on_research_finished number
+---@field on_research_reversed number
+---@field on_research_started number
+---@field on_resource_depleted number
+---@field on_robot_built_entity number
+---@field on_robot_built_tile number
+---@field on_robot_exploded_cliff number
+---@field on_robot_mined number
+---@field on_robot_mined_entity number
+---@field on_robot_mined_tile number
+---@field on_robot_pre_mined number
+---@field on_rocket_launch_ordered number
+---@field on_rocket_launched number
+---@field on_runtime_mod_setting_changed number
+---@field on_script_inventory_resized number
+---@field on_script_path_request_finished number
+---@field on_script_trigger_effect number
+---@field on_sector_scanned number
+---@field on_selected_entity_changed number
+---@field on_spider_command_completed number
+---@field on_string_translated number
+---@field on_surface_cleared number
+---@field on_surface_created number
+---@field on_surface_deleted number
+---@field on_surface_imported number
+---@field on_surface_renamed number
+---@field on_technology_effects_reset number
+---@field on_tick number
+---@field on_train_changed_state number
+---@field on_train_created number
+---@field on_train_schedule_changed number
+---@field on_trigger_created_entity number
+---@field on_trigger_fired_artillery number
+---@field on_unit_added_to_group number
+---@field on_unit_group_created number
+---@field on_unit_group_finished_gathering number
+---@field on_unit_removed_from_group number
+---@field on_worker_robot_expired number
+---@field script_raised_built number
+---@field script_raised_destroy number
+---@field script_raised_revive number
+---@field script_raised_set_tiles number
+
+---@class flow_precision_index
+---@field fifty_hours number
+---@field five_seconds number
+---@field one_hour number
+---@field one_minute number
+---@field one_thousand_hours number
+---@field ten_hours number
+---@field ten_minutes number
+---@field two_hundred_fifty_hours number
+
+---@class group_state
+---@field attacking_distraction number
+---@field attacking_target number
+---@field finished number
+---@field gathering number
+---@field moving number
+---@field pathfinding number
+---@field wander_in_group number
+
+---@class gui_type
+---@field achievement number
+---@field blueprint_library number
+---@field bonus number
+---@field controller number
+---@field custom number
+---@field entity number
+---@field equipment number
+---@field item number
+---@field logistic number
+---@field none number
+---@field other_player number
+---@field permissions number
+---@field player_management number
+---@field production number
+---@field research number
+---@field server_management number
+---@field tile number
+---@field trains number
+---@field tutorials number
+
+---@class input_action
+---@field activate_copy number
+---@field activate_cut number
+---@field activate_paste number
+---@field add_permission_group number
+---@field add_train_station number
+---@field admin_action number
+---@field alt_select_area number
+---@field alt_select_blueprint_entities number
+---@field alternative_copy number
+---@field begin_mining number
+---@field begin_mining_terrain number
+---@field build number
+---@field build_rail number
+---@field build_terrain number
+---@field cancel_craft number
+---@field cancel_deconstruct number
+---@field cancel_new_blueprint number
+---@field cancel_research number
+---@field cancel_upgrade number
+---@field change_active_character_tab number
+---@field change_active_item_group_for_crafting number
+---@field change_active_item_group_for_filters number
+---@field change_active_quick_bar number
+---@field change_arithmetic_combinator_parameters number
+---@field change_decider_combinator_parameters number
+---@field change_entity_label number
+---@field change_item_description number
+---@field change_item_label number
+---@field change_multiplayer_config number
+---@field change_picking_state number
+---@field change_programmable_speaker_alert_parameters number
+---@field change_programmable_speaker_circuit_parameters number
+---@field change_programmable_speaker_parameters number
+---@field change_riding_state number
+---@field change_shooting_state number
+---@field change_train_stop_station number
+---@field change_train_wait_condition number
+---@field change_train_wait_condition_data number
+---@field clear_cursor number
+---@field connect_rolling_stock number
+---@field copy number
+---@field copy_entity_settings number
+---@field copy_opened_blueprint number
+---@field copy_opened_item number
+---@field craft number
+---@field cursor_split number
+---@field cursor_transfer number
+---@field custom_input number
+---@field cycle_blueprint_book_backwards number
+---@field cycle_blueprint_book_forwards number
+---@field deconstruct number
+---@field delete_blueprint_library number
+---@field delete_blueprint_record number
+---@field delete_custom_tag number
+---@field delete_permission_group number
+---@field destroy_item number
+---@field destroy_opened_item number
+---@field disconnect_rolling_stock number
+---@field drag_train_schedule number
+---@field drag_train_wait_condition number
+---@field drop_blueprint_record number
+---@field drop_item number
+---@field edit_blueprint_tool_preview number
+---@field edit_custom_tag number
+---@field edit_permission_group number
+---@field export_blueprint number
+---@field fast_entity_split number
+---@field fast_entity_transfer number
+---@field flush_opened_entity_fluid number
+---@field flush_opened_entity_specific_fluid number
+---@field go_to_train_station number
+---@field grab_blueprint_record number
+---@field gui_checked_state_changed number
+---@field gui_click number
+---@field gui_confirmed number
+---@field gui_elem_changed number
+---@field gui_location_changed number
+---@field gui_selected_tab_changed number
+---@field gui_selection_state_changed number
+---@field gui_switch_state_changed number
+---@field gui_text_changed number
+---@field gui_value_changed number
+---@field import_blueprint number
+---@field import_blueprint_string number
+---@field import_blueprints_filtered number
+---@field import_permissions_string number
+---@field inventory_split number
+---@field inventory_transfer number
+---@field launch_rocket number
+---@field lua_shortcut number
+---@field map_editor_action number
+---@field market_offer number
+---@field mod_settings_changed number
+---@field open_achievements_gui number
+---@field open_blueprint_library_gui number
+---@field open_blueprint_record number
+---@field open_bonus_gui number
+---@field open_character_gui number
+---@field open_current_vehicle_gui number
+---@field open_equipment number
+---@field open_gui number
+---@field open_item number
+---@field open_logistic_gui number
+---@field open_mod_item number
+---@field open_parent_of_opened_item number
+---@field open_production_gui number
+---@field open_technology_gui number
+---@field open_tips_and_tricks_gui number
+---@field open_train_gui number
+---@field open_train_station_gui number
+---@field open_trains_gui number
+---@field paste_entity_settings number
+---@field place_equipment number
+---@field quick_bar_pick_slot number
+---@field quick_bar_set_selected_page number
+---@field quick_bar_set_slot number
+---@field reassign_blueprint number
+---@field remove_cables number
+---@field remove_train_station number
+---@field reset_assembling_machine number
+---@field reset_item number
+---@field rotate_entity number
+---@field select_area number
+---@field select_blueprint_entities number
+---@field select_entity_slot number
+---@field select_item number
+---@field select_mapper_slot number
+---@field select_next_valid_gun number
+---@field select_tile_slot number
+---@field send_spidertron number
+---@field set_auto_launch_rocket number
+---@field set_autosort_inventory number
+---@field set_behavior_mode number
+---@field set_car_weapons_control number
+---@field set_circuit_condition number
+---@field set_circuit_mode_of_operation number
+---@field set_controller_logistic_trash_filter_item number
+---@field set_deconstruction_item_tile_selection_mode number
+---@field set_deconstruction_item_trees_and_rocks_only number
+---@field set_entity_color number
+---@field set_entity_energy_property number
+---@field set_entity_logistic_trash_filter_item number
+---@field set_filter number
+---@field set_flat_controller_gui number
+---@field set_heat_interface_mode number
+---@field set_heat_interface_temperature number
+---@field set_infinity_container_filter_item number
+---@field set_infinity_container_remove_unfiltered_items number
+---@field set_infinity_pipe_filter number
+---@field set_inserter_max_stack_size number
+---@field set_inventory_bar number
+---@field set_linked_container_link_i_d number
+---@field set_logistic_filter_item number
+---@field set_logistic_filter_signal number
+---@field set_player_color number
+---@field set_recipe_notifications number
+---@field set_request_from_buffers number
+---@field set_research_finished_stops_game number
+---@field set_signal number
+---@field set_splitter_priority number
+---@field set_train_stopped number
+---@field set_trains_limit number
+---@field set_vehicle_automatic_targeting_parameters number
+---@field setup_assembling_machine number
+---@field setup_blueprint number
+---@field setup_single_blueprint_record number
+---@field smart_pipette number
+---@field spawn_item number
+---@field stack_split number
+---@field stack_transfer number
+---@field start_repair number
+---@field start_research number
+---@field start_walking number
+---@field stop_building_by_moving number
+---@field switch_connect_to_logistic_network number
+---@field switch_constant_combinator_state number
+---@field switch_inserter_filter_mode_state number
+---@field switch_power_switch_state number
+---@field switch_to_rename_stop_gui number
+---@field take_equipment number
+---@field toggle_deconstruction_item_entity_filter_mode number
+---@field toggle_deconstruction_item_tile_filter_mode number
+---@field toggle_driving number
+---@field toggle_enable_vehicle_logistics_while_moving number
+---@field toggle_entity_logistic_requests number
+---@field toggle_equipment_movement_bonus number
+---@field toggle_map_editor number
+---@field toggle_personal_logistic_requests number
+---@field toggle_personal_roboport number
+---@field toggle_show_entity_info number
+---@field translate_string number
+---@field undo number
+---@field upgrade number
+---@field upgrade_opened_blueprint_by_item number
+---@field upgrade_opened_blueprint_by_record number
+---@field use_artillery_remote number
+---@field use_item number
+---@field wire_dragging number
+---@field write_to_console number
+
+---@class inventory
+---@field artillery_turret_ammo number
+---@field artillery_wagon_ammo number
+---@field assembling_machine_input number
+---@field assembling_machine_modules number
+---@field assembling_machine_output number
+---@field beacon_modules number
+---@field burnt_result number
+---@field car_ammo number
+---@field car_trunk number
+---@field cargo_wagon number
+---@field character_ammo number
+---@field character_armor number
+---@field character_corpse number
+---@field character_guns number
+---@field character_main number
+---@field character_trash number
+---@field character_vehicle number
+---@field chest number
+---@field editor_ammo number
+---@field editor_armor number
+---@field editor_guns number
+---@field editor_main number
+---@field fuel number
+---@field furnace_modules number
+---@field furnace_result number
+---@field furnace_source number
+---@field god_main number
+---@field item_main number
+---@field lab_input number
+---@field lab_modules number
+---@field mining_drill_modules number
+---@field roboport_material number
+---@field roboport_robot number
+---@field robot_cargo number
+---@field robot_repair number
+---@field rocket number
+---@field rocket_silo_result number
+---@field rocket_silo_rocket number
+---@field spider_ammo number
+---@field spider_trash number
+---@field spider_trunk number
+---@field turret_ammo number
+
+---@class logistic_member_index
+---@field character_provider number
+---@field character_requester number
+---@field character_storage number
+---@field generic_on_off_behavior number
+---@field logistic_container number
+---@field vehicle_storage number
+
+---@class logistic_mode
+---@field active_provider number
+---@field buffer number
+---@field none number
+---@field passive_provider number
+---@field requester number
+---@field storage number
+
+---@class mouse_button_type
+---@field left number
+---@field middle number
+---@field none number
+---@field right number
+
+---@class rail_connection_direction
+---@field left number
+---@field none number
+---@field right number
+---@field straight number
+
+---@class rail_direction
+---@field back number
+---@field front number
+
+---@class relative_gui_position
+---@field bottom number
+---@field left number
+---@field right number
+---@field top number
+
+---@class relative_gui_type
+---@field accumulator_gui number
+---@field achievement_gui number
+---@field additional_entity_info_gui number
+---@field admin_gui number
+---@field arithmetic_combinator_gui number
+---@field armor_gui number
+---@field assembling_machine_gui number
+---@field assembling_machine_select_recipe_gui number
+---@field beacon_gui number
+---@field blueprint_book_gui number
+---@field blueprint_library_gui number
+---@field blueprint_setup_gui number
+---@field bonus_gui number
+---@field burner_equipment_gui number
+---@field car_gui number
+---@field constant_combinator_gui number
+---@field container_gui number
+---@field controller_gui number
+---@field decider_combinator_gui number
+---@field deconstruction_item_gui number
+---@field electric_energy_interface_gui number
+---@field electric_network_gui number
+---@field entity_variations_gui number
+---@field entity_with_energy_source_gui number
+---@field equipment_grid_gui number
+---@field furnace_gui number
+---@field generic_on_off_entity_gui number
+---@field heat_interface_gui number
+---@field infinity_pipe_gui number
+---@field inserter_gui number
+---@field item_with_inventory_gui number
+---@field lab_gui number
+---@field lamp_gui number
+---@field linked_container_gui number
+---@field loader_gui number
+---@field logistic_gui number
+---@field market_gui number
+---@field mining_drill_gui number
+---@field other_player_gui number
+---@field permissions_gui number
+---@field pipe_gui number
+---@field power_switch_gui number
+---@field production_gui number
+---@field programmable_speaker_gui number
+---@field rail_chain_signal_gui number
+---@field rail_signal_gui number
+---@field reactor_gui number
+---@field rename_stop_gui number
+---@field resource_entity_gui number
+---@field roboport_gui number
+---@field rocket_silo_gui number
+---@field server_config_gui number
+---@field spider_vehicle_gui number
+---@field splitter_gui number
+---@field standalone_character_gui number
+---@field storage_tank_gui number
+---@field tile_variations_gui number
+---@field train_gui number
+---@field train_stop_gui number
+---@field trains_gui number
+---@field transport_belt_gui number
+---@field upgrade_item_gui number
+---@field wall_gui number
+
+---@class render_mode
+---@field chart number
+---@field chart_zoomed_in number
+---@field game number
+
+---@class rich_text_setting
+---@field disabled number
+---@field enabled number
+---@field highlight number
+
+---@class riding
+---@field acceleration acceleration
+---@field direction direction
+
+---@class acceleration
+---@field accelerating number
+---@field braking number
+---@field nothing number
+---@field reversing number
+
+---@class direction
+---@field left number
+---@field right number
+---@field straight number
+
+---@class shooting
+---@field not_shooting number
+---@field shooting_enemies number
+---@field shooting_selected number
+
+---@class signal_state State of an ordinary rail signal.
+---@field closed number Red.
+---@field open number Green.
+---@field reserved number Orange.
+---@field reserved_by_circuit_network number Red - From circuit network.
+
+---@class train_state
+---@field arrive_signal number Braking before a rail signal.
+---@field arrive_station number Braking before a station.
+---@field destination_full number Same as no_path but all candidate train stops are full
+---@field manual_control number Can move if user explicitly sits in and rides the train.
+---@field manual_control_stop number Switched to manual control and has to stop.
+---@field no_path number Has no path and is stopped.
+---@field no_schedule number Doesn't have anywhere to go.
+---@field on_the_path number Normal state -- following the path.
+---@field path_lost number Had path and lost it -- must stop.
+---@field wait_signal number Waiting at a signal.
+---@field wait_station number Waiting at a station.
+
+---@class transport_line
+---@field left_line number
+---@field left_split_line number
+---@field left_underground_line number
+---@field right_line number
+---@field right_split_line number
+---@field right_underground_line number
+---@field secondary_left_line number
+---@field secondary_left_split_line number
+---@field secondary_right_line number
+---@field secondary_right_split_line number
+
+---@class wire_connection_id
+---@field electric_pole number
+---@field power_switch_left number
+---@field power_switch_right number
+
+---@class wire_type
+---@field copper number
+---@field green number
+---@field red number
+
