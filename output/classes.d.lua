@@ -5,11 +5,13 @@
 ---@field path_resolution_modifier int8 The pathing resolution modifier, must be between -8 and 8.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaAccumulatorControlBehavior Control behavior for accumulators.
+---@class LuaAccumulatorControlBehavior : LuaControlBehavior Control behavior for accumulators.
 ---@field output_signal SignalID
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaAchievementPrototype Prototype of a achievement.
 ---@field name string Name of this prototype.
@@ -20,6 +22,7 @@
 ---@field hidden boolean
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaAmmoCategoryPrototype Prototype of a ammo category.
 ---@field name string Name of this prototype.
@@ -29,11 +32,13 @@
 ---@field bonus_gui_order string
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaArithmeticCombinatorControlBehavior Control behavior for arithmetic combinators.
+---@class LuaArithmeticCombinatorControlBehavior : LuaCombinatorControlBehavior Control behavior for arithmetic combinators.
 ---@field parameters ArithmeticCombinatorParameters The arithmetic combinator parameters.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaAutoplaceControlPrototype Prototype of an autoplace control.
 ---@field name string Name of this prototype.
@@ -45,12 +50,34 @@
 ---@field category string Category name of this prototype.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaBootstrap Entry point for registering event handlers. It is accessible through the global object named `script`.
 ---@field mod_name string The name of the mod from the environment this is used in.
 ---@field level [object Object] Information about the currently running scenario/campaign/tutorial.
 ---@field active_mods [object Object] A dictionary listing the names of all currently active mods and mapping them to their version.
 ---@field object_name string This object's name.
+---@field on_init fun(f: [object Object]) Register a callback to be run on mod initialization. This is only called when a new save game is created or when a save file is loaded that previously didn't contain the mod. During it, the mod gets the chance to set up initial values that it will use for its lifetime. It has full access to [LuaGameScript](LuaGameScript) and the `global` table and can change anything about them that it deems appropriate. No other events will be raised for the mod until it has finished this step.
+---@field on_load fun(f: [object Object]) Register a function to be run on save load. This is only called for mods that have been part of the save previously, or for players connecting to a running multiplayer session. It gives the mod the opportunity to do some very specific actions, should it need to. Doing anything other than these three will lead to desyncs, which breaks multiplayer and replay functionality. Access to [LuaGameScript](LuaGameScript) and [LuaRendering](LuaRendering) is not available. The `global` table can be accessed and is safe to read from, but not write to. The only legitimate uses of this event are these three: - Re-setup [metatables](https://www.lua.org/pil/13.html) as they are not persisted through save-load. - Re-setup conditional event handlers. - Create local references to data stored in the [global](Global.html) table. For all other purposes, [LuaBootstrap::on_init](LuaBootstrap::on_init), [LuaBootstrap::on_configuration_changed](LuaBootstrap::on_configuration_changed) or migration scripts should be used instead.
+---@field on_configuration_changed fun(f: [object Object]) Register a function to be run when mod configuration changes. This is called when the game version or any mod version changes; when any mod is added or removed; or when prototypes or startup mod settings have changed. It allows the mod to make any changes it deems appropriate to both the data structures in its `global` table or to the game state through [LuaGameScript](LuaGameScript).
+---@field on_event fun(event: [object Object], f: [object Object], filters: [object Object]) Register a handler to run on the specified event(s). Each mod can only register once for every event, as any additional registration will overwrite the previous one. This holds true even if different filters are used for subsequent registrations.
+---@field on_nth_tick fun(f: [object Object], tick: [object Object]) Register a handler to run every nth-tick(s). When the game is on tick 0 it will trigger all registered handlers.
+---@field register_on_entity_destroyed fun(entity: LuaEntity): uint64 Registers an entity so that after it's destroyed, [on_entity_destroyed](on_entity_destroyed) is called. Once an entity is registered, it stays registered until it is actually destroyed, even through save/load cycles. The registration is global across all mods, meaning once one mod registers an entity, all mods listening to [on_entity_destroyed](on_entity_destroyed) will receive the event when it is destroyed. Registering the same entity multiple times will still only fire the destruction event once, and will return the same registration number.
+---@field generate_event_name fun(): uint Generate a new, unique event ID that can be used to raise custom events with [LuaBootstrap::raise_event](LuaBootstrap::raise_event).
+---@field get_event_handler fun(event: uint): [object Object] Find the event handler for an event.
+---@field get_event_order fun(): string Gets the mod event order as a string.
+---@field set_event_filter fun(event: uint, filters: [object Object]) Sets the filters for the given event. The filters are only retained when set after the actual event registration, because registering for an event with different or no filters will overwrite previously set ones.
+---@field get_event_filter fun(event: uint): [object Object] Gets the filters for the given event.
+---@field raise_event fun(data: table, event: uint) Raise an event. Only events generated with [LuaBootstrap::generate_event_name](LuaBootstrap::generate_event_name) and the following can be raised: - [on_console_chat](on_console_chat) - [on_player_crafted_item](on_player_crafted_item) - [on_player_fast_transferred](on_player_fast_transferred) - [on_biter_base_built](on_biter_base_built) - [on_market_item_purchased](on_market_item_purchased) - [script_raised_built](script_raised_built) - [script_raised_destroy](script_raised_destroy) - [script_raised_revive](script_raised_revive) - [script_raised_set_tiles](script_raised_set_tiles)
+---@field raise_console_chat fun(message: string, player_index: uint) Raises [on_console_chat](on_console_chat) with the given parameters.
+---@field raise_player_crafted_item fun(item_stack: LuaItemStack, player_index: uint, recipe: LuaRecipe) Raises [on_player_crafted_item](on_player_crafted_item) with the given parameters.
+---@field raise_player_fast_transferred fun(entity: LuaEntity, from_player: boolean, player_index: uint) Raises [on_player_fast_transferred](on_player_fast_transferred) with the given parameters.
+---@field raise_biter_base_built fun(entity: LuaEntity) Raises [on_biter_base_built](on_biter_base_built) with the given parameters.
+---@field raise_market_item_purchased fun(count: uint, market: LuaEntity, offer_index: uint, player_index: uint) Raises [on_market_item_purchased](on_market_item_purchased) with the given parameters.
+---@field raise_script_built fun(entity: LuaEntity) Raises [script_raised_built](script_raised_built) with the given parameters.
+---@field raise_script_destroy fun(entity: LuaEntity) Raises [script_raised_destroy](script_raised_destroy) with the given parameters.
+---@field raise_script_revive fun(entity: LuaEntity, tags: Tags) Raises [script_raised_revive](script_raised_revive) with the given parameters.
+---@field raise_script_set_tiles fun(surface_index: uint, tiles: [object Object]) Raises [script_raised_set_tiles](script_raised_set_tiles) with the given parameters.
 
 ---@class LuaBurner A reference to the burner energy source owned by a specific [LuaEntity](LuaEntity) or [LuaEquipment](LuaEquipment).
 ---@field owner [object Object] The owner of this burner energy source
@@ -63,6 +90,7 @@
 ---@field fuel_categories [object Object] The fuel categories this burner uses.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaBurnerPrototype Prototype of a burner energy source.
 ---@field emissions double
@@ -76,10 +104,12 @@
 ---@field fuel_categories [object Object]
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaChunkIterator A chunk iterator can be used for iterating chunks coordinates of a surface. The returned type is a [ChunkPositionAndArea](ChunkPositionAndArea) containing the chunk coordinates and its area.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaCircuitNetwork A circuit network associated with a given entity, connector, and wire type.
 ---@field entity LuaEntity The entity this circuit network reference is associated with
@@ -90,25 +120,34 @@
 ---@field connected_circuit_count uint The number of circuits connected to this network.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_signal fun(signal: SignalID): int
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaCombinatorControlBehavior
+---@class LuaCombinatorControlBehavior : LuaControlBehavior
 ---@field signals_last_tick [object Object] The circuit network signals sent by this combinator last tick.
+---@field get_signal_last_tick fun(signal: SignalID): int Gets the value of a specific signal sent by this combinator behavior last tick or nil if the signal didn't exist.
 
 ---@class LuaCommandProcessor Allows for the registration of custom console commands. Similarly to [event subscriptions](LuaBootstrap::on_event), these don't persist through a save-and-load cycle.
 ---@field commands [object Object] Lists the custom commands registered by scripts through `LuaCommandProcessor`.
 ---@field game_commands [object Object] Lists the built-in commands of the core game. The [wiki](https://wiki.factorio.com/Console) has an overview of these.
 ---@field object_name string This object's name.
+---@field add_command fun(function: [object Object], help: LocalisedString, name: string) Add a custom console command.
+---@field remove_command fun(name: string): boolean Remove a custom console command.
 
----@class LuaConstantCombinatorControlBehavior Control behavior for constant combinators.
+---@class LuaConstantCombinatorControlBehavior : LuaControlBehavior Control behavior for constant combinators.
 ---@field parameters [object Object] The constant combinator parameters
 ---@field enabled boolean Turns this constant combinator on and off.
 ---@field signals_count uint The number of signals this constant combinator supports
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field set_signal fun(index: uint, signal: Signal) Sets the signal at the given index
+---@field get_signal fun(index: uint): Signal Gets the signal at the given index. Returned [Signal](Signal) will not contain signal if none is set for the index.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaContainerControlBehavior Control behavior for container entities.
+---@class LuaContainerControlBehavior : LuaControlBehavior Control behavior for container entities.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaControl This is an abstract base class containing the common functionality between [LuaPlayer](LuaPlayer) and entities (see [LuaEntity](LuaEntity)). When accessing player-related functions through a [LuaEntity](LuaEntity), it must refer to a character entity.
 ---@field surface LuaSurface The surface this entity is currently on.
@@ -157,10 +196,44 @@
 ---@field in_combat boolean If this character entity is in combat.
 ---@field character_running_speed double Gets the current movement speed of this character, including effects from exoskeletons, tiles, stickers and shooting.
 ---@field character_mining_progress double Gets the current mining progress between 0 and 1 of this character, or 0 if they aren't mining.
+---@field get_inventory fun(inventory: defines.inventory): LuaInventory Get an inventory belonging to this entity. This can be either the "main" inventory or some auxiliary one, like the module slots or logistic trash slots.
+---@field get_main_inventory fun(): LuaInventory Gets the main inventory for this character or player if this is a character or player.
+---@field can_insert fun(items: ItemStackIdentification): boolean Can at least some items be inserted?
+---@field insert fun(items: ItemStackIdentification): uint Insert items into this entity. This works the same way as inserters or shift-clicking: the "best" inventory is chosen automatically.
+---@field set_gui_arrow fun(type: string) Create an arrow which points at this entity. This is used in the tutorial. For examples, see `control.lua` in the campaign missions.
+---@field clear_gui_arrow fun() Removes the arrow created by `set_gui_arrow`.
+---@field get_item_count fun(item: string): uint Get the number of all or some items in this entity.
+---@field has_items_inside fun(): boolean Does this entity have any item inside it?
+---@field can_reach_entity fun(entity: LuaEntity): boolean Can a given entity be opened or accessed?
+---@field clear_items_inside fun() Remove all items from this entity.
+---@field remove_item fun(items: ItemStackIdentification): uint Remove items from this entity.
+---@field teleport fun(position: MapPosition, surface: SurfaceIdentification): boolean Teleport the entity to a given position, possibly on another surface.
+---@field update_selected_entity fun(position: MapPosition) Select an entity, as if by hovering the mouse above it.
+---@field clear_selected_entity fun() Unselect any selected entity.
+---@field disable_flashlight fun() Disable the flashlight.
+---@field enable_flashlight fun() Enable the flashlight.
+---@field is_flashlight_enabled fun() Is the flashlight enabled.
+---@field get_craftable_count fun(recipe: [object Object]): uint Gets the count of the given recipe that can be crafted.
+---@field begin_crafting fun(count: uint, recipe: [object Object], silent: boolean): uint Begins crafting the given count of the given recipe.
+---@field cancel_crafting fun(count: uint, index: uint) Cancels crafting the given count of the given crafting queue index.
+---@field mine_entity fun(entity: LuaEntity, force: boolean): boolean Mines the given entity as if this player (or character) mined it.
+---@field mine_tile fun(tile: LuaTile): boolean Mines the given tile as if this player (or character) mined it.
+---@field is_player fun(): boolean When `true` control adapter is a LuaPlayer object, `false` for entities including characters with players
+---@field open_technology_gui fun(technology: TechnologyIdentification) Open the technology GUI and select a given technology.
+---@field set_personal_logistic_slot fun(slot_index: uint, value: LogisticParameters): boolean Sets a personal logistic request and auto-trash slot to the given value.
+---@field set_vehicle_logistic_slot fun(slot_index: uint, value: LogisticParameters): boolean Sets a vehicle logistic request and auto-trash slot to the given value.
+---@field get_personal_logistic_slot fun(slot_index: uint): LogisticParameters Gets the parameters of a personal logistic request and auto-trash slot.
+---@field get_vehicle_logistic_slot fun(slot_index: uint): LogisticParameters Gets the parameters of a vehicle logistic request and auto-trash slot.
+---@field clear_personal_logistic_slot fun(slot_index: uint)
+---@field clear_vehicle_logistic_slot fun(slot_index: uint)
+---@field is_cursor_blueprint fun(): boolean Returns whether the player is holding a blueprint. This takes both blueprint items as well as blueprint records from the blueprint library into account.
+---@field get_blueprint_entities fun(): [object Object] Gets the entities that are part of the currently selected blueprint, regardless of it being in a blueprint book or picked from the blueprint library. Returns `nil` if there is no currently selected blueprint.
+---@field is_cursor_empty fun(): boolean Returns whether the player is holding something in the cursor. It takes into account items from the blueprint library, as well as items and ghost cursor.
 
 ---@class LuaControlBehavior The control behavior for an entity. Inserters have logistic network and circuit network behavior logic, lamps have circuit logic and so on. This is an abstract base class that concrete control behaviors inherit.
 ---@field type defines.control_behavior.type The concrete type of this control behavior.
 ---@field entity LuaEntity The entity this control behavior belongs to.
+---@field get_circuit_network fun(circuit_connector: defines.circuit_connector_id, wire: defines.wire_type): LuaCircuitNetwork
 
 ---@class LuaCustomChartTag A custom tag that shows on the map view.
 ---@field icon SignalID This tag's icon, if it has one. Writing `nil` removes it.
@@ -172,6 +245,8 @@
 ---@field surface LuaSurface The surface this tag belongs to.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field destroy fun() Destroys this tag.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaCustomInputPrototype Prototype of a custom input.
 ---@field name string Name of this prototype.
@@ -190,10 +265,12 @@
 ---@field item_to_spawn LuaItemPrototype The item that gets spawned when this custom input is fired or `nil`.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaCustomTable Lazily evaluated table. For performance reasons, we sometimes return a custom table-like type instead of a native Lua table. This custom type lazily constructs the necessary Lua wrappers of the corresponding C++ objects, therefore preventing their unnecessary construction in some cases. There are some notable consequences to the usage of a custom table type rather than the native Lua table type: Iterating a custom table is only possible using the `pairs` Lua function; `ipairs` won't work. Another key difference is that custom tables cannot be serialised into a game save file -- if saving the game would require serialisation of a custom table, an error will be displayed and the game will not be saved.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaDamagePrototype Prototype of a damage.
 ---@field name string Name of this prototype.
@@ -203,11 +280,13 @@
 ---@field hidden boolean Whether this damage type is hidden from entity tooltips.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaDeciderCombinatorControlBehavior Control behavior for decider combinators.
+---@class LuaDeciderCombinatorControlBehavior : LuaCombinatorControlBehavior Control behavior for decider combinators.
 ---@field parameters DeciderCombinatorParameters The decider combinator parameters
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaDecorativePrototype Prototype of an optimized decorative.
 ---@field name string Name of this prototype.
@@ -220,6 +299,7 @@
 ---@field autoplace_specification AutoplaceSpecification Autoplace specification for this decorative prototype. `nil` if none.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaElectricEnergySourcePrototype Prototype of an electric energy source.
 ---@field buffer_capacity double
@@ -232,8 +312,9 @@
 ---@field render_no_power_icon boolean
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaEntity The primary interface for interacting with entities through the Lua API. Entities are everything that exists on the map except for tiles (see [LuaTile](LuaTile)). Most functions on LuaEntity also work when the entity is contained in a ghost.
+---@class LuaEntity : LuaControl The primary interface for interacting with entities through the Lua API. Entities are everything that exists on the map except for tiles (see [LuaTile](LuaTile)). Most functions on LuaEntity also work when the entity is contained in a ghost.
 ---@field name string Name of the entity prototype. E.g. "inserter" or "filter-inserter".
 ---@field ghost_name string Name of the entity or tile contained in this ghost
 ---@field localised_name LocalisedString Localised name of the entity.
@@ -404,6 +485,115 @@
 ---@field linked_belt_neighbour LuaEntity Neighbour to which this linked belt is connected to. Returns nil if not connected.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_output_inventory fun(): LuaInventory Gets the entities output inventory if it has one.
+---@field get_module_inventory fun(): LuaInventory
+---@field get_fuel_inventory fun(): LuaInventory The fuel inventory for this entity or `nil` if this entity doesn't have a fuel inventory.
+---@field get_burnt_result_inventory fun(): LuaInventory The burnt result inventory for this entity or `nil` if this entity doesn't have a burnt result inventory.
+---@field damage fun(damage: float, dealer: LuaEntity, force: ForceIdentification, type: string): float Damages the entity.
+---@field can_be_destroyed fun(): boolean Checks if the entity can be destroyed
+---@field destroy fun(do_cliff_correction: boolean, raise_destroy: boolean): boolean Destroys the entity.
+---@field set_command fun(command: Command) Give the entity a command.
+---@field set_distraction_command fun(command: Command) Give the entity a distraction command.
+---@field has_command fun(): boolean Has this unit been assigned a command?
+---@field die fun(cause: LuaEntity, force: ForceIdentification): boolean Immediately kills the entity. Does nothing if the entity doesn't have health. Unlike [LuaEntity::destroy](LuaEntity::destroy), `die` will trigger the [on_entity_died](on_entity_died) event and the entity will produce a corpse and drop loot if it has any.
+---@field has_flag fun(flag: string): boolean Test whether this entity's prototype has a certain flag set.
+---@field ghost_has_flag fun(flag: string): boolean Same as [LuaEntity::has_flag](LuaEntity::has_flag), but targets the inner entity on a entity ghost.
+---@field add_market_item fun(offer: Offer) Offer a thing on the market.
+---@field remove_market_item fun(offer: uint): boolean Remove an offer from a market.
+---@field get_market_items fun(): [object Object] Get all offers in a market as an array.
+---@field clear_market_items fun() Removes all offers from a market.
+---@field connect_neighbour fun(target: [object Object]): boolean Connect two devices with a circuit wire or copper cable. Depending on which type of connection should be made, there are different procedures: - To connect two electric poles, `target` must be a [LuaEntity](LuaEntity) that specifies another electric pole. This will connect them with copper cable. - To connect two devices with circuit wire, `target` must be a table of type [WireConnectionDefinition](WireConnectionDefinition).
+---@field disconnect_neighbour fun(target: [object Object]) Disconnect circuit wires or copper cables between devices. Depending on which type of connection should be cut, there are different procedures: - To remove all copper cables, leave the `target` parameter blank: `pole.disconnect_neighbour()`. - To remove all wires of a specific color, set `target` to [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green). - To remove a specific copper cable between two electric poles, `target` must be a [LuaEntity](LuaEntity) that specifies the other pole: `pole1.disconnect_neighbour(pole2)`. - To remove a specific circuit wire, `target` must be a table of type [WireConnectionDefinition](WireConnectionDefinition).
+---@field order_deconstruction fun(force: ForceIdentification, player: PlayerIdentification): boolean Sets the entity to be deconstructed by construction robots.
+---@field cancel_deconstruction fun(force: ForceIdentification, player: PlayerIdentification) Cancels deconstruction if it is scheduled, does nothing otherwise.
+---@field to_be_deconstructed fun(): boolean Is this entity marked for deconstruction?
+---@field order_upgrade fun(direction: defines.direction, force: ForceIdentification, player: PlayerIdentification, target: EntityPrototypeIdentification): boolean Sets the entity to be upgraded by construction robots.
+---@field cancel_upgrade fun(force: ForceIdentification, player: PlayerIdentification): boolean Cancels upgrade if it is scheduled, does nothing otherwise.
+---@field to_be_upgraded fun(): boolean Is this entity marked for upgrade?
+---@field get_request_slot fun(slot: uint): SimpleItemStack Get a logistic requester slot.
+---@field set_request_slot fun(request: ItemStackIdentification, slot: uint): boolean Set a logistic requester slot.
+---@field clear_request_slot fun(slot: uint) Clear a logistic requester slot.
+---@field is_crafting fun() Returns whether a craft is currently in process. It does not indicate whether progress is currently being made, but whether any crafting action has made progress in this machine.
+---@field is_opened fun(): boolean
+---@field is_opening fun(): boolean
+---@field is_closed fun(): boolean
+---@field is_closing fun(): boolean
+---@field request_to_open fun(extra_time: uint, force: ForceIdentification)
+---@field request_to_close fun(force: ForceIdentification)
+---@field get_transport_line fun(index: uint): LuaTransportLine Get a transport line of a belt or belt connectable entity.
+---@field get_max_transport_line_index fun(): uint Get the maximum transport line index of a belt or belt connectable entity.
+---@field launch_rocket fun(): boolean
+---@field revive fun(raise_revive: boolean, return_item_request_proxy: boolean): [object Object] Revive a ghost. I.e. turn it from a ghost to a real entity or tile.
+---@field silent_revive fun(raise_revive: boolean, return_item_request_proxy: boolean): [object Object] Revives a ghost silently.
+---@field get_connected_rail fun(rail_connection_direction: defines.rail_connection_direction, rail_direction: defines.rail_direction): LuaEntity
+---@field get_connected_rails fun(): [object Object] Get the rails that this signal is connected to.
+---@field get_rail_segment_entity fun(direction: defines.rail_direction, in_else_out: boolean): LuaEntity Get the rail signal or train stop at the start/end of the rail segment this rail is in, or `nil` if the rail segment doesn't start/end with a signal nor a train stop.
+---@field get_rail_segment_end fun(direction: defines.rail_direction): LuaEntity Get the rail at the end of the rail segment this rail is in.
+---@field get_rail_segment_length fun(): double Get the length of the rail segment this rail is in.
+---@field get_rail_segment_overlaps fun(): [object Object] Get a rail from each rail segment that overlaps with this rail's rail segment.
+---@field get_filter fun(slot_index: uint): string Get the filter for a slot in an inserter, loader, or logistic storage container.
+---@field set_filter fun(item: string, slot_index: uint) Set the filter for a slot in an inserter, loader, or logistic storage container.
+---@field get_infinity_container_filter fun(index: uint): InfinityInventoryFilter Gets the filter for this infinity container at the given index or `nil` if the filter index doesn't exist or is empty.
+---@field set_infinity_container_filter fun(filter: InfinityInventoryFilter, index: uint) Sets the filter for this infinity container at the given index.
+---@field get_infinity_pipe_filter fun(): InfinityPipeFilter Gets the filter for this infinity pipe or `nil` if the filter is empty.
+---@field set_infinity_pipe_filter fun(filter: InfinityPipeFilter) Sets the filter for this infinity pipe.
+---@field get_heat_setting fun(): HeatSetting Gets the heat setting for this heat interface.
+---@field set_heat_setting fun(filter: HeatSetting) Sets the heat setting for this heat interface.
+---@field get_control_behavior fun(): LuaControlBehavior Gets the control behavior of the entity (if any).
+---@field get_or_create_control_behavior fun(): LuaControlBehavior Gets (and or creates if needed) the control behavior of the entity.
+---@field get_circuit_network fun(circuit_connector: defines.circuit_connector_id, wire: defines.wire_type): LuaCircuitNetwork
+---@field get_merged_signal fun(circuit_connector: defines.circuit_connector_id, signal: SignalID): int Read a single signal from the combined circuit networks.
+---@field get_merged_signals fun(circuit_connector: defines.circuit_connector_id): [object Object] The merged circuit network signals or `nil` if there are no signals.
+---@field supports_backer_name fun(): boolean Whether this entity supports a backer name.
+---@field copy_settings fun(by_player: PlayerIdentification, entity: LuaEntity): [object Object] Copies settings from the given entity onto this entity.
+---@field get_logistic_point fun(index: defines.logistic_member_index): [object Object] Gets all the `LuaLogisticPoint`s that this entity owns. Optionally returns only the point specified by the index parameter.
+---@field play_note fun(instrument: uint, note: uint): boolean Plays a note with the given instrument and note.
+---@field connect_rolling_stock fun(direction: defines.rail_direction): boolean Connects the rolling stock in the given direction.
+---@field disconnect_rolling_stock fun(direction: defines.rail_direction): boolean Tries to disconnect this rolling stock in the given direction.
+---@field update_connections fun() Reconnect loader, beacon, cliff and mining drill connections to entities that might have been teleported out or in by the script. The game doesn't do this automatically as we don't want to loose performance by checking this in normal games.
+---@field get_recipe fun(): LuaRecipe Current recipe being assembled by this machine or `nil` if no recipe is set.
+---@field set_recipe fun(recipe: [object Object]): [object Object] Sets the current recipe in this assembly machine.
+---@field rotate fun(by_player: PlayerIdentification, enable_looted: boolean, force: [object Object], reverse: boolean, spill_items: boolean): boolean Rotates this entity as if the player rotated it.
+---@field get_driver fun(): [object Object] Gets the driver of this vehicle if any.
+---@field set_driver fun(driver: [object Object]) Sets the driver of this vehicle.
+---@field get_passenger fun(): [object Object] Gets the passenger of this car or spidertron if any.
+---@field set_passenger fun(passenger: [object Object]) Sets the passenger of this car or spidertron.
+---@field is_connected_to_electric_network fun(): boolean Returns true if this entity is connected to an electric network.
+---@field get_train_stop_trains fun(): [object Object] The trains scheduled to stop at this train stop.
+---@field get_stopped_train fun(): LuaTrain The train currently stopped at this train stop or `nil` if none.
+---@field clone fun(create_build_effect_smoke: boolean, force: ForceIdentification, position: MapPosition, surface: LuaSurface): LuaEntity Clones this entity.
+---@field get_fluid_count fun(fluid: string): double Get the amount of all or some fluid in this entity.
+---@field get_fluid_contents fun(): [object Object] Get amounts of all fluids in this entity.
+---@field remove_fluid fun(amount: double, maximum_temperature: double, minimum_temperature: double, name: string, temperature: double): double Remove fluid from this entity.
+---@field insert_fluid fun(fluid: Fluid): double Insert fluid into this entity. Fluidbox is chosen automatically.
+---@field clear_fluid_inside fun() Remove all fluids from this entity.
+---@field get_beam_source fun(): BeamTarget Get the source of this beam.
+---@field set_beam_source fun(source: [object Object]) Set the source of this beam.
+---@field get_beam_target fun(): BeamTarget Get the target of this beam.
+---@field set_beam_target fun(target: [object Object]) Set the target of this beam.
+---@field get_radius fun(): double The radius of this entity.
+---@field get_health_ratio fun(): float The health ratio of this entity between 1 and 0 (for full health and no health respectively).
+---@field create_build_effect_smoke fun() Creates the same smoke that is created when you place a building by hand. You can play the building sound to go with it by using [LuaSurface::play_sound](LuaSurface::play_sound), eg: entity.surface.play_sound{path="entity-build/"..entity.prototype.name, position=entity.position}
+---@field release_from_spawner fun() Release the unit from the spawner which spawned it. This allows the spawner to continue spawning additional units.
+---@field toggle_equipment_movement_bonus fun() Toggle this entity's equipment movement bonus. Does nothing if the entity does not have an equipment grid.
+---@field can_shoot fun(position: MapPosition, target: LuaEntity): boolean If this character can shoot the given entity or position.
+---@field start_fading_out fun() Only works if the entity is a speech-bubble, with an "effect" defined in its wrapper_flow_style. Starts animating the opacity of the speech bubble towards zero, and destroys the entity when it hits zero.
+---@field get_upgrade_target fun(): LuaEntityPrototype Returns the new entity prototype.
+---@field get_upgrade_direction fun(): defines.direction Returns the new entity direction after upgrading.
+---@field get_damage_to_be_taken fun(): float Returns the amount of damage to be taken by this entity.
+---@field deplete fun() Depletes and destroys this resource entity.
+---@field mine fun(force: boolean, ignore_minable: boolean, inventory: LuaInventory, raise_destroyed: boolean): boolean Mines this entity.
+---@field spawn_decorations fun() Triggers spawn_decoration actions defined in the entity prototype or does nothing if entity is not "turret" or "unit-spawner".
+---@field can_wires_reach fun(entity: LuaEntity): boolean Can wires reach between these entities.
+---@field get_connected_rolling_stock fun(direction: defines.rail_direction): LuaEntity Gets rolling stock connected to the given end of this stock
+---@field is_registered_for_construction fun(): boolean Is this entity or tile ghost or item request proxy registered for construction? If false, it means a construction robot has been dispatched to build the entity, or it is not an entity that can be constructed.
+---@field is_registered_for_deconstruction fun(force: ForceIdentification): boolean Is this entity registered for deconstruction with this force? If false, it means a construction robot has been dispatched to deconstruct it, or it is not marked for deconstruction. This is worst-case O(N) complexity where N is the current number of things in the deconstruct queue.
+---@field is_registered_for_upgrade fun(): boolean Is this entity registered for upgrade? If false, it means a construction robot has been dispatched to upgrade it, or it is not marked for upgrade. This is worst-case O(N) complexity where N is the current number of things in the upgrade queue.
+---@field is_registered_for_repair fun(): boolean Is this entity registered for repair? If false, it means a construction robot has been dispatched to upgrade it, or it is not damaged. This is worst-case O(N) complexity where N is the current number of things in the repair queue.
+---@field add_autopilot_destination fun(position: MapPosition) Adds the given position to this spidertron's autopilot's queue of destinations.
+---@field connect_linked_belts fun(neighbour: LuaEntity) Connects current linked belt with another one. Neighbours have to be of different type. If given linked belt is connected to something else it will be disconnected first. If provided neighbour is connected to something else it will also be disconnected first. Automatically updates neighbour to be connected back to this one.
+---@field disconnect_linked_belts fun() Disconnects linked belt from its neighbour.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEntityPrototype Prototype of an entity.
 ---@field type string Type of this prototype.
@@ -612,6 +802,9 @@
 ---@field character_corpse LuaEntityPrototype
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field has_flag fun(flag: string): boolean Test whether this entity prototype has a certain flag set.
+---@field get_inventory_size fun(index: defines.inventory): uint Gets the base size of the given inventory on this entity or `nil` if the given inventory doesn't exist.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipment An item in a [LuaEquipmentGrid](LuaEquipmentGrid), for example one's power armor.
 ---@field name string Name of this equipment.
@@ -629,6 +822,7 @@
 ---@field burner LuaBurner The burner energy source for this equipment or `nil` if there isn't one.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipmentCategoryPrototype Prototype of an equipment category.
 ---@field name string Name of this prototype.
@@ -637,6 +831,7 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipmentGrid An equipment grid is for example the inside of a power armor.
 ---@field prototype LuaEquipmentGridPrototype
@@ -652,6 +847,15 @@
 ---@field inhibit_movement_bonus boolean True if this movement bonus equipment is turned off, otherwise false.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field take fun(by_player: PlayerIdentification, equipment: LuaEquipment, position: Position): SimpleItemStack Remove an equipment from the grid.
+---@field take_all fun(by_player: PlayerIdentification): [object Object] Remove all equipment from the grid.
+---@field clear fun(by_player: PlayerIdentification) Clear all equipment from the grid, removing it without actually returning it.
+---@field put fun(by_player: PlayerIdentification, name: string, position: Position): LuaEquipment Insert an equipment into the grid.
+---@field can_move fun(equipment: LuaEquipment, position: Position): boolean Check whether moving an equipment would succeed.
+---@field move fun(equipment: LuaEquipment, position: Position): boolean Move an equipment within this grid.
+---@field get fun(position: Position): LuaEquipment Find equipment in the Equipment Grid based off a position.
+---@field get_contents fun(): [object Object] Get counts of all equipment in this grid.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipmentGridPrototype Prototype of an equipment grid.
 ---@field name string Name of this prototype.
@@ -664,6 +868,7 @@
 ---@field locked boolean If the player can move equipment into or out of this grid.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipmentPrototype Prototype of a modular equipment.
 ---@field name string Name of this prototype.
@@ -688,6 +893,7 @@
 ---@field automatic boolean Is this active defense equipment automatic. Returns false if not active defense equipment.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFlowStatistics Encapsulates statistic data for different parts of the game. In the context of flow statistics, `input` and `output` describe on which side of the associated GUI the values are shown. Input values are shown on the left side, output values on the right side. Examples: - The item production GUI shows "consumption" on the right, thus `output` describes the item consumption numbers. The same goes for fluid consumption. - The kills gui shows "losses" on the right, so `output` describes how many of the force's entities were killed by enemies. - The electric network GUI shows "power consumption" on the left side, so in this case `input` describes the power consumption numbers.
 ---@field input_counts [object Object] List of input counts indexed by prototype name. Represents the data that is shown on the left side of the GUI for the given statistics.
@@ -695,11 +901,28 @@
 ---@field force LuaForce The force these statistics belong to or `nil` for pollution statistics.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_input_count fun(name: string): [object Object] Gets the total input count for a given prototype.
+---@field set_input_count fun(count: [object Object], name: string) Sets the total input count for a given prototype.
+---@field get_output_count fun(name: string): [object Object] Gets the total output count for a given prototype.
+---@field set_output_count fun(count: [object Object], name: string) Sets the total output count for a given prototype.
+---@field get_flow_count fun(count: boolean, input: boolean, name: string, precision_index: defines.flow_precision_index): double Gets the flow count value for the given time frame.
+---@field on_flow fun(count: float, name: string) Adds a value to this flow statistics.
+---@field clear fun() Reset all the statistics data to 0.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFluidBox An array of fluid boxes of an entity. Entities may contain more than one fluid box, and some can change the number of fluid boxes -- for instance, an assembling machine will change its number of fluid boxes depending on its active recipe. See [Fluid](Fluid) Do note that reading from a [LuaFluidBox](LuaFluidBox) creates a new table and writing will copy the given fields from the table into the engine's own fluid box structure. Therefore, the correct way to update a fluidbox of an entity is to read it first, modify the table, then write the modified table back. Directly accessing the returned table's attributes won't have the desired effect.
 ---@field owner LuaEntity The entity that owns this fluidbox.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_prototype fun(index: uint): LuaFluidBoxPrototype The prototype of this fluidbox index.
+---@field get_capacity fun(index: uint): double The capacity of the given fluidbox index.
+---@field get_connections fun(index: uint): [object Object] The fluidbox connections for the given fluidbox index.
+---@field get_filter fun(index: uint): FluidBoxFilter Get a fluid box filter
+---@field set_filter fun(filter: FluidBoxFilterSpec, index: uint): boolean Set a fluid box filter.
+---@field get_flow fun(index: uint): double Flow through the fluidbox in the last tick. It is the larger of in-flow and out-flow.
+---@field get_locked_fluid fun(index: uint): string Returns the fluid the fluidbox is locked onto Returns 'nil' for no lock
+---@field flush fun(fluid: FluidIdentification, index: uint): [object Object] Flushes all fluid from this fluidbox and its fluid system.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFluidBoxPrototype A prototype of a fluidbox owned by some [LuaEntityPrototype](LuaEntityPrototype).
 ---@field entity LuaEntityPrototype The entity that this belongs to.
@@ -717,6 +940,7 @@
 ---@field render_layer string The render layer.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFluidEnergySourcePrototype Prototype of a fluid energy source.
 ---@field emissions double
@@ -732,6 +956,7 @@
 ---@field fluid_box LuaFluidBoxPrototype The fluid box for this energy source.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFluidPrototype Prototype of a fluid.
 ---@field name string Name of this prototype.
@@ -751,6 +976,7 @@
 ---@field hidden boolean Whether this fluid is hidden from the fluid and signal selectors.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFontPrototype Prototype of a font.
 ---@field name string Name of this prototype.
@@ -762,6 +988,7 @@
 ---@field border_color Color The border color or `nil` if not set.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaForce `LuaForce` encapsulates data local to each "force" or "faction" of the game. Default forces are player, enemy and neutral. Players and mods can create additional forces (up to 64 total).
 ---@field name string Name of the force.
@@ -826,6 +1053,60 @@
 ---@field research_enabled boolean Whether research is enabled for this force, see [LuaForce::enable_research](LuaForce::enable_research) and [LuaForce::disable_research](LuaForce::disable_research)
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_entity_count fun(name: string): uint Count entities of given type.
+---@field disable_research fun() Disable research for this force.
+---@field enable_research fun() Enable research for this force.
+---@field disable_all_prototypes fun() Disable all recipes and technologies. Only recipes and technologies enabled explicitly will be useable from this point.
+---@field enable_all_prototypes fun() Enables all recipes and technologies. The opposite of [LuaForce::disable_all_prototypes](LuaForce::disable_all_prototypes)
+---@field reset_recipes fun() Load the original version of all recipes from the prototypes.
+---@field enable_all_recipes fun() Unlock all recipes.
+---@field enable_all_technologies fun() Unlock all technologies.
+---@field research_all_technologies fun(include_disabled_prototypes: boolean) Research all technologies.
+---@field reset_technologies fun() Load the original versions of technologies from prototypes. Preserves research state of technologies.
+---@field reset fun() Reset everything. All technologies are set to not researched, all modifiers are set to default values.
+---@field reset_technology_effects fun() Reapplies all possible research effects, including unlocked recipes. Any custom changes are lost. Preserves research state of technologies.
+---@field chart fun(area: BoundingBox, surface: SurfaceIdentification) Chart a portion of the map. The chart for the given area is refreshed; it creates chart for any parts of the given area that haven't been charted yet.
+---@field clear_chart fun(surface: SurfaceIdentification) Erases chart data for this force.
+---@field rechart fun() Force a rechart of the whole chart.
+---@field chart_all fun(surface: SurfaceIdentification) Chart all generated chunks.
+---@field is_chunk_charted fun(position: ChunkPosition, surface: SurfaceIdentification): boolean Has a chunk been charted?
+---@field is_chunk_visible fun(position: ChunkPosition, surface: SurfaceIdentification): boolean Is the given chunk currently charted and visible (not covered by fog of war) on the map.
+---@field cancel_charting fun(surface: SurfaceIdentification) Cancels pending chart requests for the given surface or all surfaces.
+---@field get_ammo_damage_modifier fun(ammo: string): double
+---@field set_ammo_damage_modifier fun(ammo: string, modifier: double)
+---@field get_gun_speed_modifier fun(ammo: string): double
+---@field set_gun_speed_modifier fun(ammo: string, modifier: double)
+---@field get_turret_attack_modifier fun(turret: string): double
+---@field set_turret_attack_modifier fun(modifier: double, turret: string)
+---@field set_cease_fire fun(cease_fire: boolean, other: ForceIdentification) Add `other` force to this force's cease fire list. Forces on the cease fire list won't be targeted for attack.
+---@field get_cease_fire fun(other: ForceIdentification): boolean Is `other` force in this force's cease fire list?
+---@field set_friend fun(friend: boolean, other: ForceIdentification) Add `other` force to this force's friends list. Friends have unrestricted access to buildings and turrets won't fire at them.
+---@field get_friend fun(other: ForceIdentification): boolean Is `other` force in this force's friends list.
+---@field is_pathfinder_busy fun(): boolean Is pathfinder busy? When the pathfinder is busy, it won't accept any more pathfinding requests.
+---@field kill_all_units fun() Kill all units and flush the pathfinder.
+---@field find_logistic_network_by_position fun(position: Position, surface: SurfaceIdentification): LuaLogisticNetwork
+---@field set_spawn_position fun(position: Position, surface: SurfaceIdentification)
+---@field get_spawn_position fun(surface: SurfaceIdentification): Position
+---@field unchart_chunk fun(position: ChunkPosition, surface: SurfaceIdentification)
+---@field get_item_launched fun(item: string): uint Gets the count of a given item launched in rockets.
+---@field set_item_launched fun(count: uint, item: string) Sets the count of a given item launched in rockets.
+---@field print fun(color: Color, message: LocalisedString) Print text to the chat console of all players on this force.
+---@field get_trains fun(surface: SurfaceIdentification): [object Object]
+---@field add_chart_tag fun(surface: SurfaceIdentification, tag: ChartTagSpec): LuaCustomChartTag Adds a custom chart tag to the given surface and returns the new tag or `nil` if the given position isn't valid for a chart tag.
+---@field find_chart_tags fun(area: BoundingBox, surface: SurfaceIdentification): [object Object] Finds all custom chart tags within the given bounding box on the given surface.
+---@field get_saved_technology_progress fun(technology: TechnologyIdentification): double Gets the saved progress for the given technology or `nil` if there is no saved progress.
+---@field set_saved_technology_progress fun(progress: double, technology: TechnologyIdentification) Sets the saved progress for the given technology. The technology must not be in progress, must not be completed, and the new progress must be < 100%.
+---@field reset_evolution fun() Resets evolution for this force to zero.
+---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for every player in this force.
+---@field get_train_stops fun(name: [object Object], surface: SurfaceIdentification): [object Object] Gets train stops matching the given filters.
+---@field get_hand_crafting_disabled_for_recipe fun(recipe: [object Object]): boolean Gets if the given recipe is explicitly disabled from being hand crafted.
+---@field set_hand_crafting_disabled_for_recipe fun(hand_crafting_disabled: boolean, recipe: [object Object]) Sets if the given recipe can be hand-crafted. This is used to explicitly disable hand crafting a recipe - it won't allow hand-crafting otherwise not hand-craftable recipes.
+---@field add_research fun(technology: TechnologyIdentification): boolean Add this technology to the back of the research queue if the queue is enabled. Otherwise, set this technology to be researched now.
+---@field cancel_current_research fun() Stop the research currently in progress. This will remove any dependent technologies from the research queue.
+---@field get_linked_inventory fun(link_id: uint, prototype: EntityPrototypeIdentification): LuaInventory Gets the linked inventory for the given prototype and link ID if it exists or `nil`.
+---@field is_friend fun(other: ForceIdentification): boolean Is this force a friend? This differs from `get_friend` in that it is always true for neutral force. This is equivalent to checking the `friend` ForceCondition.
+---@field is_enemy fun(other: ForceIdentification): boolean Is this force an enemy? This differs from `get_cease_fire` in that it is always false for neutral force. This is equivalent to checking the `enemy` ForceCondition.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFuelCategoryPrototype Prototype of a fuel category.
 ---@field name string Name of this prototype.
@@ -834,6 +1115,7 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaGameScript Main toplevel type, provides access to most of the API though its members. An instance of LuaGameScript is available as the global object named `game`.
 ---@field object_name string This object's name.
@@ -900,14 +1182,80 @@
 ---@field max_inserter_reach_distance double
 ---@field max_pipe_to_ground_distance uint8
 ---@field max_underground_belt_distance uint8
+---@field set_game_state fun(can_continue: boolean, game_finished: boolean, next_level: string, player_won: boolean, victorious_force: ForceIdentification) Set scenario state.
+---@field reset_game_state fun() Reset scenario state (game_finished, player_won, etc.).
+---@field get_entity_by_tag fun(tag: string): LuaEntity
+---@field show_message_dialog fun(image: string, point_to: GuiArrowSpecification, style: string, text: LocalisedString, wrapper_frame_style: string) Show an in-game message dialog.
+---@field is_demo fun(): boolean Is this the demo version of Factorio?
+---@field reload_script fun() Forces a reload of the scenario script from the original scenario location.
+---@field reload_mods fun() Forces a reload of all mods.
+---@field save_atlas fun() Saves the current configuration of Atlas to a file. This will result in huge file containing all of the game graphics moved to as small space as possible.
+---@field check_consistency fun() Run internal consistency checks. Allegedly prints any errors it finds.
+---@field regenerate_entity fun(entities: [object Object]) Regenerate autoplacement of some entities on all surfaces. This can be used to autoplace newly-added entities.
+---@field take_screenshot fun(allow_in_replay: boolean, anti_alias: boolean, by_player: PlayerIdentification, daytime: double, force_render: boolean, path: string, player: PlayerIdentification, position: Position, quality: int, resolution: Position, show_cursor_building_preview: boolean, show_entity_info: boolean, show_gui: boolean, surface: SurfaceIdentification, water_tick: uint, zoom: double) Take a screenshot and save it to a file. The filename should include a file extension indicating the desired image format. Supports `.png`, `.jpg` / `.jpeg`, `.tga` and `.bmp`.
+---@field set_wait_for_screenshots_to_finish fun() Forces the screenshot saving system to wait until all queued screenshots have been written to disk.
+---@field take_technology_screenshot fun(by_player: PlayerIdentification, force: ForceIdentification, path: string, quality: int, selected_technology: TechnologyIdentification, skip_disabled: boolean) Take a screenshot of the technology screen and save it to a file. The filename should include a file extension indicating the desired image format. Supports `.png`, `.jpg` / `.jpeg`, `.tga` and `.bmp`.
+---@field table_to_json fun(data: table): string Convert a table to a JSON string
+---@field json_to_table fun(json: string): AnyBasic Convert a JSON string to a table.
+---@field write_file fun(append: boolean, data: LocalisedString, filename: string, for_player: uint) Write a string to a file.
+---@field remove_path fun(path: string) Remove file or directory. Given path is taken relative to the script output directory. Can be used to remove files created by [LuaGameScript::write_file](LuaGameScript::write_file).
+---@field remove_offline_players fun(players: [object Object]) Remove players who are currently not connected from the map.
+---@field force_crc fun() Force a CRC check. Tells all peers to calculate their current map CRC; these CRC are then compared against each other. If a mismatch is detected, the game is desynced and some peers are forced to reconnect.
+---@field create_force fun(force: string): LuaForce Create a new force.
+---@field merge_forces fun(destination: ForceIdentification, source: ForceIdentification) Marks two forces to be merge together. All entities in the source force will be reassigned to the target force. The source force will then be destroyed.
+---@field create_surface fun(name: string, settings: MapGenSettings): LuaSurface Create a new surface
+---@field server_save fun(name: string) Instruct the server to save the map.
+---@field auto_save fun(name: string) Instruct the game to perform an auto-save.
+---@field delete_surface fun(surface: [object Object]) Deletes the given surface and all entities on it.
+---@field disable_replay fun() Disables replay saving for the current save file. Once done there's no way to re-enable replay saving for the save file without loading an old save.
+---@field disable_tutorial_triggers fun() Disables tutorial triggers, that unlock new tutorials and show notices about unlocked tutorials.
+---@field direction_to_string fun(direction: defines.direction) Converts the given direction into the string version of the direction.
+---@field print fun(color: Color, message: LocalisedString) Print text to the chat console all players.
+---@field create_random_generator fun(seed: uint): LuaRandomGenerator Creates a deterministic standalone random generator with the given seed or if a seed is not provided the initial map seed is used.
+---@field check_prototype_translations fun() Goes over all items, entities, tiles, recipes, technologies among other things and logs if the locale is incorrect.
+---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for every player in the game.
+---@field is_valid_sound_path fun(sound_path: SoundPath): boolean Checks if the given SoundPath is valid.
+---@field is_valid_sprite_path fun(sprite_path: SpritePath): boolean Checks if the given SpritePath is valid and contains a loaded sprite.
+---@field kick_player fun(player: PlayerIdentification, reason: LocalisedString) Kicks the given player from this multiplayer game. Does nothing if this is a single player game or if the player running this isn't an admin.
+---@field ban_player fun(player: PlayerIdentification, reason: LocalisedString) Bans the given player from this multiplayer game. Does nothing if this is a single player game of if the player running this isn't an admin.
+---@field unban_player fun(player: PlayerIdentification) Unbans the given player from this multiplayer game. Does nothing if this is a single player game of if the player running this isn't an admin.
+---@field purge_player fun(player: PlayerIdentification) Purges the given players messages from the game. Does nothing if the player running this isn't an admin.
+---@field mute_player fun(player: PlayerIdentification) Mutes the given player. Does nothing if the player running this isn't an admin.
+---@field unmute_player fun(player: PlayerIdentification) Unmutes the given player. Does nothing if the player running this isn't an admin.
+---@field count_pipe_groups fun() Counts how many distinct groups of pipes exist in the world.
+---@field is_multiplayer fun(): boolean Is the map loaded is multiplayer?
+---@field get_active_entities_count fun(surface: SurfaceIdentification): uint Gets the number of entities that are active (updated each tick).
+---@field get_map_exchange_string fun(): string Gets the map exchange string for the map generation settings that were used to create this map.
+---@field parse_map_exchange_string fun(map_exchange_string: string): MapExchangeStringData Convert a map exchange string to map gen settings and map settings.
+---@field get_train_stops fun(force: ForceIdentification, name: [object Object], surface: SurfaceIdentification): [object Object] Gets train stops matching the given filters.
+---@field get_player fun(player: [object Object]): LuaPlayer Gets the given player or returns `nil` if no player is found.
+---@field get_surface fun(surface: [object Object]): LuaSurface Gets the given surface or returns `nil` if no surface is found.
+---@field create_profiler fun(stopped: boolean): LuaProfiler Creates a [LuaProfiler](LuaProfiler), which is used for measuring script performance.
+---@field evaluate_expression fun(expression: string, variables: [object Object]): double Evaluate an expression, substituting variables as provided. For details on the formula, see the relevant page on the [Factorio wiki](https://wiki.factorio.com/Prototype/Technology#unit).
+---@field get_filtered_entity_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaEntityPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_item_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaItemPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_equipment_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaEquipmentPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_mod_setting_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaModSettingPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_achievement_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaAchievementPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_tile_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaTilePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_decorative_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaDecorativePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_fluid_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaFluidPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_recipe_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaRecipePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_technology_prototypes fun(filters: [object Object]): [object Object] Returns a dictionary of all LuaTechnologyPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field create_inventory fun(size: uint16): LuaInventory Creates an inventory that is not owned by any game object. It can be resized later with [LuaInventory::resize](LuaInventory::resize).
+---@field get_script_inventories fun(mod: string): [object Object] Gets the inventories created through [LuaGameScript::create_inventory](LuaGameScript::create_inventory)
+---@field reset_time_played fun() Resets the amount of time played for this map.
+---@field encode_string fun(string: string): string Deflates and base64 encodes the given string.
+---@field decode_string fun(string: string): string Base64 decodes and inflates the given string.
 
----@class LuaGenericOnOffControlBehavior An abstract base class for behaviors that support switching the entity on or off based on some condition.
+---@class LuaGenericOnOffControlBehavior : LuaControlBehavior An abstract base class for behaviors that support switching the entity on or off based on some condition.
 ---@field disabled boolean If the entity is currently disabled because of the control behavior.
 ---@field circuit_condition CircuitConditionDefinition The circuit condition.
 ---@field logistic_condition CircuitConditionDefinition The logistic condition.
 ---@field connect_to_logistic_network boolean `true` if this should connect to the logistic network.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaGroup Item group or subgroup.
 ---@field name string
@@ -919,6 +1267,7 @@
 ---@field order string
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaGui The root of the GUI. This type houses the root elements, `top`, `left`, `center`, `goal`, and `screen`, to which other elements can be added to be displayed on screen.
 ---@field player LuaPlayer The player who owns this gui.
@@ -931,6 +1280,8 @@
 ---@field relative LuaGuiElement For showing a GUI somewhere relative to one of the game GUIs. It is an empty-widget element.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field is_valid_sprite_path fun(sprite_path: SpritePath): boolean Returns `true` if sprite_path is valid and contains loaded sprite, otherwise `false`. Sprite path of type `file` doesn't validate if file exists.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaGuiElement An element of a custom GUI. This type is used to represent any kind of a GUI element - labels, buttons and frames are all instances of this type. Just like [LuaEntity](LuaEntity), different kinds of elements support different attributes; attempting to access an attribute on an element that doesn't support it (for instance, trying to access the `column_count` of a `textfield`) will result in a runtime error. The following types of GUI element are supported: - `"button"`: A clickable element. Relevant event: [on_gui_click](on_gui_click) - `"sprite-button"`: A `button` that displays a sprite rather than text. Relevant event: [on_gui_click](on_gui_click) - `"checkbox"`: A clickable element with a check mark that can be turned off or on. Relevant event: [on_gui_checked_state_changed](on_gui_checked_state_changed) - `"flow"`: An invisible container that lays out its children either horizontally or vertically. - `"frame"`: A non-transparent box that contains other elements. It can have a title (set via the `caption` attribute). Just like a `flow`, it lays out its children either horizontally or vertically. Relevant event: [on_gui_location_changed](on_gui_location_changed) - `"label"`: A piece of text. - `"line"`: A horizontal or vertical separation line. - `"progressbar"`: A partially filled bar that can be used to indicate progress. - `"table"`: An invisible container that lays out its children in a specific number of columns. The width of each column is determined by the widest element it contains. - `"textfield"`: A single-line box the user can type into. Relevant events: [on_gui_text_changed](on_gui_text_changed), [on_gui_confirmed](on_gui_confirmed) - `"radiobutton"`: A clickable element that is functionally identical to a `checkbox`, but has a circular appearance. Relevant event: [on_gui_checked_state_changed](on_gui_checked_state_changed) - `"sprite"`: An element that shows an image. - `"scroll-pane"`: An invisible element that is similar to a `flow`, but has the ability to show and use scroll bars. - `"drop-down"`: A drop-down containing strings of text. Relevant event: [on_gui_selection_state_changed](on_gui_selection_state_changed) - `"list-box"`: A list of strings, only one of which can be selected at a time. Shows a scroll bar if necessary. Relevant event: [on_gui_selection_state_changed](on_gui_selection_state_changed) - `"camera"`: A camera that shows the game at the given position on the given surface. It can visually track an [entity](LuaGuiElement::entity) that is set after the element has been created. - `"choose-elem-button"`: A button that lets the player pick from a certain kind of prototype, with optional filtering. Relevant event: [on_gui_elem_changed](on_gui_elem_changed) - `"text-box"`: A multi-line `textfield`. Relevant event: [on_gui_text_changed](on_gui_text_changed) - `"slider"`: A horizontal number line which can be used to choose a number. Relevant event: [on_gui_value_changed](on_gui_value_changed) - `"minimap"`: A minimap preview, similar to the normal player minimap. It can visually track an [entity](LuaGuiElement::entity) that is set after the element has been created. - `"entity-preview"`: A preview of an entity. The [entity](LuaGuiElement::entity) has to be set after the element has been created. - `"empty-widget"`: An empty element that just exists. The root GUI elements `screen` and `relative` are `empty-widget`s. - `"tabbed-pane"`: A collection of `tab`s and their contents. Relevant event: [on_gui_selected_tab_changed](on_gui_selected_tab_changed) - `"tab"`: A tab for use in a `tabbed-pane`. - `"switch"`: A switch with three possible states. Can have labels attached to either side. Relevant event: [on_gui_switch_state_changed](on_gui_switch_state_changed) Each GUI element allows access to its children by having them as attributes. Thus, one can use the `parent.child` syntax to refer to children. Lua also supports the `parent["child"]` syntax to refer to the same element. This can be used in cases where the child has a name that isn't a valid Lua identifier.
 ---@field index uint The index of this GUI element (unique amongst the GUI elements of a LuaPlayer).
@@ -1003,6 +1354,40 @@
 ---@field right_label_tooltip LocalisedString The tooltip shown on the right switch label.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field add fun(anchor: GuiAnchor, caption: LocalisedString, enabled: boolean, ignored_by_interaction: boolean, index: uint, name: string, style: string, tags: Tags, tooltip: LocalisedString, type: string, visible: boolean): LuaGuiElement Add a new child element to this GuiElement.
+---@field clear fun() Remove children of this element. Any [LuaGuiElement](LuaGuiElement) objects referring to the destroyed elements become invalid after this operation.
+---@field destroy fun() Remove this element, along with its children. Any [LuaGuiElement](LuaGuiElement) objects referring to the destroyed elements become invalid after this operation.
+---@field get_mod fun(): string The mod that owns this Gui element or `nil` if it's owned by the scenario script.
+---@field get_index_in_parent fun(): uint Gets the index that this element has in its parent element.
+---@field swap_children fun(index_1: uint, index_2: uint) Swaps the children at the given indices in this element.
+---@field clear_items fun() Removes the items in this dropdown or listbox.
+---@field get_item fun(index: uint): LocalisedString Gets the item at the given index from this dropdown or listbox.
+---@field set_item fun(index: uint, string: LocalisedString) Sets the given string at the given index in this dropdown or listbox.
+---@field add_item fun(index: uint, string: LocalisedString) Inserts a string at the end or at the given index of this dropdown or listbox.
+---@field remove_item fun(index: uint) Removes the item at the given index from this dropdown or listbox.
+---@field get_slider_minimum fun(): double Gets this sliders minimum value.
+---@field get_slider_maximum fun(): double Gets this sliders maximum value.
+---@field set_slider_minimum_maximum fun(maximum: double, minimum: double) Sets this sliders minimum and maximum values.
+---@field get_slider_value_step fun(): double Gets the minimum distance this slider can move.
+---@field get_slider_discrete_slider fun(): boolean Returns whether this slider only allows being moved to discrete positions.
+---@field get_slider_discrete_values fun(): boolean Returns whether this slider only allows discrete values.
+---@field set_slider_value_step fun(value: double) Sets the minimum distance this slider can move.
+---@field set_slider_discrete_slider fun(value: boolean) Sets whether this slider only allows being moved to discrete positions.
+---@field set_slider_discrete_values fun(value: boolean) Sets whether this slider only allows discrete values.
+---@field focus fun() Focuses this GUI element if possible.
+---@field scroll_to_top fun() Scrolls this scroll bar to the top.
+---@field scroll_to_bottom fun() Scrolls this scroll bar to the bottom.
+---@field scroll_to_left fun() Scrolls this scroll bar to the left.
+---@field scroll_to_right fun() Scrolls this scroll bar to the right.
+---@field scroll_to_element fun(element: LuaGuiElement, scroll_mode: string) Scrolls this scroll bar such that the specified GUI element is visible to the player.
+---@field select_all fun() Selects all the text in this textbox.
+---@field select fun(end: int, start: int) Selects a range of text in this textbox.
+---@field add_tab fun(content: LuaGuiElement, tab: LuaGuiElement) Adds the given tab and content widgets to this tabbed pane as a new tab.
+---@field remove_tab fun(tab: LuaGuiElement) Removes the given tab and its associated content from this tabbed pane.
+---@field force_auto_center fun() Forces this frame to re-auto-center. Only works on frames stored directly in [LuaGui::screen](LuaGui::screen).
+---@field scroll_to_item fun(index: int, scroll_mode: string) Scrolls the scroll bar such that the specified listbox item is visible to the player.
+---@field bring_to_front fun() Moves this GUI element to the "front" so it will draw over other elements.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaHeatEnergySourcePrototype Prototype of a heat energy source.
 ---@field emissions double
@@ -1018,8 +1403,9 @@
 ---@field connections [object Object]
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaInserterControlBehavior Control behavior for inserters.
+---@class LuaInserterControlBehavior : LuaGenericOnOffControlBehavior Control behavior for inserters.
 ---@field circuit_read_hand_contents boolean `true` if the contents of the inserter hand should be sent to the circuit network
 ---@field circuit_mode_of_operation defines.control_behavior.inserter.circuit_mode_of_operation The circuit mode of operations for the inserter.
 ---@field circuit_hand_read_mode defines.control_behavior.inserter.hand_read_mode The hand read mode for the inserter.
@@ -1027,6 +1413,7 @@
 ---@field circuit_stack_control_signal SignalID The signal used to set the stack size of the inserter.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaInventory A storage of item stacks.
 ---@field index defines.inventory The inventory index this inventory uses, or `nil` if the inventory doesn't have an index.
@@ -1036,6 +1423,29 @@
 ---@field mod_owner string The mod that owns this inventory or `nil` if this isn't owned by a mod.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field clear fun() Make this inventory empty.
+---@field can_insert fun(items: ItemStackIdentification): boolean Can at least some items be inserted?
+---@field insert fun(items: ItemStackIdentification): uint Insert items into this inventory.
+---@field remove fun(items: ItemStackIdentification): uint Remove items from this inventory.
+---@field get_item_count fun(item: string): uint Get the number of all or some items in this inventory.
+---@field is_empty fun(): boolean Does this inventory contain nothing?
+---@field get_contents fun(): [object Object] Get counts of all items in this inventory.
+---@field supports_bar fun(): boolean Does this inventory support a bar? Bar is the draggable red thing, found for example on chests, that limits the portion of the inventory that may be manipulated by machines.
+---@field get_bar fun(): uint Get the current bar. This is the index at which the red area starts.
+---@field set_bar fun(bar: uint) Set the current bar.
+---@field supports_filters fun(): boolean If this inventory supports filters.
+---@field is_filtered fun(): boolean If this inventory supports filters and has at least 1 filter set.
+---@field can_set_filter fun(filter: string, index: uint): boolean If the given inventory slot filter can be set to the given filter.
+---@field get_filter fun(index: uint): string Gets the filter for the given item stack index.
+---@field set_filter fun(filter: string, index: uint): boolean Sets the filter for the given item stack index.
+---@field find_item_stack fun(item: string): LuaItemStack Gets the first LuaItemStack in the inventory that matches the given item name.
+---@field find_empty_stack fun(item: string): LuaItemStack Finds the first empty stack. Filtered slots are excluded unless a filter item is given.
+---@field count_empty_stacks fun(include_filtered: boolean): uint Counts the number of empty stacks.
+---@field get_insertable_count fun(item: string) Gets the number of the given item that can be inserted into this inventory.
+---@field sort_and_merge fun() Sorts and merges the items in this inventory.
+---@field resize fun(size: uint16) Resizes the inventory.
+---@field destroy fun() Destroys this inventory.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaItemPrototype Prototype of an item.
 ---@field type string Type of this prototype. E.g. `"gun"` or `"mining-tool"`.
@@ -1112,6 +1522,9 @@
 ---@field mapper_count uint How many filters an upgrade item has. `nil` if not a upgrade item.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field has_flag fun(flag: string): boolean Test whether this item prototype has a certain flag set.
+---@field get_ammo_type fun(ammo_source_type: string): AmmoType Type of this ammo prototype or `nil` if this is not an ammo prototype.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaItemStack A reference to an item and count owned by some external entity.
 ---@field valid_for_read boolean Is this valid for reading? Differs from the usual `valid` in that `valid` will be `true` even if the item stack is blank but the entity that holds it is still valid.
@@ -1163,16 +1576,59 @@
 ---@field is_upgrade_item boolean If this is a upgrade item.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field is_blueprint_setup fun(): boolean Is this blueprint item setup? I.e. is it a non-empty blueprint?
+---@field get_blueprint_entities fun(): [object Object] The entities in this blueprint.
+---@field set_blueprint_entities fun(entities: [object Object]) Set new entities to be a part of this blueprint.
+---@field add_ammo fun(amount: float) Add ammo to this ammo item.
+---@field drain_ammo fun(amount: float) Remove ammo from this ammo item.
+---@field add_durability fun(amount: double) Add durability to this tool item.
+---@field drain_durability fun(amount: double) Remove durability from this tool item.
+---@field can_set_stack fun(stack: ItemStackIdentification): boolean Would a call to [LuaItemStack::set_stack](LuaItemStack::set_stack) succeed?
+---@field set_stack fun(stack: ItemStackIdentification): boolean Set this item stack to another item stack.
+---@field transfer_stack fun(stack: ItemStackIdentification): boolean Transfers the given item stack into this item stack.
+---@field export_stack fun(): string Export a supported item (blueprint, blueprint-book, deconstruction-planner, upgrade-planner, item-with-tags) to a string.
+---@field import_stack fun(data: string): int Import a supported item (blueprint, blueprint-book, deconstruction-planner, upgrade-planner, item-with-tags) from a string.
+---@field swap_stack fun(stack: LuaItemStack): boolean Swaps this item stack with the given item stack if allowed.
+---@field clear fun() Clear this item stack.
+---@field get_blueprint_tiles fun(): [object Object] A list of the tiles in this blueprint.
+---@field set_blueprint_tiles fun(tiles: [object Object]) Set specific tiles in this blueprint.
+---@field get_inventory fun(inventory: defines.inventory): LuaInventory Access the inner inventory of an item.
+---@field build_blueprint fun(by_player: PlayerIdentification, direction: defines.direction, force: ForceIdentification, force_build: boolean, position: Position, raise_built: boolean, skip_fog_of_war: boolean, surface: SurfaceIdentification): [object Object]
+---@field deconstruct_area fun(area: BoundingBox, by_player: PlayerIdentification, force: ForceIdentification, skip_fog_of_war: boolean, surface: SurfaceIdentification) Deconstruct the given area with this deconstruction item.
+---@field cancel_deconstruct_area fun(area: BoundingBox, by_player: PlayerIdentification, force: ForceIdentification, skip_fog_of_war: boolean, surface: SurfaceIdentification) Cancel deconstruct the given area with this deconstruction item.
+---@field create_blueprint fun(always_include_tiles: boolean, area: BoundingBox, force: ForceIdentification, include_entities: boolean, include_fuel: boolean, include_modules: boolean, include_station_names: boolean, include_trains: boolean, surface: SurfaceIdentification): [object Object] Sets up this blueprint using the found blueprintable entities/tiles on the surface.
+---@field get_tag fun(tag_name: string): AnyBasic Gets the tag with the given name or returns `nil` if it doesn't exist.
+---@field set_tag fun(tag: AnyBasic, tag_name: string): AnyBasic Sets the tag with the given name and value.
+---@field remove_tag fun(tag: string): boolean Removes a tag with the given name.
+---@field clear_blueprint fun() Clears this blueprint item.
+---@field get_entity_filter fun(index: uint): string Gets the entity filter at the given index for this deconstruction item.
+---@field set_entity_filter fun(filter: [object Object], index: uint): boolean Sets the entity filter at the given index for this deconstruction item.
+---@field get_tile_filter fun(index: uint): string Gets the tile filter at the given index for this deconstruction item.
+---@field set_tile_filter fun(filter: [object Object], index: uint): boolean Sets the tile filter at the given index for this deconstruction item.
+---@field clear_deconstruction_item fun() Clears all settings/filters on this deconstruction item resetting it to default values.
+---@field clear_upgrade_item fun() Clears all settings/filters on this upgrade item resetting it to default values.
+---@field get_mapper fun(index: uint, type: string): UpgradeFilter Gets the filter at the given index for this upgrade item.
+---@field set_mapper fun(filter: UpgradeFilter, index: uint, type: string) Sets the module filter at the given index for this upgrade item.
+---@field get_blueprint_entity_count fun(): uint Gets the number of entities in this blueprint item.
+---@field get_blueprint_entity_tags fun(index: uint): Tags Gets the tags for the given blueprint entity index in this blueprint item.
+---@field set_blueprint_entity_tags fun(index: uint, tags: Tags) Sets the tags on the given blueprint entity index in this blueprint item.
+---@field get_blueprint_entity_tag fun(index: uint, tag: string): AnyBasic Gets the given tag on the given blueprint entity index in this blueprint item.
+---@field set_blueprint_entity_tag fun(index: uint, tag: string, value: AnyBasic) Sets the given tag on the given blueprint entity index in this blueprint item.
+---@field create_grid fun(): LuaEquipmentGrid Creates the equipment grid for this item if it doesn't exist and this is an item-with-entity-data that supports equipment grids.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaLampControlBehavior Control behavior for lamps.
+---@class LuaLampControlBehavior : LuaGenericOnOffControlBehavior Control behavior for lamps.
 ---@field use_colors boolean `true` if the lamp should set the color from the circuit network signals.
 ---@field color Color The color the lamp is showing or `nil` if not using any color.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaLazyLoadedValue A lazily loaded value. For performance reasons, we sometimes return a custom lazily-loaded value type instead of the native Lua value. This custom type lazily constructs the necessary value when [LuaLazyLoadedValue::get](LuaLazyLoadedValue::get) is called, therefore preventing its unnecessary construction in some cases. An instance of LuaLazyLoadedValue is only valid during the event it was created from and cannot be saved.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get fun(): Any Gets the value of this lazy loaded value.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaLogisticCell Logistic cell of a particular [LuaEntity](LuaEntity). A "Logistic Cell" is the given name for settings and properties used by what would normally be seen as a "Roboport". A logistic cell however doesn't have to be attached to the roboport entity (the character has one for the personal roboport).
 ---@field logistic_radius float Logistic radius of this cell.
@@ -1192,11 +1648,16 @@
 ---@field to_charge_robots [object Object] Robots waiting to charge.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field is_in_logistic_range fun(position: Position): boolean Is a given position within the logistic range of this cell?
+---@field is_in_construction_range fun(position: Position): boolean Is a given position within the construction range of this cell?
+---@field is_neighbour_with fun(other: LuaLogisticCell): boolean Are two cells neighbours?
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaLogisticContainerControlBehavior Control behavior for logistic chests.
+---@class LuaLogisticContainerControlBehavior : LuaControlBehavior Control behavior for logistic chests.
 ---@field circuit_mode_of_operation defines.control_behavior.logistic_container.circuit_mode_of_operation The circuit mode of operations for the logistic container.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaLogisticNetwork A single logistic network of a given force on a given surface.
 ---@field force LuaForce The force this logistic network belongs to.
@@ -1222,6 +1683,14 @@
 ---@field logistic_robots [object Object] All logistic robots in this logistic network.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_item_count fun(item: string, member: string): int Count given or all items in the network or given members.
+---@field get_contents fun(): [object Object] Get item counts for the entire network.
+---@field remove_item fun(item: ItemStackIdentification, members: string): uint Remove items from the logistic network. This will actually remove the items from some logistic chests.
+---@field insert fun(item: ItemStackIdentification, members: string): uint Insert items into the logistic network. This will actually insert the items into some logistic chests.
+---@field find_cell_closest_to fun(position: Position): LuaLogisticCell Find logistic cell closest to a given position.
+---@field select_pickup_point fun(include_buffers: boolean, members: string, name: string, position: Position): LuaLogisticPoint Find the 'best' logistic point with this item ID and from the given position or from given chest type.
+---@field select_drop_point fun(members: string, stack: ItemStackIdentification): LuaLogisticPoint Find a logistic point to drop the specific item stack.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaLogisticPoint Logistic point of a particular [LuaEntity](LuaEntity). A "Logistic point" is the name given for settings and properties used by requester, provider, and storage points in a given logistic network. These "points" don't have to be a logistic container but often are. One other entity that can own several points is the "character" character type entity.
 ---@field owner LuaEntity The [LuaEntity](LuaEntity) owner of this [LuaLogisticPoint](LuaLogisticPoint).
@@ -1235,14 +1704,16 @@
 ---@field exact boolean If this logistic point is using the exact mode. In exact mode robots never over-deliver requests.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaMiningDrillControlBehavior Control behavior for mining drills.
+---@class LuaMiningDrillControlBehavior : LuaGenericOnOffControlBehavior Control behavior for mining drills.
 ---@field circuit_enable_disable boolean `true` if this drill is enabled or disabled using the logistics or circuit condition.
 ---@field circuit_read_resources boolean `true` if this drill should send the resources in the field to the circuit network. Which resources depends on [LuaMiningDrillControlBehavior::resource_read_mode](LuaMiningDrillControlBehavior::resource_read_mode)
 ---@field resource_read_mode defines.control_behavior.mining_drill.resource_read_mode If the mining drill should send just the resources in its area or the entire field it's on to the circuit network.
 ---@field resource_read_targets [object Object] The resource entities that the mining drill will send information about to the circuit network or an empty array.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaModSettingPrototype Prototype of a mod setting.
 ---@field name string Name of this prototype.
@@ -1260,6 +1731,7 @@
 ---@field hidden boolean If this setting is hidden from the GUI.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaModuleCategoryPrototype Prototype of a module category.
 ---@field name string Name of this prototype.
@@ -1268,6 +1740,7 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaNamedNoiseExpression Prototype of a named noise expression.
 ---@field name string Name of this prototype.
@@ -1278,6 +1751,7 @@
 ---@field expression NoiseExpression The expression itself.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaNoiseLayerPrototype Prototype of a noise layer.
 ---@field name string Name of this prototype.
@@ -1286,6 +1760,7 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaParticlePrototype Prototype of an optimized particle.
 ---@field name string Name of this prototype.
@@ -1303,6 +1778,7 @@
 ---@field mining_particle_frame_speed float
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaPermissionGroup A permission group that defines what players in this group are allowed to do.
 ---@field name string The name of this group.
@@ -1310,13 +1786,22 @@
 ---@field group_id uint The group ID
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field add_player fun(player: PlayerIdentification): boolean Adds the given player to this group.
+---@field remove_player fun(player: PlayerIdentification): boolean Removes the given player from this group.
+---@field allows_action fun(action: defines.input_action): boolean Whether this group allows the given action.
+---@field set_allows_action fun(action: defines.input_action, allow_action: boolean): boolean Sets whether this group allows the performance the given action.
+---@field destroy fun(): boolean Destroys this group.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaPermissionGroups All permission groups.
 ---@field groups [object Object] All of the permission groups.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field create_group fun(name: string): LuaPermissionGroup Creates a new permission group.
+---@field get_group fun(group: [object Object]): LuaPermissionGroup Gets the permission group with the given name or group ID or `nil` if there is no matching group.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaPlayer A player in the game. Pay attention that a player may or may not have a character, which is the [LuaEntity](LuaEntity) of the little guy running around the world doing things.
+---@class LuaPlayer : LuaControl A player in the game. Pay attention that a player may or may not have a character, which is the [LuaEntity](LuaEntity) of the little guy running around the world doing things.
 ---@field character LuaEntity The character attached to this player, or `nil` if no character.
 ---@field cutscene_character LuaEntity When in a cutscene; the character this player would be using once the cutscene is over.
 ---@field index uint This player's index in [LuaGameScript::players](LuaGameScript::players).
@@ -1353,27 +1838,100 @@
 ---@field map_view_settings MapViewSettings The player's map view settings. To write to this, use a table containing the fields that should be changed.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field set_ending_screen_data fun(file: string, message: LocalisedString) Setup the screen to be shown when the game is finished.
+---@field print fun(color: Color, message: LocalisedString) Print text to the chat console.
+---@field clear_console fun() Clear the chat console.
+---@field get_goal_description fun(): LocalisedString Get the current goal description, as a localised string.
+---@field set_goal_description fun(only_update: boolean, text: LocalisedString) Set the text in the goal window (top left).
+---@field set_controller fun(character: LuaEntity, chart_mode_cutoff: double, final_transition_time: uint, start_position: Position, start_zoom: double, type: defines.controllers, waypoints: CutsceneWaypoint) Set the controller type of the player.
+---@field drag_wire fun(position: MapPosition): boolean Start/end wire dragging at the specified location, wire type is based on the cursor contents
+---@field disable_recipe_groups fun() Disable recipe groups.
+---@field enable_recipe_groups fun() Enable recipe groups.
+---@field disable_recipe_subgroups fun() Disable recipe subgroups.
+---@field enable_recipe_subgroups fun() Enable recipe subgroups.
+---@field print_entity_statistics fun(entities: [object Object]) Print entity statistics to the player's console.
+---@field print_robot_jobs fun() Print construction robot job counts to the players console.
+---@field print_lua_object_statistics fun() Print LuaObject counts per mod.
+---@field log_active_entity_chunk_counts fun() Logs a dictionary of chunks -> active entities for the surface this player is on.
+---@field log_active_entity_counts fun() Logs a dictionary of active entities -> count for the surface this player is on.
+---@field unlock_achievement fun(name: string) Unlock the achievements of the given player. This has any effect only when this is the local player, the achievement isn't unlocked so far and the achievement is of the type "achievement".
+---@field clear_cursor fun(): boolean Invokes the "clear cursor" action on the player as if the user pressed it.
+---@field create_character fun(character: string): boolean Creates and attaches a character entity to this player.
+---@field add_alert fun(entity: LuaEntity, type: defines.alert_type) Adds an alert to this player for the given entity of the given alert type.
+---@field add_custom_alert fun(entity: LuaEntity, icon: SignalID, message: LocalisedString, show_on_map: boolean) Adds a custom alert to this player.
+---@field remove_alert fun(entity: LuaEntity, icon: SignalID, message: LocalisedString, position: Position, prototype: LuaEntityPrototype, surface: SurfaceIdentification, type: defines.alert_type) Removes all alerts matching the given filters or if an empty filters table is given all alerts are removed.
+---@field get_alerts fun(entity: LuaEntity, position: Position, prototype: LuaEntityPrototype, surface: SurfaceIdentification, type: defines.alert_type): [object Object] Get all alerts matching the given filters, or all alerts if no filters are given.
+---@field mute_alert fun(alert_type: defines.alert_type): boolean Mutes alerts for the given alert category.
+---@field unmute_alert fun(alert_type: defines.alert_type): boolean Unmutes alerts for the given alert category.
+---@field is_alert_muted fun(alert_type: defines.alert_type): boolean If the given alert type is currently muted.
+---@field enable_alert fun(alert_type: defines.alert_type): boolean Enables alerts for the given alert category.
+---@field disable_alert fun(alert_type: defines.alert_type): boolean Disables alerts for the given alert category.
+---@field is_alert_enabled fun(alert_type: defines.alert_type): boolean If the given alert type is currently enabled.
+---@field pipette_entity fun(entity: [object Object]): boolean Invokes the "smart pipette" action on the player as if the user pressed it.
+---@field can_place_entity fun(direction: defines.direction, name: string, position: MapPosition): boolean Checks if this player can build the give entity at the given location on the surface the player is on.
+---@field can_build_from_cursor fun(alt: boolean, direction: defines.direction, position: MapPosition, skip_fog_of_war: boolean, terrain_building_size: uint): boolean Checks if this player can build what ever is in the cursor on the surface the player is on.
+---@field build_from_cursor fun(alt: boolean, direction: defines.direction, position: MapPosition, skip_fog_of_war: boolean, terrain_building_size: uint) Builds what ever is in the cursor on the surface the player is on.
+---@field use_from_cursor fun(position: Position) Uses the current item in the cursor if it's a capsule or does nothing if not.
+---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for this player.
+---@field get_associated_characters fun(): [object Object] The characters associated with this player.
+---@field associate_character fun(character: LuaEntity) Associates a character with this player.
+---@field disassociate_character fun(character: LuaEntity) Disassociates a character from this player. This is functionally the same as setting [LuaEntity::associated_player](LuaEntity::associated_player) to `nil`.
+---@field create_local_flying_text fun(color: Color, create_at_cursor: boolean, position: MapPosition, speed: double, text: LocalisedString, time_to_live: uint) Spawn flying text that is only visible to this player. Either `position` or `create_at_cursor` are required. When `create_at_cursor` is `true`, all parameters other than `text` are ignored.
+---@field get_quick_bar_slot fun(index: uint): LuaItemPrototype Gets the quick bar filter for the given slot or `nil`.
+---@field set_quick_bar_slot fun(filter: [object Object], index: uint) Sets the quick bar filter for the given slot.
+---@field get_active_quick_bar_page fun(index: uint): uint8 Gets which quick bar page is being used for the given screen page or `nil` if not known.
+---@field set_active_quick_bar_page fun(page_index: uint, screen_index: uint) Sets which quick bar page is being used for the given screen page.
+---@field jump_to_cutscene_waypoint fun(waypoint_index: uint) Jump to the specified cutscene waypoint. Only works when the player is viewing a cutscene.
+---@field exit_cutscene fun() Exit the current cutscene. Errors if not in a cutscene.
+---@field open_map fun(position: MapPosition, scale: double) Queues a request to open the map at the specified position. If the map is already opened, the request will simply set the position (and scale). Render mode change requests are processed before rendering of the next frame.
+---@field zoom_to_world fun(position: MapPosition, scale: double) Queues a request to zoom to world at the specified position. If the player is already zooming to world, the request will simply set the position (and scale). Render mode change requests are processed before rendering of the next frame.
+---@field close_map fun() Queues request to switch to the normal game view from the map or zoom to world view. Render mode change requests are processed before rendering of the next frame.
+---@field is_shortcut_toggled fun(prototype_name: string): boolean Is a custom Lua shortcut currently toggled?
+---@field is_shortcut_available fun(prototype_name: string): boolean Is a custom Lua shortcut currently available?
+---@field set_shortcut_toggled fun(prototype_name: string, toggled: boolean) Toggle or untoggle a custom Lua shortcut
+---@field set_shortcut_available fun(available: boolean, prototype_name: string) Make a custom Lua shortcut available or unavailable.
+---@field connect_to_server fun(address: string, description: LocalisedString, name: LocalisedString, password: string) Asks the player if they would like to connect to the given server.
+---@field toggle_map_editor fun() Toggles this player into or out of the map editor. Does nothing if this player isn't an admin or if the player doesn't have permission to use the map editor.
+---@field request_translation fun(localised_string: LocalisedString): boolean Requests a translation for the given localised string. If the request is successful the [on_string_translated](on_string_translated) event will be fired at a later time with the results.
+---@field get_infinity_inventory_filter fun(index: uint): InfinityInventoryFilter Gets the filter for this map editor infinity filters at the given index or `nil` if the filter index doesn't exist or is empty.
+---@field set_infinity_inventory_filter fun(filter: InfinityInventoryFilter, index: uint) Sets the filter for this map editor infinity filters at the given index.
+---@field clear_recipe_notifications fun() Clears all recipe notifications for this player.
+---@field add_recipe_notification fun(recipe: string) Adds the given recipe to the list of recipe notifications for this player.
+---@field add_to_clipboard fun(blueprint: LuaItemStack) Adds the given blueprint to this player's clipboard queue.
+---@field activate_paste fun() Gets a copy of the currently selected blueprint in the clipboard queue into the player's cursor, as if the player activated Paste.
+---@field start_selection fun(position: MapPosition, selection_mode: string) Starts selection with selection tool from the specified position. Does nothing if the players cursor is not a selection tool.
+---@field clear_selection fun() Clears the players selection tool selection position.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaProfiler An object used to measure script performance.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field reset fun() Resets the clock, also restarting it.
+---@field stop fun() Stops the clock.
+---@field restart fun() Start the clock again, without resetting it.
+---@field add fun(other: LuaProfiler) Add the duration of another timer to this timer. Useful to reduce start/stop overhead when accumulating time onto many timers at once.
+---@field divide fun(number: double) Divides the current duration by a set value. Useful for calculating the average of many iterations.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaProgrammableSpeakerControlBehavior Control behavior for programmable speakers.
+---@class LuaProgrammableSpeakerControlBehavior : LuaControlBehavior Control behavior for programmable speakers.
 ---@field circuit_parameters ProgrammableSpeakerCircuitParameters
 ---@field circuit_condition CircuitConditionDefinition
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRCON An interface to send messages to the calling RCON interface.
 ---@field object_name string This object's name.
+---@field print fun(message: LocalisedString) Print text to the calling RCON interface if any.
 
----@class LuaRailChainSignalControlBehavior Control behavior for rail chain signals.
+---@class LuaRailChainSignalControlBehavior : LuaControlBehavior Control behavior for rail chain signals.
 ---@field red_signal SignalID
 ---@field orange_signal SignalID
 ---@field green_signal SignalID
 ---@field blue_signal SignalID
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRailPath A rail path.
 ---@field size uint The total number of rails in this path.
@@ -1383,8 +1941,9 @@
 ---@field rails [object Object] Array of the rails that this path travels over.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaRailSignalControlBehavior Control behavior for rail signals.
+---@class LuaRailSignalControlBehavior : LuaControlBehavior Control behavior for rail signals.
 ---@field red_signal SignalID
 ---@field orange_signal SignalID
 ---@field green_signal SignalID
@@ -1393,10 +1952,13 @@
 ---@field circuit_condition CircuitConditionDefinition The circuit condition when controlling the signal through the circuit network.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRandomGenerator A deterministic random generator independent from the core games random generator that can be seeded and re-seeded at will. This random generator can be saved and loaded and will maintain its state. Note this is entirely different from calling [math.random](Libraries.html#math.random)() and you should be sure you actually want to use this over calling `math.random()`. If you aren't sure if you need to use this over calling `math.random()` then you probably don't need to use this.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field re_seed fun(seed: uint) Re-seeds the random generator with the given value.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRecipe A crafting recipe. Recipes belong to forces (see [LuaForce](LuaForce)) because some recipes are unlocked by research, and researches are per-force.
 ---@field name string Name of the recipe. This can be different than the name of the result items as there could be more recipes to make the same item.
@@ -1416,6 +1978,8 @@
 ---@field force LuaForce The force that owns this recipe.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field reload fun() Reload the recipe from the prototype.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRecipeCategoryPrototype Prototype of a recipe category.
 ---@field name string Name of this prototype.
@@ -1424,6 +1988,7 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRecipePrototype A crafting recipe prototype.
 ---@field enabled boolean If this recipe prototype is enabled by default (enabled at the beginning of a game).
@@ -1454,13 +2019,118 @@
 ---@field unlock_results boolean Is this recipe unlocks the result item(s) so they're shown in filter-select GUIs.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaRemote Registry of interfaces between scripts. An interface is simply a dictionary mapping names to functions. A script or mod can then register an interface with [LuaRemote](LuaRemote), after that any script can call the registered functions, provided it knows the interface name and the desired function name. An instance of LuaRemote is available through the global object named `remote`.
 ---@field object_name string This object's name.
 ---@field interfaces [object Object] List of all registered interfaces. For each interface name, `remote.interfaces[name]` is a dictionary mapping the interface's registered functions to the value `true`.
+---@field add_interface fun(functions: [object Object], name: string) Add a remote interface.
+---@field remove_interface fun(name: string): boolean Removes an interface with the given name.
+---@field call fun(function: string, interface: string): Any Call a function of an interface.
 
 ---@class LuaRendering Allows rendering of geometric shapes, text and sprites in the game world. Each render object is identified by an id that is universally unique for the lifetime of a whole game.
 ---@field object_name string This object's name.
+---@field draw_line fun(color: Color, dash_length: double, draw_on_ground: boolean, forces: [object Object], from: [object Object], from_offset: Vector, gap_length: double, only_in_alt_mode: boolean, players: [object Object], surface: SurfaceIdentification, time_to_live: uint, to: [object Object], to_offset: Vector, visible: boolean, width: float): uint64 Create a line.
+---@field draw_text fun(alignment: string, color: Color, draw_on_ground: boolean, font: string, forces: [object Object], only_in_alt_mode: boolean, orientation: RealOrientation, players: [object Object], scale: double, scale_with_zoom: boolean, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, text: LocalisedString, time_to_live: uint, vertical_alignment: string, visible: boolean): uint64 Create a text.
+---@field draw_circle fun(color: Color, draw_on_ground: boolean, filled: boolean, forces: [object Object], only_in_alt_mode: boolean, players: [object Object], radius: double, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, visible: boolean, width: float): uint64 Create a circle.
+---@field draw_rectangle fun(color: Color, draw_on_ground: boolean, filled: boolean, forces: [object Object], left_top: [object Object], left_top_offset: Vector, only_in_alt_mode: boolean, players: [object Object], right_bottom: [object Object], right_bottom_offset: Vector, surface: SurfaceIdentification, time_to_live: uint, visible: boolean, width: float): uint64 Create a rectangle.
+---@field draw_arc fun(angle: float, color: Color, draw_on_ground: boolean, forces: [object Object], max_radius: double, min_radius: double, only_in_alt_mode: boolean, players: [object Object], start_angle: float, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, visible: boolean): uint64 Create an arc.
+---@field draw_polygon fun(color: Color, draw_on_ground: boolean, forces: [object Object], only_in_alt_mode: boolean, orientation: RealOrientation, orientation_target: [object Object], orientation_target_offset: Vector, players: [object Object], surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, vertices: [object Object], visible: boolean): uint64 Create a triangle mesh defined by a triangle strip.
+---@field draw_sprite fun(forces: [object Object], only_in_alt_mode: boolean, orientation: RealOrientation, orientation_target: [object Object], orientation_target_offset: Vector, oriented_offset: Vector, players: [object Object], render_layer: RenderLayer, sprite: SpritePath, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, tint: Color, visible: boolean, x_scale: double, y_scale: double): uint64 Create a sprite.
+---@field draw_light fun(color: Color, forces: [object Object], intensity: float, minimum_darkness: float, only_in_alt_mode: boolean, orientation: RealOrientation, oriented: boolean, players: [object Object], scale: float, sprite: SpritePath, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, visible: boolean): uint64 Create a light.
+---@field draw_animation fun(animation: string, animation_offset: double, animation_speed: double, forces: [object Object], only_in_alt_mode: boolean, orientation: RealOrientation, orientation_target: [object Object], orientation_target_offset: Vector, oriented_offset: Vector, players: [object Object], render_layer: RenderLayer, surface: SurfaceIdentification, target: [object Object], target_offset: Vector, time_to_live: uint, tint: Color, visible: boolean, x_scale: double, y_scale: double): uint64 Create an animation.
+---@field destroy fun(id: uint64) Destroy the object with the given id.
+---@field is_font_valid fun(font_name: string): boolean Does a font with this name exist?
+---@field is_valid fun(id: uint64): boolean Does a valid object with this id exist?
+---@field get_all_ids fun(mod_name: string): [object Object] Gets an array of all valid object ids.
+---@field clear fun(mod_name: string) Destroys all render objects.
+---@field get_type fun(id: uint64): string Gets the type of the given object. The types are "text", "line", "circle", "rectangle", "arc", "polygon", "sprite", "light" and "animation".
+---@field bring_to_front fun(id: uint64) Reorder this object so that it is drawn in front of the already existing objects.
+---@field get_surface fun(id: uint64): LuaSurface The surface the object with this id is rendered on.
+---@field get_time_to_live fun(id: uint64): uint Get the time to live of the object with this id. This will be 0 if the object does not expire.
+---@field set_time_to_live fun(id: uint64, time_to_live: uint) Set the time to live of the object with this id. Set to 0 if the object should not expire.
+---@field get_forces fun(id: uint64): [object Object] Get the forces that the object with this id is rendered to or `nil` if visible to all forces.
+---@field set_forces fun(forces: [object Object], id: uint64) Set the forces that the object with this id is rendered to.
+---@field get_players fun(id: uint64): [object Object] Get the players that the object with this id is rendered to or `nil` if visible to all players.
+---@field set_players fun(id: uint64, players: [object Object]) Set the players that the object with this id is rendered to.
+---@field get_visible fun(id: uint64): boolean Get whether this is rendered to anyone at all.
+---@field set_visible fun(id: uint64, visible: boolean) Set whether this is rendered to anyone at all.
+---@field get_draw_on_ground fun(id: uint64): boolean Get whether this is being drawn on the ground, under most entities and sprites.
+---@field set_draw_on_ground fun(draw_on_ground: boolean, id: uint64) Set whether this is being drawn on the ground, under most entities and sprites.
+---@field get_only_in_alt_mode fun(id: uint64): boolean Get whether this is only rendered in alt-mode.
+---@field set_only_in_alt_mode fun(id: uint64, only_in_alt_mode: boolean) Set whether this is only rendered in alt-mode.
+---@field get_color fun(id: uint64): Color Get the color or tint of the object with this id.
+---@field set_color fun(color: Color, id: uint64) Set the color or tint of the object with this id. Does nothing if this object does not support color.
+---@field get_width fun(id: uint64): float Get the width of the object with this id. Value is in pixels (32 per tile).
+---@field set_width fun(id: uint64, width: float) Set the width of the object with this id. Does nothing if this object does not support width. Value is in pixels (32 per tile).
+---@field get_from fun(id: uint64): ScriptRenderTarget Get from where the line with this id is drawn or `nil` if this object is not a line.
+---@field set_from fun(from: [object Object], from_offset: Vector, id: uint64) Set from where the line with this id is drawn. Does nothing if the object is not a line.
+---@field get_to fun(id: uint64): ScriptRenderTarget Get where the line with this id is drawn to or `nil` if the object is not a line.
+---@field set_to fun(id: uint64, to: [object Object], to_offset: Vector) Set where the line with this id is drawn to. Does nothing if this object is not a line.
+---@field get_dash_length fun(id: uint64): double Get the dash length of the line with this id or `nil` if the object is not a line.
+---@field set_dash_length fun(dash_length: double, id: uint64) Set the dash length of the line with this id. Does nothing if this object is not a line.
+---@field get_gap_length fun(id: uint64): double Get the length of the gaps in the line with this id or `nil` if the object is not a line.
+---@field set_gap_length fun(gap_length: double, id: uint64) Set the length of the gaps in the line with this id. Does nothing if this object is not a line.
+---@field set_dashes fun(dash_length: double, gap_length: double, id: uint64) Set the length of the dashes and the length of the gaps in the line with this id. Does nothing if this object is not a line.
+---@field get_target fun(id: uint64): ScriptRenderTarget Get where the object with this id is drawn or `nil` if the object does not support target.
+---@field set_target fun(id: uint64, target: [object Object], target_offset: Vector) Set where the object with this id is drawn. Does nothing if this object does not support target.
+---@field get_orientation fun(id: uint64): RealOrientation Get the orientation of the object with this id or `nil` if the object is not a text, polygon, sprite, light or animation.
+---@field set_orientation fun(id: uint64, orientation: RealOrientation) Set the orientation of the object with this id. Does nothing if this object is not a text, polygon, sprite, light or animation.
+---@field get_scale fun(id: uint64): double Get the scale of the text or light with this id or `nil` if the object is not a text or light.
+---@field set_scale fun(id: uint64, scale: double) Set the scale of the text or light with this id. Does nothing if this object is not a text or light.
+---@field get_text fun(id: uint64): LocalisedString Get the text that is displayed by the text with this id or `nil` if the object is not a text.
+---@field set_text fun(id: uint64, text: LocalisedString) Set the text that is displayed by the text with this id. Does nothing if this object is not a text.
+---@field get_font fun(id: uint64): string Get the font of the text with this id or `nil` if the object is not a text.
+---@field set_font fun(font: string, id: uint64) Set the font of the text with this id. Does nothing if this object is not a text.
+---@field get_alignment fun(id: uint64): string Get the alignment of the text with this id or `nil` if the object is not a text.
+---@field set_alignment fun(alignment: string, id: uint64) Set the alignment of the text with this id. Does nothing if this object is not a text.
+---@field get_vertical_alignment fun(id: uint64): string Get the vertical alignment of the text with this id or `nil` if the object is not a text.
+---@field set_vertical_alignment fun(alignment: string, id: uint64) Set the vertical alignment of the text with this id. Does nothing if this object is not a text.
+---@field get_scale_with_zoom fun(id: uint64): boolean Get if the text with this id scales with player zoom or `nil` if the object is not a text.
+---@field set_scale_with_zoom fun(id: uint64, scale_with_zoom: boolean) Set if the text with this id scales with player zoom, resulting in it always being the same size on screen, and the size compared to the game world changes. Does nothing if this object is not a text.
+---@field get_filled fun(id: uint64): boolean Get if the circle or rectangle with this id is filled or `nil` if the object is not a circle or rectangle.
+---@field set_filled fun(filled: boolean, id: uint64) Set if the circle or rectangle with this id is filled. Does nothing if this object is not a circle or rectangle.
+---@field get_radius fun(id: uint64): double Get the radius of the circle with this id or `nil` if the object is not a circle.
+---@field set_radius fun(id: uint64, radius: double) Set the radius of the circle with this id. Does nothing if this object is not a circle.
+---@field get_left_top fun(id: uint64): ScriptRenderTarget Get where top left corner of the rectangle with this id is drawn or `nil` if the object is not a rectangle.
+---@field set_left_top fun(id: uint64, left_top: [object Object], left_top_offset: Vector) Set where top left corner of the rectangle with this id is drawn. Does nothing if this object is not a rectangle.
+---@field get_right_bottom fun(id: uint64): ScriptRenderTarget Get where bottom right corner of the rectangle with this id is drawn or `nil` if the object is not a rectangle.
+---@field set_right_bottom fun(id: uint64, right_bottom: [object Object], right_bottom_offset: Vector) Set where top bottom right of the rectangle with this id is drawn. Does nothing if this object is not a rectangle.
+---@field set_corners fun(id: uint64, left_top: [object Object], left_top_offset: Vector, right_bottom: [object Object], right_bottom_offset: Vector) Set the corners of the rectangle with this id. Does nothing if this object is not a rectangle.
+---@field get_max_radius fun(id: uint64): double Get the radius of the outer edge of the arc with this id or `nil` if the object is not a arc.
+---@field set_max_radius fun(id: uint64, max_radius: double) Set the radius of the outer edge of the arc with this id. Does nothing if this object is not a arc.
+---@field get_min_radius fun(id: uint64): double Get the radius of the inner edge of the arc with this id or `nil` if the object is not a arc.
+---@field set_min_radius fun(id: uint64, min_radius: double) Set the radius of the inner edge of the arc with this id. Does nothing if this object is not a arc.
+---@field get_start_angle fun(id: uint64): float Get where the arc with this id starts or `nil` if the object is not a arc.
+---@field set_start_angle fun(id: uint64, start_angle: float) Set where the arc with this id starts. Does nothing if this object is not a arc.
+---@field get_angle fun(id: uint64): float Get the angle of the arc with this id or `nil` if the object is not a arc.
+---@field set_angle fun(angle: float, id: uint64) Set the angle of the arc with this id. Does nothing if this object is not a arc.
+---@field get_vertices fun(id: uint64): [object Object] Get the vertices of the polygon with this id or `nil` if the object is not a polygon.
+---@field set_vertices fun(id: uint64, vertices: [object Object]) Set the vertices of the polygon with this id. Does nothing if this object is not a polygon.
+---@field get_sprite fun(id: uint64): SpritePath Get the sprite of the sprite or light with this id or `nil` if the object is not a sprite or light.
+---@field set_sprite fun(id: uint64, sprite: SpritePath) Set the sprite of the sprite or light with this id. Does nothing if this object is not a sprite or light.
+---@field get_x_scale fun(id: uint64): double Get the horizontal scale of the sprite or animation with this id or `nil` if the object is not a sprite or animation.
+---@field set_x_scale fun(id: uint64, x_scale: double) Set the horizontal scale of the sprite or animation with this id. Does nothing if this object is not a sprite or animation.
+---@field get_y_scale fun(id: uint64): double Get the vertical scale of the sprite or animation with this id or `nil` if the object is not a sprite or animation.
+---@field set_y_scale fun(id: uint64, y_scale: double) Set the vertical scale of the sprite or animation with this id. Does nothing if this object is not a sprite or animation.
+---@field get_render_layer fun(id: uint64): RenderLayer Get the render layer of the sprite or animation with this id or `nil` if the object is not a sprite or animation.
+---@field set_render_layer fun(id: uint64, render_layer: RenderLayer) Set the render layer of the sprite or animation with this id. Does nothing if this object is not a sprite or animation.
+---@field get_orientation_target fun(id: uint64): ScriptRenderTarget The object rotates so that it faces this target. Note that `orientation` is still applied to the object. Get the orientation_target of the object with this id or `nil` if no target or if this object is not a polygon, sprite, or animation.
+---@field set_orientation_target fun(id: uint64, orientation_target: [object Object], orientation_target_offset: Vector) The object rotates so that it faces this target. Note that `orientation` is still applied to the object. Set the orientation_target of the object with this id. Does nothing if this object is not a polygon, sprite, or animation. Set to `nil` if the object should not have an orientation_target.
+---@field get_oriented_offset fun(id: uint64): Vector Offsets the center of the sprite or animation if `orientation_target` is given. This offset will rotate together with the sprite or animation. Get the oriented_offset of the sprite or animation with this id or `nil` if this object is not a sprite or animation.
+---@field set_oriented_offset fun(id: uint64, oriented_offset: Vector) Offsets the center of the sprite or animation if `orientation_target` is given. This offset will rotate together with the sprite or animation. Set the oriented_offset of the sprite or animation with this id. Does nothing if this object is not a sprite or animation.
+---@field get_intensity fun(id: uint64): float Get the intensity of the light with this id or `nil` if the object is not a light.
+---@field set_intensity fun(id: uint64, intensity: float) Set the intensity of the light with this id. Does nothing if this object is not a light.
+---@field get_minimum_darkness fun(id: uint64): float Get the minimum darkness at which the light with this id is rendered or `nil` if the object is not a light.
+---@field set_minimum_darkness fun(id: uint64, minimum_darkness: float) Set the minimum darkness at which the light with this id is rendered. Does nothing if this object is not a light.
+---@field get_oriented fun(id: uint64): boolean Get if the light with this id is rendered has the same orientation as the target entity or `nil` if the object is not a light. Note that `orientation` is still applied to the sprite.
+---@field set_oriented fun(id: uint64, oriented: boolean) Set if the light with this id is rendered has the same orientation as the target entity. Does nothing if this object is not a light. Note that `orientation` is still applied to the sprite.
+---@field get_animation fun(id: uint64): string Get the animation prototype name of the animation with this id or `nil` if the object is not an animation.
+---@field set_animation fun(animation: string, id: uint64) Set the animation prototype name of the animation with this id. Does nothing if this object is not an animation.
+---@field get_animation_speed fun(id: uint64): double Get the animation speed of the animation with this id or `nil` if the object is not an animation.
+---@field set_animation_speed fun(animation_speed: double, id: uint64) Set the animation speed of the animation with this id. Does nothing if this object is not an animation.
+---@field get_animation_offset fun(id: uint64): double Get the animation offset of the animation with this id or `nil` if the object is not an animation.
+---@field set_animation_offset fun(animation_offset: double, id: uint64) Set the animation offset of the animation with this id. Does nothing if this object is not an animation.
 
 ---@class LuaResourceCategoryPrototype Prototype of a resource category.
 ---@field name string Name of this prototype.
@@ -1469,8 +2139,9 @@
 ---@field localised_description LocalisedString
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaRoboportControlBehavior Control behavior for roboports.
+---@class LuaRoboportControlBehavior : LuaControlBehavior Control behavior for roboports.
 ---@field read_logistics boolean `true` if the roboport should report the logistics network content to the circuit network.
 ---@field read_robot_stats boolean `true` if the roboport should report the robot statistics to the circuit network.
 ---@field available_logistic_output_signal SignalID
@@ -1479,12 +2150,14 @@
 ---@field total_construction_output_signal SignalID
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaSettings Object containing mod settings of three distinct types: `startup`, `global`, and `player`. An instance of LuaSettings is available through the global object named `settings`.
 ---@field startup [object Object] The startup mod settings, indexed by prototype name.
 ---@field global [object Object] The current global mod settings, indexed by prototype name. Even though these are marked as read-only, they can be changed by overwriting individual [ModSetting](ModSetting) tables in the custom table. Mods can only change their own settings. Using the in-game console, all global settings can be changed.
 ---@field player [object Object] The default player mod settings for this map, indexed by prototype name. Even though these are marked as read-only, they can be changed by overwriting individual [ModSetting](ModSetting) tables in the custom table. Mods can only change their own settings. Using the in-game console, all player settings can be changed.
 ---@field object_name string This object's name.
+---@field get_player_settings fun(player: PlayerIdentification): [object Object] Gets the current per-player settings for the given player, indexed by prototype name. Returns the same structure as [LuaPlayer::mod_settings](LuaPlayer::mod_settings).
 
 ---@class LuaShortcutPrototype Prototype of a shortcut.
 ---@field name string Name of this prototype.
@@ -1498,10 +2171,12 @@
 ---@field associated_control_input string
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaStorageTankControlBehavior Control behavior for storage tanks.
+---@class LuaStorageTankControlBehavior : LuaControlBehavior Control behavior for storage tanks.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaStyle Style of a GUI element. All of the attributes listed here may be `nil` if not available for a particular GUI element.
 ---@field gui LuaGui Gui of the [LuaGuiElement](LuaGuiElement) of this style.
@@ -1573,6 +2248,7 @@
 ---@field extra_margin_when_activated [object Object] Sets extra_top/right/bottom/left_margin_when_activated to this value. An array with two values sets top/bottom margin to the first value and left/right margin to the second value. An array with four values sets top, right, bottom, left margin respectively.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaSurface A "domain" of the world. Surfaces can only be created and deleted through the API. Surfaces are uniquely identified by their name. Every game contains at least the surface "nauvis".
 ---@field name string The name of this surface. Names are unique among surfaces.
@@ -1598,6 +2274,83 @@
 ---@field show_clouds boolean If clouds are shown on this surface.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_pollution fun(position: Position): double Get the pollution for a given position.
+---@field can_place_entity fun(build_check_type: defines.build_check_type, direction: defines.direction, force: ForceIdentification, forced: boolean, inner_name: string, name: string, position: Position): boolean Check for collisions with terrain or other entities.
+---@field can_fast_replace fun(direction: defines.direction, force: ForceIdentification, name: string, position: Position): boolean If there exists an entity at the given location that can be fast-replaced with the given entity parameters.
+---@field find_entity fun(entity: string, position: Position): LuaEntity Find a specific entity at a specific position.
+---@field find_entities fun(area: BoundingBox): [object Object] Find entities in a given area. If no area is given all entities on the surface are returned.
+---@field find_entities_filtered fun(area: BoundingBox, collision_mask: [object Object], direction: [object Object], force: [object Object], ghost_name: [object Object], ghost_type: [object Object], invert: boolean, limit: uint, name: [object Object], position: Position, radius: double, to_be_deconstructed: boolean, to_be_upgraded: boolean, type: [object Object]): [object Object] Find all entities of the given type or name in the given area. If no filters (`name`, `type`, `force`, etc.) are given, this returns all entities in the search area. If multiple filters are specified, only entities matching all given filters are returned. If no `area` or `position` are given, the entire surface is searched. If `position` is given, this returns the entities colliding with that position (i.e the given position is within the entity's collision box). If `position` and `radius` are given, this returns the entities within the radius of the position. If `area` is specified, this returns the entities colliding with that area.
+---@field find_tiles_filtered fun(area: BoundingBox, collision_mask: [object Object], has_hidden_tile: boolean, limit: uint, name: [object Object], position: Position, radius: double): [object Object] Find all tiles of the given name in the given area. If no filters are given, this returns all tiles in the search area. If no `area` or `position` and `radius` is given, the entire surface is searched. If `position` and `radius` are given, only tiles within the radius of the position are included.
+---@field count_entities_filtered fun(area: BoundingBox, collision_mask: [object Object], direction: [object Object], force: [object Object], ghost_name: [object Object], ghost_type: [object Object], invert: boolean, limit: uint, name: [object Object], position: Position, radius: double, to_be_deconstructed: boolean, to_be_upgraded: boolean, type: [object Object]): uint Count entities of given type or name in a given area. Works just like [LuaSurface::find_entities_filtered](LuaSurface::find_entities_filtered), except this only returns the count. As it doesn't construct all the wrapper objects, this is more efficient if one is only interested in the number of entities. If no `area` or `position` are given, the entire surface is searched. If `position` is given, this returns the entities colliding with that position (i.e the given position is within the entity's collision box). If `position` and `radius` are given, this returns entities in the radius of the position. If `area` is specified, this returns entities colliding with that area.
+---@field count_tiles_filtered fun(area: BoundingBox, collision_mask: [object Object], has_hidden_tile: boolean, limit: uint, name: [object Object], position: Position, radius: double): uint Count tiles of a given name in a given area. Works just like [LuaSurface::find_tiles_filtered](LuaSurface::find_tiles_filtered), except this only returns the count. As it doesn't construct all the wrapper objects, this is more efficient if one is only interested in the number of tiles. If no `area` or `position` and `radius` is given, the entire surface is searched. If `position` and `radius` are given, only tiles within the radius of the position are included.
+---@field find_non_colliding_position fun(center: Position, force_to_tile_center: boolean, name: string, precision: double, radius: double): Position Find a non-colliding position within a given radius.
+---@field find_non_colliding_position_in_box fun(force_to_tile_center: boolean, name: string, precision: double, search_space: BoundingBox): Position Find a non-colliding position within a given rectangle.
+---@field spill_item_stack fun(allow_belts: boolean, enable_looted: boolean, force: [object Object], items: ItemStackIdentification, position: Position): [object Object] Spill items on the ground centered at a given location.
+---@field find_enemy_units fun(center: Position, force: [object Object], radius: double): [object Object] Find enemy units (entities with type "unit") of a given force within an area.
+---@field find_units fun(area: BoundingBox, condition: ForceCondition, force: [object Object]): [object Object] Find units (entities with type "unit") of a given force and force condition within a given area.
+---@field find_nearest_enemy fun(force: ForceIdentification, max_distance: double, position: Position): LuaEntity Find the enemy entity-with-force ([military entity](https://wiki.factorio.com/Military_units_and_structures)) closest to the given position.
+---@field find_nearest_enemy_entity_with_owner fun(force: ForceIdentification, max_distance: double, position: Position): LuaEntity Find the enemy entity-with-owner closest to the given position.
+---@field set_multi_command fun(command: Command, force: ForceIdentification, unit_count: uint, unit_search_distance: uint): uint Give a command to multiple units. This will automatically select suitable units for the task.
+---@field create_entity fun(create_build_effect_smoke: boolean, direction: defines.direction, fast_replace: boolean, force: ForceIdentification, item: LuaItemStack, move_stuck_players: boolean, name: string, player: PlayerIdentification, position: Position, raise_built: boolean, source: LuaEntity, spawn_decorations: boolean, spill: boolean, target: LuaEntity): LuaEntity Create an entity on this surface.
+---@field create_trivial_smoke fun(name: string, position: Position)
+---@field create_particle fun(frame_speed: float, height: float, movement: Vector, name: string, position: Position, vertical_speed: float) Creates a particle at the given location
+---@field create_unit_group fun(force: ForceIdentification, position: Position): LuaUnitGroup Create a new unit group at a given position.
+---@field build_enemy_base fun(force: ForceIdentification, position: Position, unit_count: uint) Send a group to build a new base.
+---@field get_tile fun(x: int, y: int): LuaTile Get the tile at a given position.
+---@field set_tiles fun(correct_tiles: boolean, raise_event: boolean, remove_colliding_decoratives: boolean, remove_colliding_entities: [object Object], tiles: [object Object]) Set tiles at specified locations. Can automatically correct the edges around modified tiles. Placing a [mineable](LuaTilePrototype::mineable_properties) tile on top of a non-mineable one will turn the latter into the [LuaTile::hidden_tile](LuaTile::hidden_tile) for that tile. Placing a mineable tile on a mineable one or a non-mineable tile on a non-mineable one will not modify the hidden tile. This restriction can however be circumvented by using [LuaSurface::set_hidden_tile](LuaSurface::set_hidden_tile).
+---@field pollute fun(amount: double, source: Position) Spawn pollution at the given position.
+---@field get_chunks fun(): LuaChunkIterator Get an iterator going over every chunk on this surface.
+---@field is_chunk_generated fun(position: ChunkPosition): boolean Is a given chunk generated?
+---@field request_to_generate_chunks fun(position: Position, radius: uint) Request that the game's map generator generate chunks at the given position for the given radius on this surface.
+---@field force_generate_chunk_requests fun() Blocks and generates all chunks that have been requested using all available threads.
+---@field set_chunk_generated_status fun(position: ChunkPosition, status: defines.chunk_generated_status) Set generated status of a chunk. Useful when copying chunks.
+---@field find_logistic_network_by_position fun(force: ForceIdentification, position: Position): LuaLogisticNetwork Find the logistic network that covers a given position.
+---@field find_logistic_networks_by_construction_area fun(force: ForceIdentification, position: Position): [object Object] Finds all of the logistics networks whose construction area intersects with the given position.
+---@field deconstruct_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Place a deconstruction request.
+---@field cancel_deconstruct_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Cancel a deconstruction order.
+---@field upgrade_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Place an upgrade request.
+---@field cancel_upgrade_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Cancel a upgrade order.
+---@field get_hidden_tile fun(position: TilePosition): string The hidden tile name or `nil` if there isn't one for the given position.
+---@field set_hidden_tile fun(position: TilePosition, tile: [object Object]) Set the hidden tile for the specified position. While during normal gameplay only [non-mineable](LuaTilePrototype::mineable_properties) tiles can become hidden, this method allows any kind of tile to be set as the hidden one.
+---@field get_connected_tiles fun(position: Position, tiles: [object Object]): [object Object] Gets all tiles of the given types that are connected horizontally or vertically to the given tile position including the given tile position.
+---@field delete_chunk fun(position: ChunkPosition)
+---@field regenerate_entity fun(chunks: [object Object], entities: [object Object]) Regenerate autoplacement of some entities on this surface. This can be used to autoplace newly-added entities.
+---@field regenerate_decorative fun(chunks: [object Object], decoratives: [object Object]) Regenerate autoplacement of some decoratives on this surface. This can be used to autoplace newly-added decoratives.
+---@field print fun(color: Color, message: LocalisedString) Print text to the chat console of all players on this surface.
+---@field destroy_decoratives fun(area: BoundingBox, invert: boolean, limit: uint, name: [object Object], position: TilePosition) Removes all decoratives from the given area. If no area and no position are given, then the entire surface is searched.
+---@field create_decoratives fun(check_collision: boolean, decoratives: [object Object]) Adds the given decoratives to the surface.
+---@field find_decoratives_filtered fun(area: BoundingBox, invert: boolean, limit: uint, name: [object Object], position: TilePosition): [object Object] Find decoratives of a given name in a given area. If no filters are given, returns all decoratives in the search area. If multiple filters are specified, returns only decoratives matching every given filter. If no area and no position are given, the entire surface is searched.
+---@field get_trains fun(force: ForceIdentification): [object Object]
+---@field clear_pollution fun() Clears all pollution on this surface.
+---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for every player on this surface.
+---@field get_resource_counts fun(): [object Object] Gets the resource amount of all resources on this surface
+---@field get_random_chunk fun(): ChunkPosition Gets a random generated chunk position or 0,0 if no chunks have been generated on this surface.
+---@field clone_area fun(clear_destination_decoratives: boolean, clear_destination_entities: boolean, clone_decoratives: boolean, clone_entities: boolean, clone_tiles: boolean, create_build_effect_smoke: boolean, destination_area: BoundingBox, destination_force: [object Object], destination_surface: SurfaceIdentification, expand_map: boolean, source_area: BoundingBox) Clones the given area.
+---@field clone_brush fun(clear_destination_decoratives: boolean, clear_destination_entities: boolean, clone_decoratives: boolean, clone_entities: boolean, clone_tiles: boolean, create_build_effect_smoke: boolean, destination_force: [object Object], destination_offset: TilePosition, destination_surface: SurfaceIdentification, expand_map: boolean, manual_collision_mode: boolean, source_offset: TilePosition, source_positions: [object Object]) Clones the given area.
+---@field clone_entities fun(create_build_effect_smoke: boolean, destination_force: ForceIdentification, destination_offset: Vector, destination_surface: SurfaceIdentification, entities: [object Object], snap_to_grid: boolean) Clones the given entities.
+---@field clear fun(ignore_characters: boolean) Clears this surface deleting all entities and chunks on it.
+---@field request_path fun(bounding_box: BoundingBox, can_open_gates: boolean, collision_mask: [object Object], entity_to_ignore: LuaEntity, force: ForceIdentification, goal: Position, path_resolution_modifier: int, pathfind_flags: PathfinderFlags, radius: double, start: Position): uint Generates a path with the specified constraints (as an array of [PathfinderWaypoints](PathfinderWaypoint)) using the unit pathfinding algorithm. This path can be used to emulate pathing behavior by script for non-unit entities. If you want to command actual units to move, use the [LuaEntity::set_command](LuaEntity::set_command) functionality instead. The resulting path is ultimately returned asynchronously via [on_script_path_request_finished](on_script_path_request_finished).
+---@field get_script_areas fun(name: string): [object Object] Gets the script areas that match the given name or if no name is given all areas are returned.
+---@field get_script_area fun(key: [object Object]): ScriptArea Gets the first script area by name or id.
+---@field edit_script_area fun(area: ScriptArea, id: uint) Sets the given script area to the new values.
+---@field add_script_area fun(area: ScriptArea): uint Adds the given script area.
+---@field remove_script_area fun(id: uint): boolean Removes the given script area.
+---@field get_script_positions fun(name: string): [object Object] Gets the script positions that match the given name or if no name is given all positions are returned.
+---@field get_script_position fun(key: [object Object]): ScriptPosition Gets the first script position by name or id.
+---@field edit_script_position fun(area: ScriptPosition, id: uint) Sets the given script position to the new values.
+---@field add_script_position fun(area: ScriptPosition): uint Adds the given script position.
+---@field remove_script_position fun(id: uint): boolean Removes the given script position.
+---@field get_map_exchange_string fun(): string Gets the map exchange string for the current map generation settings of this surface.
+---@field get_starting_area_radius fun(): double Gets the starting area radius of this surface.
+---@field get_closest fun(entities: [object Object], position: Position): LuaEntity Gets the closest entity in the list to this position.
+---@field get_train_stops fun(force: ForceIdentification, name: [object Object]): [object Object] Gets train stops matching the given filters.
+---@field get_total_pollution fun(): double Gets the total amount of pollution on the surface by iterating over all of the chunks containing pollution.
+---@field entity_prototype_collides fun(direction: defines.direction, position: Position, prototype: EntityPrototypeIdentification, use_map_generation_bounding_box: boolean)
+---@field decorative_prototype_collides fun(position: Position, prototype: string)
+---@field calculate_tile_properties fun(positions: [object Object], property_names: [object Object]): [object Object]
+---@field get_entities_with_force fun(force: [object Object], position: ChunkPosition): [object Object] Returns all the entities with force on this chunk for the given force.
+---@field build_checkerboard fun(area: BoundingBox) Sets the given area to the checkerboard lab tiles.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTechnology One research item.
 ---@field force LuaForce The force this technology belongs to.
@@ -1619,6 +2372,8 @@
 ---@field research_unit_count_formula string The count formula used for this infinite research or nil if this isn't an infinite research.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field reload fun() Reload this technology from its prototype.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTechnologyPrototype A Technology prototype.
 ---@field name string Name of this technology.
@@ -1640,6 +2395,7 @@
 ---@field research_unit_count_formula string The count formula used for this infinite research or nil if this isn't an infinite research.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTile A single "square" on the map.
 ---@field name string Prototype name of this tile. E.g. `"sand-3"` or `"grass-2"`.
@@ -1649,6 +2405,11 @@
 ---@field surface LuaSurface The surface this tile is on.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field collides_with fun(layer: CollisionMaskLayer): boolean What type of things can collide with this tile?
+---@field to_be_deconstructed fun(): boolean Is this tile marked for deconstruction?
+---@field order_deconstruction fun(force: ForceIdentification, player: PlayerIdentification): LuaEntity Orders deconstruction of this tile by the given force.
+---@field cancel_deconstruction fun(force: ForceIdentification, player: PlayerIdentification) Cancels deconstruction if it is scheduled, does nothing otherwise.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTilePrototype Prototype of a tile.
 ---@field name string Name of this prototype.
@@ -1674,6 +2435,7 @@
 ---@field check_collision_with_entities boolean True if building this tile should check for colliding entities above and prevent building if such are found. Also during mining tiles above this tile checks for entities colliding with this tile and prevents mining if such are found.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTrain A train. Trains are a sequence of connected rolling stocks -- locomotives and wagons.
 ---@field manual_mode boolean When `true`, the train is explicitly controlled by the player or script. When `false`, the train moves autonomously according to its schedule.
@@ -1706,8 +2468,22 @@
 ---@field signal LuaEntity The signal this train is arriving or waiting at or `nil` if none.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field get_item_count fun(item: string): uint Get the amount of a particular item stored in the train.
+---@field get_contents fun(): [object Object] Get a mapping of the train's inventory.
+---@field remove_item fun(stack: ItemStackIdentification): uint Remove some items from the train.
+---@field insert fun(stack: ItemStackIdentification) Insert a stack into the train.
+---@field clear_items_inside fun() Clear all items in this train.
+---@field recalculate_path fun(force: boolean): boolean Checks if the path is invalid and tries to re-path if it isn't.
+---@field get_fluid_count fun(fluid: string): double Get the amount of a particular fluid stored in the train.
+---@field get_fluid_contents fun(): [object Object] Gets a mapping of the train's fluid inventory.
+---@field remove_fluid fun(fluid: Fluid): double Remove some fluid from the train.
+---@field insert_fluid fun(fluid: Fluid): double Inserts the given fluid into the first available location in this train.
+---@field clear_fluids_inside fun() Clears all fluids in this train.
+---@field go_to_station fun(index: uint) Go to the station specified by the index in the train's schedule.
+---@field get_rails fun(): [object Object] Gets all rails under the train.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaTrainStopControlBehavior Control behavior for train stops.
+---@class LuaTrainStopControlBehavior : LuaGenericOnOffControlBehavior Control behavior for train stops.
 ---@field send_to_train boolean `true` if the train stop should send the circuit network contents to the train to use.
 ---@field read_from_train boolean `true` if the train stop should send the train contents to the circuit network.
 ---@field read_stopped_train boolean `true` if the train stop should send the stopped train id to the circuit network.
@@ -1719,13 +2495,15 @@
 ---@field trains_limit_signal SignalID The signal to be used by set-trains-limit to limit amount of incoming trains
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaTransportBeltControlBehavior Control behavior for transport belts.
+---@class LuaTransportBeltControlBehavior : LuaGenericOnOffControlBehavior Control behavior for transport belts.
 ---@field enable_disable boolean If the belt will be enabled/disabled based off the circuit network.
 ---@field read_contents boolean If the belt will read the contents and send them to the circuit network.
 ---@field read_contents_mode defines.control_behavior.transport_belt.content_read_mode The read mode for the belt.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTransportLine One line on a transport belt.
 ---@field owner LuaEntity The entity this transport line belongs to.
@@ -1733,6 +2511,16 @@
 ---@field input_lines [object Object] The transport lines that this transport line is fed by or an empty table if none.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field clear fun() Remove all items from this transport line.
+---@field get_item_count fun(item: string): uint Count some or all items on this line.
+---@field remove_item fun(items: ItemStackIdentification): uint Remove some items from this line.
+---@field can_insert_at fun(position: float): boolean Can an item be inserted at a given position?
+---@field can_insert_at_back fun(): boolean Can an item be inserted at the back of this line?
+---@field insert_at fun(items: ItemStackIdentification, position: float): boolean Insert items at a given position.
+---@field insert_at_back fun(items: ItemStackIdentification): boolean Insert items at the back of this line.
+---@field get_contents fun(): [object Object] Get counts of all items on this line.
+---@field line_equals fun(other: LuaTransportLine): boolean Returns whether the associated internal transport line of this line is the same as the others associated internal transport line.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTrivialSmokePrototype Prototype of a trivial smoke.
 ---@field name string Name of this prototype.
@@ -1755,6 +2543,7 @@
 ---@field render_layer RenderLayer
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaUnitGroup A collection of units moving and attacking together. The engine creates autonomous unit groups to attack polluted areas. The script can create and control such groups as well. Groups can accept commands in the same manner as regular units.
 ---@field members [object Object] Members of this group.
@@ -1768,6 +2557,13 @@
 ---@field distraction_command Command The distraction command given to this group or `nil` is the group currently isn't distracted.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field add_member fun(unit: LuaEntity) Make a unit a member of this group. Has the same effect as giving a `group_command` with this group to the unit.
+---@field set_command fun(command: Command) Give this group a command.
+---@field set_distraction_command fun(command: Command) Give this group a distraction command.
+---@field set_autonomous fun() Make this group autonomous. Autonomous groups will automatically attack polluted areas. Autonomous groups aren't considered to be script driven
+---@field start_moving fun() Make the group start moving even if some of its members haven't yet arrived.
+---@field destroy fun() Dissolve this group. Its members won't be destroyed, they will be merely unlinked from this group.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaVirtualSignalPrototype Prototype of a virtual signal.
 ---@field name string Name of this prototype.
@@ -1778,6 +2574,7 @@
 ---@field subgroup LuaGroup
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaVoidEnergySourcePrototype Prototype of a void energy source.
 ---@field emissions double
@@ -1785,12 +2582,14 @@
 ---@field render_no_power_icon boolean
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
----@class LuaWallControlBehavior Control behavior for walls.
+---@class LuaWallControlBehavior : LuaControlBehavior Control behavior for walls.
 ---@field circuit_condition CircuitConditionDefinition The circuit condition.
 ---@field open_gate boolean
 ---@field read_sensor boolean
 ---@field output_signal SignalID
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
+---@field help fun(): string All methods and properties that this object supports.
 
