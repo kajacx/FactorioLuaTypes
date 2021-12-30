@@ -1,6 +1,6 @@
 export interface FactorioApiJson {
-  application: "factorio"
-  stage: "runtime"
+  application: 'factorio'
+  stage: 'runtime'
   application_version: string
   api_version: 1
 
@@ -38,15 +38,15 @@ export interface Class extends BasicMember, WithNotes {
 }
 
 export interface CallOperator extends Method {
-  name: "call"
+  name: 'call'
 }
 
 export interface IndexOperator extends Attribute {
-  name: "index"
+  name: 'index'
 }
 
 export interface LengthOperator extends Attribute {
-  name: "length"
+  name: 'length'
 }
 
 export type Operator = CallOperator | IndexOperator | LengthOperator
@@ -67,26 +67,26 @@ export interface BaseConcept extends BasicMember, WithNotes {
 }
 
 export interface TableConcept extends BaseConcept, WithParameterVariants {
-  category: "table"
+  category: 'table'
 }
 
 export interface TableOrArrayConcept extends BaseConcept {
-  category: "table_or_array"
+  category: 'table_or_array'
   parameters: Parameter[]
 }
 
 export interface EnumConcept extends BaseConcept {
-  category: "enum"
+  category: 'enum'
   options: BasicMember[]
 }
 
 export interface FlagConcept extends BaseConcept {
-  category: "flag"
+  category: 'flag'
   options: BasicMember[]
 }
 
 export interface UnionConcept extends BaseConcept {
-  category: "union"
+  category: 'union'
   options: {
     type: Type
     order: number
@@ -95,16 +95,16 @@ export interface UnionConcept extends BaseConcept {
 }
 
 export interface FilterConcept extends BaseConcept, WithParameterVariants {
-  category: "filter"
+  category: 'filter'
 }
 
 export interface StructConcept extends BaseConcept {
-  category: "struct"
+  category: 'struct'
   attributes: Attribute[]
 }
 
 export interface ConceptConcept extends BaseConcept {
-  category: "concept"
+  category: 'concept'
 }
 
 export type Concept =
@@ -126,39 +126,39 @@ export interface BaseComplexType {
 }
 
 export interface VariantComplexType extends BaseComplexType {
-  complex_type: "variant"
+  complex_type: 'variant'
   options: Type[]
 }
 
 export interface ArrayComplexType extends BaseComplexType {
-  complex_type: "array"
+  complex_type: 'array'
   value: Type
 }
 
 export interface DictionaryComplexType extends BaseComplexType {
-  complex_type: "dictionary"
+  complex_type: 'dictionary'
   key: Type
   value: Type
 }
 
 export interface LuaCustomTableComplexType extends BaseComplexType {
-  complex_type: "LuaCustomTable"
+  complex_type: 'LuaCustomTable'
   key: Type
   value: Type
 }
 
 export interface FunctionComplexType extends BaseComplexType {
-  complex_type: "function"
+  complex_type: 'function'
   parameters: Type[]
 }
 
 export interface LuaLazyLoadedValueComplexType extends BaseComplexType {
-  complex_type: "LuaLazyLoadedValue"
+  complex_type: 'LuaLazyLoadedValue'
   value: Type
 }
 
 export interface TableComplexType extends BaseComplexType, WithParameterVariants {
-  complex_type: "table"
+  complex_type: 'table'
 }
 
 export type ComplexType =

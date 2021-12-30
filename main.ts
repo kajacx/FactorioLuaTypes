@@ -5,6 +5,7 @@ import { processClasses } from './processors/classProcessor';
 import { processConcepts } from './processors/conceptProcessor';
 import { processDefines } from './processors/definesProcesor';
 import { processEvents } from './processors/eventProcessor';
+import { LazyType, processLazy } from './processors/lazyProcessor';
 
 const factorioApi: FactorioApiJson = require('./definitions/runtime-api-1.1.50');
 
@@ -23,13 +24,17 @@ const work = async () => {
     }
   }
 
+  const lazyTypes: LazyType[] = [];
+
   // process all types in "parallel"
   await Promise.all([
-    processClasses(folder, factorioApi),
-    processConcepts(folder, factorioApi),
-    processEvents(folder, factorioApi),
-    processDefines(folder, factorioApi),
-    processAliases(folder, factorioApi),
+    processClasses(folder, factorioApi, lazyTypes),
+    processConcepts(folder, factorioApi, lazyTypes),
+    processEvents(folder, factorioApi, lazyTypes),
+    processDefines(folder, factorioApi, lazyTypes),
+    processAliases(folder),
   ]);
+
+  await processLazy(folder, lazyTypes);
 }
 work();
