@@ -33,6 +33,6 @@ export const parseType = (type: Type, lazyTypes: LazyType[]): string => {
 
 export const parseMethod = (method: Method, lazyTypes: LazyType[]) => {
   const args = method.parameters.map(param => `${param.name}: ${parseType(param.type, lazyTypes)}`).join(', ');
-  const returnType = method.return_type ? `: ${method.return_type}` : '';
+  const returnType = method.return_type ? `: ${parseType(method.return_type, lazyTypes)}` : '';
   return `fun(${args})${returnType}`;
 }

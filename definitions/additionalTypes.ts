@@ -26,6 +26,16 @@ export const aliases: AliasType[] = [
     targetType: 'number',
   },
   {
+    name: 'uint16',
+    description: 'Unsigned 16 bit integer value',
+    targetType: 'number',
+  },
+  {
+    name: 'uint64',
+    description: 'Unsigned 64 bit integer value',
+    targetType: 'number',
+  },
+  {
     name: 'float',
     description: 'Single precision floating point value',
     targetType: 'number',

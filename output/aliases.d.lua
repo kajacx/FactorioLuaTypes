@@ -6,6 +6,10 @@
 
 ---@alias uint8 number Unsigned byte value
 
+---@alias uint16 number Unsigned 16 bit integer value
+
+---@alias uint64 number Unsigned 64 bit integer value
+
 ---@alias float number Single precision floating point value
 
 ---@alias double number Double precision floating point value

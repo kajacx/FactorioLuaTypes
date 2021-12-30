@@ -64,10 +64,10 @@
 ---@field on_nth_tick fun(f: fun(arg0: NthTickEventData), tick: uint | uint[]) Register a handler to run every nth-tick(s). When the game is on tick 0 it will trigger all registered handlers.
 ---@field register_on_entity_destroyed fun(entity: LuaEntity): uint64 Registers an entity so that after it's destroyed, [on_entity_destroyed](on_entity_destroyed) is called. Once an entity is registered, it stays registered until it is actually destroyed, even through save/load cycles. The registration is global across all mods, meaning once one mod registers an entity, all mods listening to [on_entity_destroyed](on_entity_destroyed) will receive the event when it is destroyed. Registering the same entity multiple times will still only fire the destruction event once, and will return the same registration number.
 ---@field generate_event_name fun(): uint Generate a new, unique event ID that can be used to raise custom events with [LuaBootstrap::raise_event](LuaBootstrap::raise_event).
----@field get_event_handler fun(event: uint): [object Object] Find the event handler for an event.
+---@field get_event_handler fun(event: uint): fun(arg0: EventData) Find the event handler for an event.
 ---@field get_event_order fun(): string Gets the mod event order as a string.
 ---@field set_event_filter fun(event: uint, filters: EventFilter[]) Sets the filters for the given event. The filters are only retained when set after the actual event registration, because registering for an event with different or no filters will overwrite previously set ones.
----@field get_event_filter fun(event: uint): [object Object] Gets the filters for the given event.
+---@field get_event_filter fun(event: uint): EventFilter[] Gets the filters for the given event.
 ---@field raise_event fun(data: table, event: uint) Raise an event. Only events generated with [LuaBootstrap::generate_event_name](LuaBootstrap::generate_event_name) and the following can be raised: - [on_console_chat](on_console_chat) - [on_player_crafted_item](on_player_crafted_item) - [on_player_fast_transferred](on_player_fast_transferred) - [on_biter_base_built](on_biter_base_built) - [on_market_item_purchased](on_market_item_purchased) - [script_raised_built](script_raised_built) - [script_raised_destroy](script_raised_destroy) - [script_raised_revive](script_raised_revive) - [script_raised_set_tiles](script_raised_set_tiles)
 ---@field raise_console_chat fun(message: string, player_index: uint) Raises [on_console_chat](on_console_chat) with the given parameters.
 ---@field raise_player_crafted_item fun(item_stack: LuaItemStack, player_index: uint, recipe: LuaRecipe) Raises [on_player_crafted_item](on_player_crafted_item) with the given parameters.
@@ -227,7 +227,7 @@
 ---@field clear_personal_logistic_slot fun(slot_index: uint)
 ---@field clear_vehicle_logistic_slot fun(slot_index: uint)
 ---@field is_cursor_blueprint fun(): boolean Returns whether the player is holding a blueprint. This takes both blueprint items as well as blueprint records from the blueprint library into account.
----@field get_blueprint_entities fun(): [object Object] Gets the entities that are part of the currently selected blueprint, regardless of it being in a blueprint book or picked from the blueprint library. Returns `nil` if there is no currently selected blueprint.
+---@field get_blueprint_entities fun(): BlueprintEntity[] Gets the entities that are part of the currently selected blueprint, regardless of it being in a blueprint book or picked from the blueprint library. Returns `nil` if there is no currently selected blueprint.
 ---@field is_cursor_empty fun(): boolean Returns whether the player is holding something in the cursor. It takes into account items from the blueprint library, as well as items and ghost cursor.
 
 ---@class LuaControlBehavior The control behavior for an entity. Inserters have logistic network and circuit network behavior logic, lamps have circuit logic and so on. This is an abstract base class that concrete control behaviors inherit.
@@ -500,7 +500,7 @@
 ---@field ghost_has_flag fun(flag: string): boolean Same as [LuaEntity::has_flag](LuaEntity::has_flag), but targets the inner entity on a entity ghost.
 ---@field add_market_item fun(offer: Offer) Offer a thing on the market.
 ---@field remove_market_item fun(offer: uint): boolean Remove an offer from a market.
----@field get_market_items fun(): [object Object] Get all offers in a market as an array.
+---@field get_market_items fun(): Offer[] Get all offers in a market as an array.
 ---@field clear_market_items fun() Removes all offers from a market.
 ---@field connect_neighbour fun(target: LuaEntity | WireConnectionDefinition): boolean Connect two devices with a circuit wire or copper cable. Depending on which type of connection should be made, there are different procedures: - To connect two electric poles, `target` must be a [LuaEntity](LuaEntity) that specifies another electric pole. This will connect them with copper cable. - To connect two devices with circuit wire, `target` must be a table of type [WireConnectionDefinition](WireConnectionDefinition).
 ---@field disconnect_neighbour fun(target: defines_wire_type | LuaEntity | WireConnectionDefinition) Disconnect circuit wires or copper cables between devices. Depending on which type of connection should be cut, there are different procedures: - To remove all copper cables, leave the `target` parameter blank: `pole.disconnect_neighbour()`. - To remove all wires of a specific color, set `target` to [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green). - To remove a specific copper cable between two electric poles, `target` must be a [LuaEntity](LuaEntity) that specifies the other pole: `pole1.disconnect_neighbour(pole2)`. - To remove a specific circuit wire, `target` must be a table of type [WireConnectionDefinition](WireConnectionDefinition).
@@ -523,14 +523,14 @@
 ---@field get_transport_line fun(index: uint): LuaTransportLine Get a transport line of a belt or belt connectable entity.
 ---@field get_max_transport_line_index fun(): uint Get the maximum transport line index of a belt or belt connectable entity.
 ---@field launch_rocket fun(): boolean
----@field revive fun(raise_revive: boolean, return_item_request_proxy: boolean): [object Object] Revive a ghost. I.e. turn it from a ghost to a real entity or tile.
----@field silent_revive fun(raise_revive: boolean, return_item_request_proxy: boolean): [object Object] Revives a ghost silently.
+---@field revive fun(raise_revive: boolean, return_item_request_proxy: boolean): table<string, uint> Revive a ghost. I.e. turn it from a ghost to a real entity or tile.
+---@field silent_revive fun(raise_revive: boolean, return_item_request_proxy: boolean): table<string, uint> Revives a ghost silently.
 ---@field get_connected_rail fun(rail_connection_direction: defines_rail_connection_direction, rail_direction: defines_rail_direction): LuaEntity
----@field get_connected_rails fun(): [object Object] Get the rails that this signal is connected to.
+---@field get_connected_rails fun(): LuaEntity[] Get the rails that this signal is connected to.
 ---@field get_rail_segment_entity fun(direction: defines_rail_direction, in_else_out: boolean): LuaEntity Get the rail signal or train stop at the start/end of the rail segment this rail is in, or `nil` if the rail segment doesn't start/end with a signal nor a train stop.
 ---@field get_rail_segment_end fun(direction: defines_rail_direction): LuaEntity Get the rail at the end of the rail segment this rail is in.
 ---@field get_rail_segment_length fun(): double Get the length of the rail segment this rail is in.
----@field get_rail_segment_overlaps fun(): [object Object] Get a rail from each rail segment that overlaps with this rail's rail segment.
+---@field get_rail_segment_overlaps fun(): LuaEntity[] Get a rail from each rail segment that overlaps with this rail's rail segment.
 ---@field get_filter fun(slot_index: uint): string Get the filter for a slot in an inserter, loader, or logistic storage container.
 ---@field set_filter fun(item: string, slot_index: uint) Set the filter for a slot in an inserter, loader, or logistic storage container.
 ---@field get_infinity_container_filter fun(index: uint): InfinityInventoryFilter Gets the filter for this infinity container at the given index or `nil` if the filter index doesn't exist or is empty.
@@ -543,27 +543,27 @@
 ---@field get_or_create_control_behavior fun(): LuaControlBehavior Gets (and or creates if needed) the control behavior of the entity.
 ---@field get_circuit_network fun(circuit_connector: defines_circuit_connector_id, wire: defines_wire_type): LuaCircuitNetwork
 ---@field get_merged_signal fun(circuit_connector: defines_circuit_connector_id, signal: SignalID): int Read a single signal from the combined circuit networks.
----@field get_merged_signals fun(circuit_connector: defines_circuit_connector_id): [object Object] The merged circuit network signals or `nil` if there are no signals.
+---@field get_merged_signals fun(circuit_connector: defines_circuit_connector_id): Signal[] The merged circuit network signals or `nil` if there are no signals.
 ---@field supports_backer_name fun(): boolean Whether this entity supports a backer name.
----@field copy_settings fun(by_player: PlayerIdentification, entity: LuaEntity): [object Object] Copies settings from the given entity onto this entity.
----@field get_logistic_point fun(index: defines_logistic_member_index): [object Object] Gets all the `LuaLogisticPoint`s that this entity owns. Optionally returns only the point specified by the index parameter.
+---@field copy_settings fun(by_player: PlayerIdentification, entity: LuaEntity): table<string, uint> Copies settings from the given entity onto this entity.
+---@field get_logistic_point fun(index: defines_logistic_member_index): LuaLogisticPoint | LuaLogisticPoint[] Gets all the `LuaLogisticPoint`s that this entity owns. Optionally returns only the point specified by the index parameter.
 ---@field play_note fun(instrument: uint, note: uint): boolean Plays a note with the given instrument and note.
 ---@field connect_rolling_stock fun(direction: defines_rail_direction): boolean Connects the rolling stock in the given direction.
 ---@field disconnect_rolling_stock fun(direction: defines_rail_direction): boolean Tries to disconnect this rolling stock in the given direction.
 ---@field update_connections fun() Reconnect loader, beacon, cliff and mining drill connections to entities that might have been teleported out or in by the script. The game doesn't do this automatically as we don't want to loose performance by checking this in normal games.
 ---@field get_recipe fun(): LuaRecipe Current recipe being assembled by this machine or `nil` if no recipe is set.
----@field set_recipe fun(recipe: string | LuaRecipe): [object Object] Sets the current recipe in this assembly machine.
+---@field set_recipe fun(recipe: string | LuaRecipe): table<string, uint> Sets the current recipe in this assembly machine.
 ---@field rotate fun(by_player: PlayerIdentification, enable_looted: boolean, force: LuaForce | string, reverse: boolean, spill_items: boolean): boolean Rotates this entity as if the player rotated it.
----@field get_driver fun(): [object Object] Gets the driver of this vehicle if any.
+---@field get_driver fun(): LuaEntity | LuaPlayer Gets the driver of this vehicle if any.
 ---@field set_driver fun(driver: LuaEntity | PlayerIdentification) Sets the driver of this vehicle.
----@field get_passenger fun(): [object Object] Gets the passenger of this car or spidertron if any.
+---@field get_passenger fun(): LuaEntity | LuaPlayer Gets the passenger of this car or spidertron if any.
 ---@field set_passenger fun(passenger: LuaEntity | PlayerIdentification) Sets the passenger of this car or spidertron.
 ---@field is_connected_to_electric_network fun(): boolean Returns true if this entity is connected to an electric network.
----@field get_train_stop_trains fun(): [object Object] The trains scheduled to stop at this train stop.
+---@field get_train_stop_trains fun(): LuaTrain[] The trains scheduled to stop at this train stop.
 ---@field get_stopped_train fun(): LuaTrain The train currently stopped at this train stop or `nil` if none.
 ---@field clone fun(create_build_effect_smoke: boolean, force: ForceIdentification, position: MapPosition, surface: LuaSurface): LuaEntity Clones this entity.
 ---@field get_fluid_count fun(fluid: string): double Get the amount of all or some fluid in this entity.
----@field get_fluid_contents fun(): [object Object] Get amounts of all fluids in this entity.
+---@field get_fluid_contents fun(): table<string, double> Get amounts of all fluids in this entity.
 ---@field remove_fluid fun(amount: double, maximum_temperature: double, minimum_temperature: double, name: string, temperature: double): double Remove fluid from this entity.
 ---@field insert_fluid fun(fluid: Fluid): double Insert fluid into this entity. Fluidbox is chosen automatically.
 ---@field clear_fluid_inside fun() Remove all fluids from this entity.
@@ -579,7 +579,7 @@
 ---@field can_shoot fun(position: MapPosition, target: LuaEntity): boolean If this character can shoot the given entity or position.
 ---@field start_fading_out fun() Only works if the entity is a speech-bubble, with an "effect" defined in its wrapper_flow_style. Starts animating the opacity of the speech bubble towards zero, and destroys the entity when it hits zero.
 ---@field get_upgrade_target fun(): LuaEntityPrototype Returns the new entity prototype.
----@field get_upgrade_direction fun(): defines.direction Returns the new entity direction after upgrading.
+---@field get_upgrade_direction fun(): defines_direction Returns the new entity direction after upgrading.
 ---@field get_damage_to_be_taken fun(): float Returns the amount of damage to be taken by this entity.
 ---@field deplete fun() Depletes and destroys this resource entity.
 ---@field mine fun(force: boolean, ignore_minable: boolean, inventory: LuaInventory, raise_destroyed: boolean): boolean Mines this entity.
@@ -848,13 +848,13 @@
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
 ---@field take fun(by_player: PlayerIdentification, equipment: LuaEquipment, position: Position): SimpleItemStack Remove an equipment from the grid.
----@field take_all fun(by_player: PlayerIdentification): [object Object] Remove all equipment from the grid.
+---@field take_all fun(by_player: PlayerIdentification): table<string, uint> Remove all equipment from the grid.
 ---@field clear fun(by_player: PlayerIdentification) Clear all equipment from the grid, removing it without actually returning it.
 ---@field put fun(by_player: PlayerIdentification, name: string, position: Position): LuaEquipment Insert an equipment into the grid.
 ---@field can_move fun(equipment: LuaEquipment, position: Position): boolean Check whether moving an equipment would succeed.
 ---@field move fun(equipment: LuaEquipment, position: Position): boolean Move an equipment within this grid.
 ---@field get fun(position: Position): LuaEquipment Find equipment in the Equipment Grid based off a position.
----@field get_contents fun(): [object Object] Get counts of all equipment in this grid.
+---@field get_contents fun(): table<string, uint> Get counts of all equipment in this grid.
 ---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaEquipmentGridPrototype Prototype of an equipment grid.
@@ -901,9 +901,9 @@
 ---@field force LuaForce The force these statistics belong to or `nil` for pollution statistics.
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
----@field get_input_count fun(name: string): [object Object] Gets the total input count for a given prototype.
+---@field get_input_count fun(name: string): uint64 | double Gets the total input count for a given prototype.
 ---@field set_input_count fun(count: uint64 | double, name: string) Sets the total input count for a given prototype.
----@field get_output_count fun(name: string): [object Object] Gets the total output count for a given prototype.
+---@field get_output_count fun(name: string): uint64 | double Gets the total output count for a given prototype.
 ---@field set_output_count fun(count: uint64 | double, name: string) Sets the total output count for a given prototype.
 ---@field get_flow_count fun(count: boolean, input: boolean, name: string, precision_index: defines_flow_precision_index): double Gets the flow count value for the given time frame.
 ---@field on_flow fun(count: float, name: string) Adds a value to this flow statistics.
@@ -916,12 +916,12 @@
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
 ---@field get_prototype fun(index: uint): LuaFluidBoxPrototype The prototype of this fluidbox index.
 ---@field get_capacity fun(index: uint): double The capacity of the given fluidbox index.
----@field get_connections fun(index: uint): [object Object] The fluidbox connections for the given fluidbox index.
+---@field get_connections fun(index: uint): LuaFluidBox[] The fluidbox connections for the given fluidbox index.
 ---@field get_filter fun(index: uint): FluidBoxFilter Get a fluid box filter
 ---@field set_filter fun(filter: FluidBoxFilterSpec, index: uint): boolean Set a fluid box filter.
 ---@field get_flow fun(index: uint): double Flow through the fluidbox in the last tick. It is the larger of in-flow and out-flow.
 ---@field get_locked_fluid fun(index: uint): string Returns the fluid the fluidbox is locked onto Returns 'nil' for no lock
----@field flush fun(fluid: FluidIdentification, index: uint): [object Object] Flushes all fluid from this fluidbox and its fluid system.
+---@field flush fun(fluid: FluidIdentification, index: uint): table<string, float> Flushes all fluid from this fluidbox and its fluid system.
 ---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaFluidBoxPrototype A prototype of a fluidbox owned by some [LuaEntityPrototype](LuaEntityPrototype).
@@ -1091,14 +1091,14 @@
 ---@field get_item_launched fun(item: string): uint Gets the count of a given item launched in rockets.
 ---@field set_item_launched fun(count: uint, item: string) Sets the count of a given item launched in rockets.
 ---@field print fun(color: Color, message: LocalisedString) Print text to the chat console of all players on this force.
----@field get_trains fun(surface: SurfaceIdentification): [object Object]
+---@field get_trains fun(surface: SurfaceIdentification): LuaTrain[]
 ---@field add_chart_tag fun(surface: SurfaceIdentification, tag: ChartTagSpec): LuaCustomChartTag Adds a custom chart tag to the given surface and returns the new tag or `nil` if the given position isn't valid for a chart tag.
----@field find_chart_tags fun(area: BoundingBox, surface: SurfaceIdentification): [object Object] Finds all custom chart tags within the given bounding box on the given surface.
+---@field find_chart_tags fun(area: BoundingBox, surface: SurfaceIdentification): LuaCustomChartTag[] Finds all custom chart tags within the given bounding box on the given surface.
 ---@field get_saved_technology_progress fun(technology: TechnologyIdentification): double Gets the saved progress for the given technology or `nil` if there is no saved progress.
 ---@field set_saved_technology_progress fun(progress: double, technology: TechnologyIdentification) Sets the saved progress for the given technology. The technology must not be in progress, must not be completed, and the new progress must be < 100%.
 ---@field reset_evolution fun() Resets evolution for this force to zero.
 ---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for every player in this force.
----@field get_train_stops fun(name: string | string[], surface: SurfaceIdentification): [object Object] Gets train stops matching the given filters.
+---@field get_train_stops fun(name: string | string[], surface: SurfaceIdentification): LuaEntity[] Gets train stops matching the given filters.
 ---@field get_hand_crafting_disabled_for_recipe fun(recipe: string | LuaRecipe): boolean Gets if the given recipe is explicitly disabled from being hand crafted.
 ---@field set_hand_crafting_disabled_for_recipe fun(hand_crafting_disabled: boolean, recipe: string | LuaRecipe) Sets if the given recipe can be hand-crafted. This is used to explicitly disable hand crafting a recipe - it won't allow hand-crafting otherwise not hand-craftable recipes.
 ---@field add_research fun(technology: TechnologyIdentification): boolean Add this technology to the back of the research queue if the queue is enabled. Otherwise, set this technology to be researched now.
@@ -1227,23 +1227,23 @@
 ---@field get_active_entities_count fun(surface: SurfaceIdentification): uint Gets the number of entities that are active (updated each tick).
 ---@field get_map_exchange_string fun(): string Gets the map exchange string for the map generation settings that were used to create this map.
 ---@field parse_map_exchange_string fun(map_exchange_string: string): MapExchangeStringData Convert a map exchange string to map gen settings and map settings.
----@field get_train_stops fun(force: ForceIdentification, name: string | string[], surface: SurfaceIdentification): [object Object] Gets train stops matching the given filters.
+---@field get_train_stops fun(force: ForceIdentification, name: string | string[], surface: SurfaceIdentification): LuaEntity[] Gets train stops matching the given filters.
 ---@field get_player fun(player: uint | string): LuaPlayer Gets the given player or returns `nil` if no player is found.
 ---@field get_surface fun(surface: uint | string): LuaSurface Gets the given surface or returns `nil` if no surface is found.
 ---@field create_profiler fun(stopped: boolean): LuaProfiler Creates a [LuaProfiler](LuaProfiler), which is used for measuring script performance.
 ---@field evaluate_expression fun(expression: string, variables: table<string, double>): double Evaluate an expression, substituting variables as provided. For details on the formula, see the relevant page on the [Factorio wiki](https://wiki.factorio.com/Prototype/Technology#unit).
----@field get_filtered_entity_prototypes fun(filters: EntityPrototypeFilter[]): [object Object] Returns a dictionary of all LuaEntityPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_item_prototypes fun(filters: ItemPrototypeFilter[]): [object Object] Returns a dictionary of all LuaItemPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_equipment_prototypes fun(filters: EquipmentPrototypeFilter[]): [object Object] Returns a dictionary of all LuaEquipmentPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_mod_setting_prototypes fun(filters: ModSettingPrototypeFilter[]): [object Object] Returns a dictionary of all LuaModSettingPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_achievement_prototypes fun(filters: AchievementPrototypeFilter[]): [object Object] Returns a dictionary of all LuaAchievementPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_tile_prototypes fun(filters: TilePrototypeFilter[]): [object Object] Returns a dictionary of all LuaTilePrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_decorative_prototypes fun(filters: DecorativePrototypeFilter[]): [object Object] Returns a dictionary of all LuaDecorativePrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_fluid_prototypes fun(filters: FluidPrototypeFilter[]): [object Object] Returns a dictionary of all LuaFluidPrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_recipe_prototypes fun(filters: RecipePrototypeFilter[]): [object Object] Returns a dictionary of all LuaRecipePrototypes that fit the given filters. The prototypes are indexed by `name`.
----@field get_filtered_technology_prototypes fun(filters: TechnologyPrototypeFilter[]): [object Object] Returns a dictionary of all LuaTechnologyPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_entity_prototypes fun(filters: EntityPrototypeFilter[]): table<string, LuaEntityPrototype> Returns a dictionary of all LuaEntityPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_item_prototypes fun(filters: ItemPrototypeFilter[]): table<string, LuaItemPrototype> Returns a dictionary of all LuaItemPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_equipment_prototypes fun(filters: EquipmentPrototypeFilter[]): table<string, LuaEquipmentPrototype> Returns a dictionary of all LuaEquipmentPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_mod_setting_prototypes fun(filters: ModSettingPrototypeFilter[]): table<string, LuaModSettingPrototype> Returns a dictionary of all LuaModSettingPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_achievement_prototypes fun(filters: AchievementPrototypeFilter[]): table<string, LuaAchievementPrototype> Returns a dictionary of all LuaAchievementPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_tile_prototypes fun(filters: TilePrototypeFilter[]): table<string, LuaTilePrototype> Returns a dictionary of all LuaTilePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_decorative_prototypes fun(filters: DecorativePrototypeFilter[]): table<string, LuaDecorativePrototype> Returns a dictionary of all LuaDecorativePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_fluid_prototypes fun(filters: FluidPrototypeFilter[]): table<string, LuaFluidPrototype> Returns a dictionary of all LuaFluidPrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_recipe_prototypes fun(filters: RecipePrototypeFilter[]): table<string, LuaRecipePrototype> Returns a dictionary of all LuaRecipePrototypes that fit the given filters. The prototypes are indexed by `name`.
+---@field get_filtered_technology_prototypes fun(filters: TechnologyPrototypeFilter[]): table<string, LuaTechnologyPrototype> Returns a dictionary of all LuaTechnologyPrototypes that fit the given filters. The prototypes are indexed by `name`.
 ---@field create_inventory fun(size: uint16): LuaInventory Creates an inventory that is not owned by any game object. It can be resized later with [LuaInventory::resize](LuaInventory::resize).
----@field get_script_inventories fun(mod: string): [object Object] Gets the inventories created through [LuaGameScript::create_inventory](LuaGameScript::create_inventory)
+---@field get_script_inventories fun(mod: string): table<string, LuaInventory[]> Gets the inventories created through [LuaGameScript::create_inventory](LuaGameScript::create_inventory)
 ---@field reset_time_played fun() Resets the amount of time played for this map.
 ---@field encode_string fun(string: string): string Deflates and base64 encodes the given string.
 ---@field decode_string fun(string: string): string Base64 decodes and inflates the given string.
@@ -1429,7 +1429,7 @@
 ---@field remove fun(items: ItemStackIdentification): uint Remove items from this inventory.
 ---@field get_item_count fun(item: string): uint Get the number of all or some items in this inventory.
 ---@field is_empty fun(): boolean Does this inventory contain nothing?
----@field get_contents fun(): [object Object] Get counts of all items in this inventory.
+---@field get_contents fun(): table<string, uint> Get counts of all items in this inventory.
 ---@field supports_bar fun(): boolean Does this inventory support a bar? Bar is the draggable red thing, found for example on chests, that limits the portion of the inventory that may be manipulated by machines.
 ---@field get_bar fun(): uint Get the current bar. This is the index at which the red area starts.
 ---@field set_bar fun(bar: uint) Set the current bar.
@@ -1577,7 +1577,7 @@
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
 ---@field is_blueprint_setup fun(): boolean Is this blueprint item setup? I.e. is it a non-empty blueprint?
----@field get_blueprint_entities fun(): [object Object] The entities in this blueprint.
+---@field get_blueprint_entities fun(): BlueprintEntity[] The entities in this blueprint.
 ---@field set_blueprint_entities fun(entities: BlueprintEntity[]) Set new entities to be a part of this blueprint.
 ---@field add_ammo fun(amount: float) Add ammo to this ammo item.
 ---@field drain_ammo fun(amount: float) Remove ammo from this ammo item.
@@ -1590,13 +1590,13 @@
 ---@field import_stack fun(data: string): int Import a supported item (blueprint, blueprint-book, deconstruction-planner, upgrade-planner, item-with-tags) from a string.
 ---@field swap_stack fun(stack: LuaItemStack): boolean Swaps this item stack with the given item stack if allowed.
 ---@field clear fun() Clear this item stack.
----@field get_blueprint_tiles fun(): [object Object] A list of the tiles in this blueprint.
+---@field get_blueprint_tiles fun(): Tile[] A list of the tiles in this blueprint.
 ---@field set_blueprint_tiles fun(tiles: Tile[]) Set specific tiles in this blueprint.
 ---@field get_inventory fun(inventory: defines_inventory): LuaInventory Access the inner inventory of an item.
----@field build_blueprint fun(by_player: PlayerIdentification, direction: defines_direction, force: ForceIdentification, force_build: boolean, position: Position, raise_built: boolean, skip_fog_of_war: boolean, surface: SurfaceIdentification): [object Object]
+---@field build_blueprint fun(by_player: PlayerIdentification, direction: defines_direction, force: ForceIdentification, force_build: boolean, position: Position, raise_built: boolean, skip_fog_of_war: boolean, surface: SurfaceIdentification): LuaEntity[]
 ---@field deconstruct_area fun(area: BoundingBox, by_player: PlayerIdentification, force: ForceIdentification, skip_fog_of_war: boolean, surface: SurfaceIdentification) Deconstruct the given area with this deconstruction item.
 ---@field cancel_deconstruct_area fun(area: BoundingBox, by_player: PlayerIdentification, force: ForceIdentification, skip_fog_of_war: boolean, surface: SurfaceIdentification) Cancel deconstruct the given area with this deconstruction item.
----@field create_blueprint fun(always_include_tiles: boolean, area: BoundingBox, force: ForceIdentification, include_entities: boolean, include_fuel: boolean, include_modules: boolean, include_station_names: boolean, include_trains: boolean, surface: SurfaceIdentification): [object Object] Sets up this blueprint using the found blueprintable entities/tiles on the surface.
+---@field create_blueprint fun(always_include_tiles: boolean, area: BoundingBox, force: ForceIdentification, include_entities: boolean, include_fuel: boolean, include_modules: boolean, include_station_names: boolean, include_trains: boolean, surface: SurfaceIdentification): table<uint, LuaEntity> Sets up this blueprint using the found blueprintable entities/tiles on the surface.
 ---@field get_tag fun(tag_name: string): AnyBasic Gets the tag with the given name or returns `nil` if it doesn't exist.
 ---@field set_tag fun(tag: AnyBasic, tag_name: string): AnyBasic Sets the tag with the given name and value.
 ---@field remove_tag fun(tag: string): boolean Removes a tag with the given name.
@@ -1684,7 +1684,7 @@
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
 ---@field get_item_count fun(item: string, member: string): int Count given or all items in the network or given members.
----@field get_contents fun(): [object Object] Get item counts for the entire network.
+---@field get_contents fun(): table<string, uint> Get item counts for the entire network.
 ---@field remove_item fun(item: ItemStackIdentification, members: string): uint Remove items from the logistic network. This will actually remove the items from some logistic chests.
 ---@field insert fun(item: ItemStackIdentification, members: string): uint Insert items into the logistic network. This will actually insert the items into some logistic chests.
 ---@field find_cell_closest_to fun(position: Position): LuaLogisticCell Find logistic cell closest to a given position.
@@ -1860,7 +1860,7 @@
 ---@field add_alert fun(entity: LuaEntity, type: defines_alert_type) Adds an alert to this player for the given entity of the given alert type.
 ---@field add_custom_alert fun(entity: LuaEntity, icon: SignalID, message: LocalisedString, show_on_map: boolean) Adds a custom alert to this player.
 ---@field remove_alert fun(entity: LuaEntity, icon: SignalID, message: LocalisedString, position: Position, prototype: LuaEntityPrototype, surface: SurfaceIdentification, type: defines_alert_type) Removes all alerts matching the given filters or if an empty filters table is given all alerts are removed.
----@field get_alerts fun(entity: LuaEntity, position: Position, prototype: LuaEntityPrototype, surface: SurfaceIdentification, type: defines_alert_type): [object Object] Get all alerts matching the given filters, or all alerts if no filters are given.
+---@field get_alerts fun(entity: LuaEntity, position: Position, prototype: LuaEntityPrototype, surface: SurfaceIdentification, type: defines_alert_type): table<uint, table<defines_alert_type, Alert[]>> Get all alerts matching the given filters, or all alerts if no filters are given.
 ---@field mute_alert fun(alert_type: defines_alert_type): boolean Mutes alerts for the given alert category.
 ---@field unmute_alert fun(alert_type: defines_alert_type): boolean Unmutes alerts for the given alert category.
 ---@field is_alert_muted fun(alert_type: defines_alert_type): boolean If the given alert type is currently muted.
@@ -1873,7 +1873,7 @@
 ---@field build_from_cursor fun(alt: boolean, direction: defines_direction, position: MapPosition, skip_fog_of_war: boolean, terrain_building_size: uint) Builds what ever is in the cursor on the surface the player is on.
 ---@field use_from_cursor fun(position: Position) Uses the current item in the cursor if it's a capsule or does nothing if not.
 ---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for this player.
----@field get_associated_characters fun(): [object Object] The characters associated with this player.
+---@field get_associated_characters fun(): LuaEntity[] The characters associated with this player.
 ---@field associate_character fun(character: LuaEntity) Associates a character with this player.
 ---@field disassociate_character fun(character: LuaEntity) Disassociates a character from this player. This is functionally the same as setting [LuaEntity::associated_player](LuaEntity::associated_player) to `nil`.
 ---@field create_local_flying_text fun(color: Color, create_at_cursor: boolean, position: MapPosition, speed: double, text: LocalisedString, time_to_live: uint) Spawn flying text that is only visible to this player. Either `position` or `create_at_cursor` are required. When `create_at_cursor` is `true`, all parameters other than `text` are ignored.
@@ -2042,16 +2042,16 @@
 ---@field destroy fun(id: uint64) Destroy the object with the given id.
 ---@field is_font_valid fun(font_name: string): boolean Does a font with this name exist?
 ---@field is_valid fun(id: uint64): boolean Does a valid object with this id exist?
----@field get_all_ids fun(mod_name: string): [object Object] Gets an array of all valid object ids.
+---@field get_all_ids fun(mod_name: string): uint64[] Gets an array of all valid object ids.
 ---@field clear fun(mod_name: string) Destroys all render objects.
 ---@field get_type fun(id: uint64): string Gets the type of the given object. The types are "text", "line", "circle", "rectangle", "arc", "polygon", "sprite", "light" and "animation".
 ---@field bring_to_front fun(id: uint64) Reorder this object so that it is drawn in front of the already existing objects.
 ---@field get_surface fun(id: uint64): LuaSurface The surface the object with this id is rendered on.
 ---@field get_time_to_live fun(id: uint64): uint Get the time to live of the object with this id. This will be 0 if the object does not expire.
 ---@field set_time_to_live fun(id: uint64, time_to_live: uint) Set the time to live of the object with this id. Set to 0 if the object should not expire.
----@field get_forces fun(id: uint64): [object Object] Get the forces that the object with this id is rendered to or `nil` if visible to all forces.
+---@field get_forces fun(id: uint64): LuaForce[] Get the forces that the object with this id is rendered to or `nil` if visible to all forces.
 ---@field set_forces fun(forces: ForceIdentification[], id: uint64) Set the forces that the object with this id is rendered to.
----@field get_players fun(id: uint64): [object Object] Get the players that the object with this id is rendered to or `nil` if visible to all players.
+---@field get_players fun(id: uint64): LuaPlayer[] Get the players that the object with this id is rendered to or `nil` if visible to all players.
 ---@field set_players fun(id: uint64, players: PlayerIdentification[]) Set the players that the object with this id is rendered to.
 ---@field get_visible fun(id: uint64): boolean Get whether this is rendered to anyone at all.
 ---@field set_visible fun(id: uint64, visible: boolean) Set whether this is rendered to anyone at all.
@@ -2105,7 +2105,7 @@
 ---@field set_start_angle fun(id: uint64, start_angle: float) Set where the arc with this id starts. Does nothing if this object is not a arc.
 ---@field get_angle fun(id: uint64): float Get the angle of the arc with this id or `nil` if the object is not a arc.
 ---@field set_angle fun(angle: float, id: uint64) Set the angle of the arc with this id. Does nothing if this object is not a arc.
----@field get_vertices fun(id: uint64): [object Object] Get the vertices of the polygon with this id or `nil` if the object is not a polygon.
+---@field get_vertices fun(id: uint64): ScriptRenderTarget[] Get the vertices of the polygon with this id or `nil` if the object is not a polygon.
 ---@field set_vertices fun(id: uint64, vertices: ScriptRenderVertexTarget[]) Set the vertices of the polygon with this id. Does nothing if this object is not a polygon.
 ---@field get_sprite fun(id: uint64): SpritePath Get the sprite of the sprite or light with this id or `nil` if the object is not a sprite or light.
 ---@field set_sprite fun(id: uint64, sprite: SpritePath) Set the sprite of the sprite or light with this id. Does nothing if this object is not a sprite or light.
@@ -2157,7 +2157,7 @@
 ---@field global table<string, ModSetting> The current global mod settings, indexed by prototype name. Even though these are marked as read-only, they can be changed by overwriting individual [ModSetting](ModSetting) tables in the custom table. Mods can only change their own settings. Using the in-game console, all global settings can be changed.
 ---@field player table<string, ModSetting> The default player mod settings for this map, indexed by prototype name. Even though these are marked as read-only, they can be changed by overwriting individual [ModSetting](ModSetting) tables in the custom table. Mods can only change their own settings. Using the in-game console, all player settings can be changed.
 ---@field object_name string This object's name.
----@field get_player_settings fun(player: PlayerIdentification): [object Object] Gets the current per-player settings for the given player, indexed by prototype name. Returns the same structure as [LuaPlayer::mod_settings](LuaPlayer::mod_settings).
+---@field get_player_settings fun(player: PlayerIdentification): table<string, ModSetting> Gets the current per-player settings for the given player, indexed by prototype name. Returns the same structure as [LuaPlayer::mod_settings](LuaPlayer::mod_settings).
 
 ---@class LuaShortcutPrototype Prototype of a shortcut.
 ---@field name string Name of this prototype.
@@ -2278,16 +2278,16 @@
 ---@field can_place_entity fun(build_check_type: defines_build_check_type, direction: defines_direction, force: ForceIdentification, forced: boolean, inner_name: string, name: string, position: Position): boolean Check for collisions with terrain or other entities.
 ---@field can_fast_replace fun(direction: defines_direction, force: ForceIdentification, name: string, position: Position): boolean If there exists an entity at the given location that can be fast-replaced with the given entity parameters.
 ---@field find_entity fun(entity: string, position: Position): LuaEntity Find a specific entity at a specific position.
----@field find_entities fun(area: BoundingBox): [object Object] Find entities in a given area. If no area is given all entities on the surface are returned.
----@field find_entities_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], direction: defines_direction | defines_direction[], force: ForceIdentification | ForceIdentification[], ghost_name: string | string[], ghost_type: string | string[], invert: boolean, limit: uint, name: string | string[], position: Position, radius: double, to_be_deconstructed: boolean, to_be_upgraded: boolean, type: string | string[]): [object Object] Find all entities of the given type or name in the given area. If no filters (`name`, `type`, `force`, etc.) are given, this returns all entities in the search area. If multiple filters are specified, only entities matching all given filters are returned. If no `area` or `position` are given, the entire surface is searched. If `position` is given, this returns the entities colliding with that position (i.e the given position is within the entity's collision box). If `position` and `radius` are given, this returns the entities within the radius of the position. If `area` is specified, this returns the entities colliding with that area.
----@field find_tiles_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], has_hidden_tile: boolean, limit: uint, name: string | string[], position: Position, radius: double): [object Object] Find all tiles of the given name in the given area. If no filters are given, this returns all tiles in the search area. If no `area` or `position` and `radius` is given, the entire surface is searched. If `position` and `radius` are given, only tiles within the radius of the position are included.
+---@field find_entities fun(area: BoundingBox): LuaEntity[] Find entities in a given area. If no area is given all entities on the surface are returned.
+---@field find_entities_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], direction: defines_direction | defines_direction[], force: ForceIdentification | ForceIdentification[], ghost_name: string | string[], ghost_type: string | string[], invert: boolean, limit: uint, name: string | string[], position: Position, radius: double, to_be_deconstructed: boolean, to_be_upgraded: boolean, type: string | string[]): LuaEntity[] Find all entities of the given type or name in the given area. If no filters (`name`, `type`, `force`, etc.) are given, this returns all entities in the search area. If multiple filters are specified, only entities matching all given filters are returned. If no `area` or `position` are given, the entire surface is searched. If `position` is given, this returns the entities colliding with that position (i.e the given position is within the entity's collision box). If `position` and `radius` are given, this returns the entities within the radius of the position. If `area` is specified, this returns the entities colliding with that area.
+---@field find_tiles_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], has_hidden_tile: boolean, limit: uint, name: string | string[], position: Position, radius: double): LuaTile[] Find all tiles of the given name in the given area. If no filters are given, this returns all tiles in the search area. If no `area` or `position` and `radius` is given, the entire surface is searched. If `position` and `radius` are given, only tiles within the radius of the position are included.
 ---@field count_entities_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], direction: defines_direction | defines_direction[], force: ForceIdentification | ForceIdentification[], ghost_name: string | string[], ghost_type: string | string[], invert: boolean, limit: uint, name: string | string[], position: Position, radius: double, to_be_deconstructed: boolean, to_be_upgraded: boolean, type: string | string[]): uint Count entities of given type or name in a given area. Works just like [LuaSurface::find_entities_filtered](LuaSurface::find_entities_filtered), except this only returns the count. As it doesn't construct all the wrapper objects, this is more efficient if one is only interested in the number of entities. If no `area` or `position` are given, the entire surface is searched. If `position` is given, this returns the entities colliding with that position (i.e the given position is within the entity's collision box). If `position` and `radius` are given, this returns entities in the radius of the position. If `area` is specified, this returns entities colliding with that area.
 ---@field count_tiles_filtered fun(area: BoundingBox, collision_mask: CollisionMaskLayer | CollisionMaskLayer[], has_hidden_tile: boolean, limit: uint, name: string | string[], position: Position, radius: double): uint Count tiles of a given name in a given area. Works just like [LuaSurface::find_tiles_filtered](LuaSurface::find_tiles_filtered), except this only returns the count. As it doesn't construct all the wrapper objects, this is more efficient if one is only interested in the number of tiles. If no `area` or `position` and `radius` is given, the entire surface is searched. If `position` and `radius` are given, only tiles within the radius of the position are included.
 ---@field find_non_colliding_position fun(center: Position, force_to_tile_center: boolean, name: string, precision: double, radius: double): Position Find a non-colliding position within a given radius.
 ---@field find_non_colliding_position_in_box fun(force_to_tile_center: boolean, name: string, precision: double, search_space: BoundingBox): Position Find a non-colliding position within a given rectangle.
----@field spill_item_stack fun(allow_belts: boolean, enable_looted: boolean, force: LuaForce | string, items: ItemStackIdentification, position: Position): [object Object] Spill items on the ground centered at a given location.
----@field find_enemy_units fun(center: Position, force: LuaForce | string, radius: double): [object Object] Find enemy units (entities with type "unit") of a given force within an area.
----@field find_units fun(area: BoundingBox, condition: ForceCondition, force: LuaForce | string): [object Object] Find units (entities with type "unit") of a given force and force condition within a given area.
+---@field spill_item_stack fun(allow_belts: boolean, enable_looted: boolean, force: LuaForce | string, items: ItemStackIdentification, position: Position): LuaEntity[] Spill items on the ground centered at a given location.
+---@field find_enemy_units fun(center: Position, force: LuaForce | string, radius: double): LuaEntity[] Find enemy units (entities with type "unit") of a given force within an area.
+---@field find_units fun(area: BoundingBox, condition: ForceCondition, force: LuaForce | string): LuaEntity[] Find units (entities with type "unit") of a given force and force condition within a given area.
 ---@field find_nearest_enemy fun(force: ForceIdentification, max_distance: double, position: Position): LuaEntity Find the enemy entity-with-force ([military entity](https://wiki.factorio.com/Military_units_and_structures)) closest to the given position.
 ---@field find_nearest_enemy_entity_with_owner fun(force: ForceIdentification, max_distance: double, position: Position): LuaEntity Find the enemy entity-with-owner closest to the given position.
 ---@field set_multi_command fun(command: Command, force: ForceIdentification, unit_count: uint, unit_search_distance: uint): uint Give a command to multiple units. This will automatically select suitable units for the task.
@@ -2305,37 +2305,37 @@
 ---@field force_generate_chunk_requests fun() Blocks and generates all chunks that have been requested using all available threads.
 ---@field set_chunk_generated_status fun(position: ChunkPosition, status: defines_chunk_generated_status) Set generated status of a chunk. Useful when copying chunks.
 ---@field find_logistic_network_by_position fun(force: ForceIdentification, position: Position): LuaLogisticNetwork Find the logistic network that covers a given position.
----@field find_logistic_networks_by_construction_area fun(force: ForceIdentification, position: Position): [object Object] Finds all of the logistics networks whose construction area intersects with the given position.
+---@field find_logistic_networks_by_construction_area fun(force: ForceIdentification, position: Position): LuaLogisticNetwork[] Finds all of the logistics networks whose construction area intersects with the given position.
 ---@field deconstruct_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Place a deconstruction request.
 ---@field cancel_deconstruct_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Cancel a deconstruction order.
 ---@field upgrade_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Place an upgrade request.
 ---@field cancel_upgrade_area fun(area: BoundingBox, force: ForceIdentification, item: LuaItemStack, player: PlayerIdentification, skip_fog_of_war: boolean) Cancel a upgrade order.
 ---@field get_hidden_tile fun(position: TilePosition): string The hidden tile name or `nil` if there isn't one for the given position.
 ---@field set_hidden_tile fun(position: TilePosition, tile: string | LuaTilePrototype) Set the hidden tile for the specified position. While during normal gameplay only [non-mineable](LuaTilePrototype::mineable_properties) tiles can become hidden, this method allows any kind of tile to be set as the hidden one.
----@field get_connected_tiles fun(position: Position, tiles: string[]): [object Object] Gets all tiles of the given types that are connected horizontally or vertically to the given tile position including the given tile position.
+---@field get_connected_tiles fun(position: Position, tiles: string[]): Position[] Gets all tiles of the given types that are connected horizontally or vertically to the given tile position including the given tile position.
 ---@field delete_chunk fun(position: ChunkPosition)
 ---@field regenerate_entity fun(chunks: ChunkPosition[], entities: string | string[]) Regenerate autoplacement of some entities on this surface. This can be used to autoplace newly-added entities.
 ---@field regenerate_decorative fun(chunks: ChunkPosition[], decoratives: string | string[]) Regenerate autoplacement of some decoratives on this surface. This can be used to autoplace newly-added decoratives.
 ---@field print fun(color: Color, message: LocalisedString) Print text to the chat console of all players on this surface.
 ---@field destroy_decoratives fun(area: BoundingBox, invert: boolean, limit: uint, name: string | string[] | LuaDecorativePrototype | LuaDecorativePrototype[], position: TilePosition) Removes all decoratives from the given area. If no area and no position are given, then the entire surface is searched.
 ---@field create_decoratives fun(check_collision: boolean, decoratives: Decorative[]) Adds the given decoratives to the surface.
----@field find_decoratives_filtered fun(area: BoundingBox, invert: boolean, limit: uint, name: string | string[] | LuaDecorativePrototype | LuaDecorativePrototype[], position: TilePosition): [object Object] Find decoratives of a given name in a given area. If no filters are given, returns all decoratives in the search area. If multiple filters are specified, returns only decoratives matching every given filter. If no area and no position are given, the entire surface is searched.
----@field get_trains fun(force: ForceIdentification): [object Object]
+---@field find_decoratives_filtered fun(area: BoundingBox, invert: boolean, limit: uint, name: string | string[] | LuaDecorativePrototype | LuaDecorativePrototype[], position: TilePosition): DecorativeResult[] Find decoratives of a given name in a given area. If no filters are given, returns all decoratives in the search area. If multiple filters are specified, returns only decoratives matching every given filter. If no area and no position are given, the entire surface is searched.
+---@field get_trains fun(force: ForceIdentification): LuaTrain[]
 ---@field clear_pollution fun() Clears all pollution on this surface.
 ---@field play_sound fun(override_sound_type: SoundType, path: SoundPath, position: Position, volume_modifier: double) Play a sound for every player on this surface.
----@field get_resource_counts fun(): [object Object] Gets the resource amount of all resources on this surface
+---@field get_resource_counts fun(): table<string, uint> Gets the resource amount of all resources on this surface
 ---@field get_random_chunk fun(): ChunkPosition Gets a random generated chunk position or 0,0 if no chunks have been generated on this surface.
 ---@field clone_area fun(clear_destination_decoratives: boolean, clear_destination_entities: boolean, clone_decoratives: boolean, clone_entities: boolean, clone_tiles: boolean, create_build_effect_smoke: boolean, destination_area: BoundingBox, destination_force: LuaForce | string, destination_surface: SurfaceIdentification, expand_map: boolean, source_area: BoundingBox) Clones the given area.
 ---@field clone_brush fun(clear_destination_decoratives: boolean, clear_destination_entities: boolean, clone_decoratives: boolean, clone_entities: boolean, clone_tiles: boolean, create_build_effect_smoke: boolean, destination_force: LuaForce | string, destination_offset: TilePosition, destination_surface: SurfaceIdentification, expand_map: boolean, manual_collision_mode: boolean, source_offset: TilePosition, source_positions: TilePosition[]) Clones the given area.
 ---@field clone_entities fun(create_build_effect_smoke: boolean, destination_force: ForceIdentification, destination_offset: Vector, destination_surface: SurfaceIdentification, entities: LuaEntity[], snap_to_grid: boolean) Clones the given entities.
 ---@field clear fun(ignore_characters: boolean) Clears this surface deleting all entities and chunks on it.
 ---@field request_path fun(bounding_box: BoundingBox, can_open_gates: boolean, collision_mask: CollisionMask | string[], entity_to_ignore: LuaEntity, force: ForceIdentification, goal: Position, path_resolution_modifier: int, pathfind_flags: PathfinderFlags, radius: double, start: Position): uint Generates a path with the specified constraints (as an array of [PathfinderWaypoints](PathfinderWaypoint)) using the unit pathfinding algorithm. This path can be used to emulate pathing behavior by script for non-unit entities. If you want to command actual units to move, use the [LuaEntity::set_command](LuaEntity::set_command) functionality instead. The resulting path is ultimately returned asynchronously via [on_script_path_request_finished](on_script_path_request_finished).
----@field get_script_areas fun(name: string): [object Object] Gets the script areas that match the given name or if no name is given all areas are returned.
+---@field get_script_areas fun(name: string): ScriptArea[] Gets the script areas that match the given name or if no name is given all areas are returned.
 ---@field get_script_area fun(key: string | uint): ScriptArea Gets the first script area by name or id.
 ---@field edit_script_area fun(area: ScriptArea, id: uint) Sets the given script area to the new values.
 ---@field add_script_area fun(area: ScriptArea): uint Adds the given script area.
 ---@field remove_script_area fun(id: uint): boolean Removes the given script area.
----@field get_script_positions fun(name: string): [object Object] Gets the script positions that match the given name or if no name is given all positions are returned.
+---@field get_script_positions fun(name: string): ScriptPosition[] Gets the script positions that match the given name or if no name is given all positions are returned.
 ---@field get_script_position fun(key: string | uint): ScriptPosition Gets the first script position by name or id.
 ---@field edit_script_position fun(area: ScriptPosition, id: uint) Sets the given script position to the new values.
 ---@field add_script_position fun(area: ScriptPosition): uint Adds the given script position.
@@ -2343,12 +2343,12 @@
 ---@field get_map_exchange_string fun(): string Gets the map exchange string for the current map generation settings of this surface.
 ---@field get_starting_area_radius fun(): double Gets the starting area radius of this surface.
 ---@field get_closest fun(entities: LuaEntity[], position: Position): LuaEntity Gets the closest entity in the list to this position.
----@field get_train_stops fun(force: ForceIdentification, name: string | string[]): [object Object] Gets train stops matching the given filters.
+---@field get_train_stops fun(force: ForceIdentification, name: string | string[]): LuaEntity[] Gets train stops matching the given filters.
 ---@field get_total_pollution fun(): double Gets the total amount of pollution on the surface by iterating over all of the chunks containing pollution.
 ---@field entity_prototype_collides fun(direction: defines_direction, position: Position, prototype: EntityPrototypeIdentification, use_map_generation_bounding_box: boolean)
 ---@field decorative_prototype_collides fun(position: Position, prototype: string)
----@field calculate_tile_properties fun(positions: Position[], property_names: string[]): [object Object]
----@field get_entities_with_force fun(force: LuaForce | string, position: ChunkPosition): [object Object] Returns all the entities with force on this chunk for the given force.
+---@field calculate_tile_properties fun(positions: Position[], property_names: string[]): table<string, double[]>
+---@field get_entities_with_force fun(force: LuaForce | string, position: ChunkPosition): LuaEntity[] Returns all the entities with force on this chunk for the given force.
 ---@field build_checkerboard fun(area: BoundingBox) Sets the given area to the checkerboard lab tiles.
 ---@field help fun(): string All methods and properties that this object supports.
 
@@ -2469,18 +2469,18 @@
 ---@field valid boolean Is this object valid? This Lua object holds a reference to an object within the game engine. It is possible that the game-engine object is removed whilst a mod still holds the corresponding Lua object. If that happens, the object becomes invalid, i.e. this attribute will be `false`. Mods are advised to check for object validity if any change to the game state might have occurred between the creation of the Lua object and its access.
 ---@field object_name string The class name of this object. Available even when `valid` is false. For LuaStruct objects it may also be suffixed with a dotted path to a member of the struct.
 ---@field get_item_count fun(item: string): uint Get the amount of a particular item stored in the train.
----@field get_contents fun(): [object Object] Get a mapping of the train's inventory.
+---@field get_contents fun(): table<string, uint> Get a mapping of the train's inventory.
 ---@field remove_item fun(stack: ItemStackIdentification): uint Remove some items from the train.
 ---@field insert fun(stack: ItemStackIdentification) Insert a stack into the train.
 ---@field clear_items_inside fun() Clear all items in this train.
 ---@field recalculate_path fun(force: boolean): boolean Checks if the path is invalid and tries to re-path if it isn't.
 ---@field get_fluid_count fun(fluid: string): double Get the amount of a particular fluid stored in the train.
----@field get_fluid_contents fun(): [object Object] Gets a mapping of the train's fluid inventory.
+---@field get_fluid_contents fun(): table<string, double> Gets a mapping of the train's fluid inventory.
 ---@field remove_fluid fun(fluid: Fluid): double Remove some fluid from the train.
 ---@field insert_fluid fun(fluid: Fluid): double Inserts the given fluid into the first available location in this train.
 ---@field clear_fluids_inside fun() Clears all fluids in this train.
 ---@field go_to_station fun(index: uint) Go to the station specified by the index in the train's schedule.
----@field get_rails fun(): [object Object] Gets all rails under the train.
+---@field get_rails fun(): LuaEntity[] Gets all rails under the train.
 ---@field help fun(): string All methods and properties that this object supports.
 
 ---@class LuaTrainStopControlBehavior : LuaGenericOnOffControlBehavior Control behavior for train stops.
@@ -2518,7 +2518,7 @@
 ---@field can_insert_at_back fun(): boolean Can an item be inserted at the back of this line?
 ---@field insert_at fun(items: ItemStackIdentification, position: float): boolean Insert items at a given position.
 ---@field insert_at_back fun(items: ItemStackIdentification): boolean Insert items at the back of this line.
----@field get_contents fun(): [object Object] Get counts of all items on this line.
+---@field get_contents fun(): table<string, uint> Get counts of all items on this line.
 ---@field line_equals fun(other: LuaTransportLine): boolean Returns whether the associated internal transport line of this line is the same as the others associated internal transport line.
 ---@field help fun(): string All methods and properties that this object supports.
 
