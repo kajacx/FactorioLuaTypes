@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises';
 import { FactorioApiJson } from '../definitions/types';
 import { formatNameAndDescr, formatTypedNameAndDescr } from '../utils/formatters';
+import { removeTrailingNewlineAndClose } from '../utils/removeNewline';
 import { sortByOrder } from '../utils/sortByOrder';
 import { LazyType } from './lazyProcessor';
 
@@ -15,5 +16,5 @@ export const processEvents = async (folder: string, factorioApi: FactorioApiJson
     await eventsFile.write('\n');
   }
 
-  await eventsFile.close();
+  await removeTrailingNewlineAndClose(eventsFile);
 };

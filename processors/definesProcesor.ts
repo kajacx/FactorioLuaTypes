@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises';
 import { Define, FactorioApiJson } from '../definitions/types';
 import { formatNameAndDescr, formatTypedNameAndDescr } from '../utils/formatters';
+import { removeTrailingNewlineAndClose } from '../utils/removeNewline';
 import { sortByOrder } from '../utils/sortByOrder';
 import { LazyType } from './lazyProcessor';
 
@@ -35,5 +36,5 @@ export const processDefines = async (folder: string, factorioApi: FactorioApiJso
   const descr = 'This is the class of the `defines` object that will exist at runtime.';
   await processDefine(definesFile, 'Defines', descr, factorioApi.defines, lazyTypes, 'defines');
 
-  await definesFile.close();
+  await removeTrailingNewlineAndClose(definesFile);
 };

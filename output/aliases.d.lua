@@ -13,4 +13,3 @@
 ---@alias float number Single precision floating point value
 
 ---@alias double number Double precision floating point value
-

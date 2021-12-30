@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises';
 import { FactorioApiJson } from '../definitions/types';
 import { formatNameAndDescr, formatTypedNameAndDescr } from '../utils/formatters';
+import { removeTrailingNewlineAndClose } from '../utils/removeNewline';
 import { sortByOrder } from '../utils/sortByOrder';
 import { parseMethod } from '../utils/typeParsers';
 import { LazyType } from './lazyProcessor';
@@ -20,5 +21,5 @@ export const processClasses = async (folder: string, factorioApi: FactorioApiJso
     await classesFile.write('\n');
   }
 
-  await classesFile.close();
+  await removeTrailingNewlineAndClose(classesFile);
 };

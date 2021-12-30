@@ -357,4 +357,3 @@
 ---@alias LuaEntityDamagedEventFilter filter
 
 ---@alias LuaSectorScannedEventFilter filter
-

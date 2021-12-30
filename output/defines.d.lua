@@ -1045,4 +1045,3 @@
 ---@field red defines_wire_type
 
 ---@class defines_wire_type Enum value type for wire_type
-

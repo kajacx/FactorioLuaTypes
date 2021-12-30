@@ -1159,4 +1159,3 @@
 ---@field surface_index uint The surface whose tiles were changed.
 ---@field tick uint Tick the event was generated.
 ---@field tiles Tile[] The tiles that were changed.
-
