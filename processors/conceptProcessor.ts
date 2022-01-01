@@ -3,6 +3,7 @@ import { FactorioApiJson } from '../definitions/types';
 import { formatNameAndDescr, formatNameCamelCase, formatTypedNameAndDescr } from '../utils/formatters';
 import { removeTrailingNewlineAndClose } from '../utils/removeNewline';
 import { sortByOrder } from '../utils/sortByOrder';
+import { parseType } from '../utils/typeParsers';
 import { LazyType } from './lazyProcessor';
 
 export const processConcepts = async (folder: string, factorioApi: FactorioApiJson, lazyTypes: LazyType[]) => {
@@ -43,6 +44,29 @@ export const processConcepts = async (folder: string, factorioApi: FactorioApiJs
         for (const option of concept.options.sort(sortByOrder)) {
           await conceptsFile.write(`---@field ${formatTypedNameAndDescr(option.name, 'boolean', option.description, lazyTypes)}\n`);
         }
+        break;
+      case 'struct':
+        await conceptsFile.write(`---@class ${formatNameAndDescr(concept.name, concept.description)}\n`);
+        for (const attribute of concept.attributes.sort(sortByOrder)) {
+          await conceptsFile.write(`---@field ${formatTypedNameAndDescr(attribute.name, attribute.type, attribute.description, lazyTypes)}\n`);
+        }
+        break;
+      case 'table':
+        await conceptsFile.write(`---@class ${formatNameAndDescr(concept.name, concept.description)}\n`);
+        for (const param of concept.parameters.sort(sortByOrder)) {
+          await conceptsFile.write(`---@field ${formatTypedNameAndDescr(param.name, param.type, param.description, lazyTypes)}\n`);
+        }
+        break;
+      case 'table_or_array':
+        // TODO: implement the "or array" part ... and make it "write only", reading will always be table (like with position)?
+        await conceptsFile.write(`---@class ${formatNameAndDescr(concept.name, concept.description)}\n`);
+        for (const param of concept.parameters.sort(sortByOrder)) {
+          await conceptsFile.write(`---@field ${formatTypedNameAndDescr(param.name, param.type, param.description, lazyTypes)}\n`);
+        }
+        break;
+      case 'union':
+        const types = concept.options.sort(sortByOrder).map(option => parseType(option.type, lazyTypes)).join(' | ');
+        await conceptsFile.write(`---@alias ${formatTypedNameAndDescr(concept.name, types, concept.description, lazyTypes)}\n`);
         break;
     }
     await conceptsFile.write('\n');
