@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import { FactorioApiJson } from '../definitions/types';
-import { formatNameAndDescr, formatTypedNameAndDescr } from '../utils/formatters';
+import { formatNameAndDescr, formatNameCamelCase, formatTypedNameAndDescr } from '../utils/formatters';
 import { removeTrailingNewlineAndClose } from '../utils/removeNewline';
 import { sortByOrder } from '../utils/sortByOrder';
 import { LazyType } from './lazyProcessor';
@@ -23,22 +23,27 @@ export const processConcepts = async (folder: string, factorioApi: FactorioApiJs
         break;
       case 'filter':
         if (concept.variant_parameter_groups) {
-          const variantGroups = concept.variant_parameter_groups.sort(sortByOrder);
-          const variants = variantGroups.map(variant => variant.name).join(' | ');
-          await conceptsFile.write(`---@alias ${formatTypedNameAndDescr(concept.name, variants, concept.description, lazyTypes)}\n`);
-          await conceptsFile.write('\n');
-          for (const variant of variantGroups) {
-            await conceptsFile.write(`---@class ${formatNameAndDescr(variant.name, variant.description)}\n`);
+          const variantNames = [];
+          for (const variant of concept.variant_parameter_groups.sort(sortByOrder)) {
+            const variantName = formatNameCamelCase(`${concept.name}_${variant.name}`, true);
+            variantNames.push(variantName);
+            await conceptsFile.write(`---@class ${formatNameAndDescr(variantName, variant.description)}\n`);
             for (const param of variant.parameters.sort(sortByOrder)) {
               await conceptsFile.write(`---@field ${formatTypedNameAndDescr(param.name, param.type, param.description, lazyTypes)}\n`);
             }
             await conceptsFile.write('\n');
           }
+          await conceptsFile.write(`---@alias ${formatTypedNameAndDescr(concept.name, variantNames.join(' | '), concept.description, lazyTypes)}\n`);
         } else {
-          console.log(concept);
+          console.warn("Unknown filter concept:", concept);
         }
-
-        
+        break;
+      case 'flag':
+        await conceptsFile.write(`---@class ${formatNameAndDescr(concept.name, concept.description)}\n`);
+        for (const option of concept.options.sort(sortByOrder)) {
+          await conceptsFile.write(`---@field ${formatTypedNameAndDescr(option.name, 'boolean', option.description, lazyTypes)}\n`);
+        }
+        break;
     }
     await conceptsFile.write('\n');
   }

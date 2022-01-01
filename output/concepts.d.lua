@@ -133,7 +133,45 @@
 
 
 
+---@class EntityPrototypeFlags This is a set of flags given as a dictionary[[string](string) &rarr; [boolean](boolean)]. When a flag is set, it is present in the dictionary with the value `true`. Unset flags aren't present in the dictionary at all. So, the boolean value is meaningless and exists just for easy table lookup if a flag is set.
+---@field not-rotatable boolean
+---@field placeable-neutral boolean
+---@field placeable-player boolean
+---@field placeable-enemy boolean
+---@field placeable-off-grid boolean
+---@field player-creation boolean
+---@field building-direction-8-way boolean
+---@field filter-directions boolean
+---@field fast-replaceable-no-build-while-moving boolean
+---@field breaths-air boolean
+---@field not-repairable boolean
+---@field not-on-map boolean
+---@field not-deconstructable boolean
+---@field not-blueprintable boolean
+---@field hidden boolean
+---@field hide-alt-info boolean
+---@field fast-replaceable-no-cross-type-while-moving boolean
+---@field no-gap-fill-while-building boolean
+---@field not-flammable boolean
+---@field no-automated-item-removal boolean
+---@field no-automated-item-insertion boolean
+---@field no-copy-paste boolean
+---@field not-selectable-in-game boolean
+---@field not-upgradable boolean
+---@field not-in-kill-statistics boolean
 
+---@class ItemPrototypeFlags This is a set of flags given as dictionary[[string](string) &rarr; [boolean](boolean)]. When a flag is set, it is present in the dictionary with the value `true`. Unset flags aren't present in the dictionary at all. So, the boolean value is meaningless and exists just for easy table lookup if a flag is set.
+---@field draw-logistic-overlay boolean
+---@field hidden boolean
+---@field always-show boolean
+---@field hide-from-bonus-gui boolean
+---@field hide-from-fuel-tooltip boolean
+---@field not-stackable boolean
+---@field can-extend-inventory boolean
+---@field primary-place-result boolean
+---@field mod-openable boolean
+---@field only-in-cursor boolean
+---@field spawnable boolean
 
 ---@alias CollisionMaskLayer any A [string](string) specifying a collision mask layer. Possible values for the string are: - `"ground-tile"` - `"water-tile"` - `"resource-layer"` - `"doodad-layer"` - `"floor-layer"` - `"item-layer"` - `"ghost-layer"` - `"object-layer"` - `"player-layer"` - `"train-layer"` - `"rail-layer"` - `"transport-belt-layer"` - `"not-setup"` Additionally the values `"layer-13"` through `"layer-55"`. These layers are currently unused by the game but may change. If a mod is going to use one of the unused layers it's recommended to start at the higher layers because the base game will take from the lower ones.
 
@@ -152,6 +190,26 @@
 
 
 
+---@class SelectionModeFlags This is a set of flags given as a dictionary[[string](string) &rarr; [boolean](boolean)]. Set flags are present in the dictionary with the value `true`; unset flags aren't present at all.
+---@field blueprint boolean Entities that can be selected for blueprint.
+---@field deconstruct boolean Entities that can be marked for deconstruction.
+---@field cancel-deconstruct boolean Entities that can be marked for deconstruction cancelling.
+---@field items boolean
+---@field trees boolean
+---@field buildable-type boolean Buildable entities.
+---@field nothing boolean Only select an area.
+---@field items-to-place boolean Entities that can be placed using an item.
+---@field any-entity boolean
+---@field any-tile boolean
+---@field same-force boolean Entities with the same force as the selector.
+---@field not-same-force boolean
+---@field friend boolean
+---@field enemy boolean
+---@field upgrade boolean
+---@field cancel-upgrade boolean
+---@field entity-with-health boolean
+---@field entity-with-force boolean
+---@field entity-with-owner boolean
 
 
 
@@ -287,547 +345,517 @@
 ---`wind`
 ---@alias SoundType string Defines which slider in the game's sound settings affects the volume of this sound. Furthermore, some sound types are mixed differently than others, e.g. zoom level effects are applied.
 
----@alias ItemPrototypeFilter place-result | burnt-result | place-as-tile | placed-as-equipment-result | name | type | flag | subgroup | fuel-category | stack-size | default-request-amount | wire-count | fuel-value | fuel-acceleration-multiplier | fuel-top-speed-multiplier | fuel-emissions-multiplier
-
----@class place-result
+---@class ItemPrototypeFilterPlaceResult
 ---@field elem_filters EntityPrototypeFilter[] Filters for the place result.
 
----@class burnt-result
+---@class ItemPrototypeFilterBurntResult
 ---@field elem_filters ItemPrototypeFilter[] Filters for the burnt result.
 
----@class place-as-tile
+---@class ItemPrototypeFilterPlaceAsTile
 ---@field elem_filters TilePrototypeFilter[] Filters for the placed tile.
 
----@class placed-as-equipment-result
+---@class ItemPrototypeFilterPlacedAsEquipmentResult
 ---@field elem_filters EquipmentPrototypeFilter[] Filters for the placed equipment.
 
----@class name For use within nested filters such as the `has-product-item` filter of array[[RecipePrototypeFilter](RecipePrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::item_prototypes](LuaGameScript::item_prototypes).
+---@class ItemPrototypeFilterName For use within nested filters such as the `has-product-item` filter of array[[RecipePrototypeFilter](RecipePrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::item_prototypes](LuaGameScript::item_prototypes).
 ---@field name string | string[] The prototype name, or list of acceptable names.
 
----@class type Usage example: ``` game.get_filtered_item_prototypes({{filter = "type", type = "armor"}}) ```
+---@class ItemPrototypeFilterType Usage example: ``` game.get_filtered_item_prototypes({{filter = "type", type = "armor"}}) ```
 ---@field type string The prototype type
 
----@class flag
+---@class ItemPrototypeFilterFlag
 ---@field flag string One of the values in [ItemPrototypeFlags](ItemPrototypeFlags).
 
----@class subgroup
+---@class ItemPrototypeFilterSubgroup
 ---@field subgroup string A [LuaGroup](LuaGroup) (subgroup) name
 
----@class fuel-category
+---@class ItemPrototypeFilterFuelCategory
 ---@field fuel-category string A [LuaFuelCategoryPrototype](LuaFuelCategoryPrototype) name
 
----@class stack-size Usage example: ``` game.get_filtered_item_prototypes({{filter = "stack-size", comparison = ">", value = 20}, {filter = "stack-size", comparison = "<", value = 100, mode = "and"}}) ```
+---@class ItemPrototypeFilterStackSize Usage example: ``` game.get_filtered_item_prototypes({{filter = "stack-size", comparison = ">", value = 20}, {filter = "stack-size", comparison = "<", value = 100, mode = "and"}}) ```
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class default-request-amount
+---@class ItemPrototypeFilterDefaultRequestAmount
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class wire-count
+---@class ItemPrototypeFilterWireCount
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class fuel-value
+---@class ItemPrototypeFilterFuelValue
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class fuel-acceleration-multiplier
+---@class ItemPrototypeFilterFuelAccelerationMultiplier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class fuel-top-speed-multiplier
+---@class ItemPrototypeFilterFuelTopSpeedMultiplier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class fuel-emissions-multiplier
+---@class ItemPrototypeFilterFuelEmissionsMultiplier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
+---@alias ItemPrototypeFilter ItemPrototypeFilterPlaceResult | ItemPrototypeFilterBurntResult | ItemPrototypeFilterPlaceAsTile | ItemPrototypeFilterPlacedAsEquipmentResult | ItemPrototypeFilterName | ItemPrototypeFilterType | ItemPrototypeFilterFlag | ItemPrototypeFilterSubgroup | ItemPrototypeFilterFuelCategory | ItemPrototypeFilterStackSize | ItemPrototypeFilterDefaultRequestAmount | ItemPrototypeFilterWireCount | ItemPrototypeFilterFuelValue | ItemPrototypeFilterFuelAccelerationMultiplier | ItemPrototypeFilterFuelTopSpeedMultiplier | ItemPrototypeFilterFuelEmissionsMultiplier
 
----@alias ModSettingPrototypeFilter type | mod | setting-type
-
----@class type
+---@class ModSettingPrototypeFilterType
 ---@field type string The prototype type
 
----@class mod
+---@class ModSettingPrototypeFilterMod
 ---@field mod string The mod name
 
----@class setting-type
+---@class ModSettingPrototypeFilterSettingType
 ---@field type string The setting scope type (startup, runtime-global, or runtime-per-user)
 
+---@alias ModSettingPrototypeFilter ModSettingPrototypeFilterType | ModSettingPrototypeFilterMod | ModSettingPrototypeFilterSettingType
 
----@alias TechnologyPrototypeFilter research-unit-ingredient | level | max-level | time
-
----@class research-unit-ingredient
+---@class TechnologyPrototypeFilterResearchUnitIngredient
 ---@field ingredient string The research ingredient to check.
 
----@class level
+---@class TechnologyPrototypeFilterLevel
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class max-level
+---@class TechnologyPrototypeFilterMaxLevel
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class time
+---@class TechnologyPrototypeFilterTime
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
+---@alias TechnologyPrototypeFilter TechnologyPrototypeFilterResearchUnitIngredient | TechnologyPrototypeFilterLevel | TechnologyPrototypeFilterMaxLevel | TechnologyPrototypeFilterTime
 
----@alias DecorativePrototypeFilter collision-mask
-
----@class collision-mask
+---@class DecorativePrototypeFilterCollisionMask
 ---@field mask CollisionMask | CollisionMaskWithFlags
 ---@field mask_mode string How to filter: `"collides"` or `"layers-equals"`
 
+---@alias DecorativePrototypeFilter DecorativePrototypeFilterCollisionMask
 
----@alias AchievementPrototypeFilter type
-
----@class type
+---@class AchievementPrototypeFilterType
 ---@field type string The prototype type
 
+---@alias AchievementPrototypeFilter AchievementPrototypeFilterType
 
----@alias FluidPrototypeFilter name | subgroup | default-temperature | max-temperature | heat-capacity | fuel-value | emissions-multiplier | gas-temperature
-
----@class name For use within nested filters such as the `has-product-fluid` filter of array[[RecipePrototypeFilter](RecipePrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::fluid_prototypes](LuaGameScript::fluid_prototypes).
+---@class FluidPrototypeFilterName For use within nested filters such as the `has-product-fluid` filter of array[[RecipePrototypeFilter](RecipePrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::fluid_prototypes](LuaGameScript::fluid_prototypes).
 ---@field name string | string[] The prototype name, or list of acceptable names.
 
----@class subgroup
+---@class FluidPrototypeFilterSubgroup
 ---@field subgroup string A [LuaGroup](LuaGroup) (subgroup) name
 
----@class default-temperature
+---@class FluidPrototypeFilterDefaultTemperature
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class max-temperature
+---@class FluidPrototypeFilterMaxTemperature
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class heat-capacity
+---@class FluidPrototypeFilterHeatCapacity
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class fuel-value
+---@class FluidPrototypeFilterFuelValue
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class emissions-multiplier
+---@class FluidPrototypeFilterEmissionsMultiplier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class gas-temperature
+---@class FluidPrototypeFilterGasTemperature
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
+---@alias FluidPrototypeFilter FluidPrototypeFilterName | FluidPrototypeFilterSubgroup | FluidPrototypeFilterDefaultTemperature | FluidPrototypeFilterMaxTemperature | FluidPrototypeFilterHeatCapacity | FluidPrototypeFilterFuelValue | FluidPrototypeFilterEmissionsMultiplier | FluidPrototypeFilterGasTemperature
 
----@alias EquipmentPrototypeFilter type
-
----@class type
+---@class EquipmentPrototypeFilterType
 ---@field type string The prototype type
 
+---@alias EquipmentPrototypeFilter EquipmentPrototypeFilterType
 
----@alias TilePrototypeFilter collision-mask | walking-speed-modifier | vehicle-friction-modifier | decorative-removal-probability | emissions
-
----@class collision-mask
+---@class TilePrototypeFilterCollisionMask
 ---@field mask CollisionMask | CollisionMaskWithFlags
 ---@field mask_mode string How to filter: `"collides"` or `"layers-equals"`
 
----@class walking-speed-modifier
+---@class TilePrototypeFilterWalkingSpeedModifier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class vehicle-friction-modifier
+---@class TilePrototypeFilterVehicleFrictionModifier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class decorative-removal-probability
+---@class TilePrototypeFilterDecorativeRemovalProbability
 ---@field comparison ComparatorString
 ---@field value float The value to compare against.
 
----@class emissions
+---@class TilePrototypeFilterEmissions
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
+---@alias TilePrototypeFilter TilePrototypeFilterCollisionMask | TilePrototypeFilterWalkingSpeedModifier | TilePrototypeFilterVehicleFrictionModifier | TilePrototypeFilterDecorativeRemovalProbability | TilePrototypeFilterEmissions
 
----@alias RecipePrototypeFilter has-ingredient-item | has-ingredient-fluid | has-product-item | has-product-fluid | subgroup | category | energy | emissions-multiplier | request-paste-multiplier | overload-multiplier
-
----@class has-ingredient-item
+---@class RecipePrototypeFilterHasIngredientItem
 ---@field elem_filters ItemPrototypeFilter[] Matches if at least 1 ingredient is an item that matches these filters.
 
----@class has-ingredient-fluid Usage example: ``` -- selects recipes that consume sulfuric acid {{filter = "has-ingredient-fluid", elem_filters = {{filter = "name", name = "sulfuric-acid"}}}} ```
+---@class RecipePrototypeFilterHasIngredientFluid Usage example: ``` -- selects recipes that consume sulfuric acid {{filter = "has-ingredient-fluid", elem_filters = {{filter = "name", name = "sulfuric-acid"}}}} ```
 ---@field elem_filters FluidPrototypeFilter[] Matches if at least 1 ingredient is a fluid that matches these filters.
 
----@class has-product-item Usage example: ``` -- selects recipes that produce an item {{filter = "has-product-item"}} -- selects recipes that produce iron plates {{filter = "has-product-item", elem_filters = {{filter = "name", name = "iron-plate"}}}} -- selects recipes that produce items that place furnaces {{filter = "has-product-item", elem_filters = {{filter = "place-result", elem_filters = {{filter = "type", type = "furnace"}}}}}} ```
+---@class RecipePrototypeFilterHasProductItem Usage example: ``` -- selects recipes that produce an item {{filter = "has-product-item"}} -- selects recipes that produce iron plates {{filter = "has-product-item", elem_filters = {{filter = "name", name = "iron-plate"}}}} -- selects recipes that produce items that place furnaces {{filter = "has-product-item", elem_filters = {{filter = "place-result", elem_filters = {{filter = "type", type = "furnace"}}}}}} ```
 ---@field elem_filters ItemPrototypeFilter[] Matches if at least 1 product is an item that matches these filters.
 
----@class has-product-fluid
+---@class RecipePrototypeFilterHasProductFluid
 ---@field elem_filters FluidPrototypeFilter[] Matches if at least 1 product is a fluid that matches these filters.
 
----@class subgroup
+---@class RecipePrototypeFilterSubgroup
 ---@field subgroup string A [LuaGroup](LuaGroup) (subgroup) name
 
----@class category
+---@class RecipePrototypeFilterCategory
 ---@field category string A [LuaRecipeCategoryPrototype](LuaRecipeCategoryPrototype) name
 
----@class energy
+---@class RecipePrototypeFilterEnergy
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class emissions-multiplier
+---@class RecipePrototypeFilterEmissionsMultiplier
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class request-paste-multiplier
+---@class RecipePrototypeFilterRequestPasteMultiplier
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
----@class overload-multiplier
+---@class RecipePrototypeFilterOverloadMultiplier
 ---@field comparison ComparatorString
 ---@field value uint The value to compare against.
 
+---@alias RecipePrototypeFilter RecipePrototypeFilterHasIngredientItem | RecipePrototypeFilterHasIngredientFluid | RecipePrototypeFilterHasProductItem | RecipePrototypeFilterHasProductFluid | RecipePrototypeFilterSubgroup | RecipePrototypeFilterCategory | RecipePrototypeFilterEnergy | RecipePrototypeFilterEmissionsMultiplier | RecipePrototypeFilterRequestPasteMultiplier | RecipePrototypeFilterOverloadMultiplier
 
----@alias EntityPrototypeFilter name | type | collision-mask | flag | build-base-evolution-requirement | selection-priority | emissions | crafting-category
-
----@class name For use within nested filters such as the `place-result` filter of array[[ItemPrototypeFilter](ItemPrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::entity_prototypes](LuaGameScript::entity_prototypes).
+---@class EntityPrototypeFilterName For use within nested filters such as the `place-result` filter of array[[ItemPrototypeFilter](ItemPrototypeFilter)]. To get a specific prototype by name, see [LuaGameScript::entity_prototypes](LuaGameScript::entity_prototypes).
 ---@field name string | string[] The prototype name, or list of acceptable names.
 
----@class type Usage example: ``` game.get_filtered_entity_prototypes({{filter = "type", type = "unit"}}) ```
+---@class EntityPrototypeFilterType Usage example: ``` game.get_filtered_entity_prototypes({{filter = "type", type = "unit"}}) ```
 ---@field type string The prototype type
 
----@class collision-mask Usage example: ``` game.get_filtered_entity_prototypes({{filter = "collision-mask", mask = "player-layer", mask_mode = "collides"}}) ```
+---@class EntityPrototypeFilterCollisionMask Usage example: ``` game.get_filtered_entity_prototypes({{filter = "collision-mask", mask = "player-layer", mask_mode = "collides"}}) ```
 ---@field mask CollisionMask | CollisionMaskWithFlags
 ---@field mask_mode string How to filter: `"collides"` or `"layers-equals"`
 
----@class flag Usage example: ``` game.get_filtered_entity_prototypes({{filter = "flag", flag = "placeable-player"}, {filter = "flag", flag = "placeable-enemy", mode = "and"}}) ```
+---@class EntityPrototypeFilterFlag Usage example: ``` game.get_filtered_entity_prototypes({{filter = "flag", flag = "placeable-player"}, {filter = "flag", flag = "placeable-enemy", mode = "and"}}) ```
 ---@field flag string One of the values in [EntityPrototypeFlags](EntityPrototypeFlags).
 
----@class build-base-evolution-requirement
+---@class EntityPrototypeFilterBuildBaseEvolutionRequirement
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class selection-priority
+---@class EntityPrototypeFilterSelectionPriority
 ---@field comparison ComparatorString
 ---@field value uint8 The value to compare against.
 
----@class emissions
+---@class EntityPrototypeFilterEmissions
 ---@field comparison ComparatorString
 ---@field value double The value to compare against.
 
----@class crafting-category
+---@class EntityPrototypeFilterCraftingCategory
 ---@field crafting_category string Matches if the prototype is for a crafting machine with this crafting category.
 
+---@alias EntityPrototypeFilter EntityPrototypeFilterName | EntityPrototypeFilterType | EntityPrototypeFilterCollisionMask | EntityPrototypeFilterFlag | EntityPrototypeFilterBuildBaseEvolutionRequirement | EntityPrototypeFilterSelectionPriority | EntityPrototypeFilterEmissions | EntityPrototypeFilterCraftingCategory
 
 ---@alias EventFilter any Used to filter out irrelevant event callbacks in a performant way. Available filters: - [LuaEntityClonedEventFilter](LuaEntityClonedEventFilter) - [LuaEntityDamagedEventFilter](LuaEntityDamagedEventFilter) - [LuaPlayerMinedEntityEventFilter](LuaPlayerMinedEntityEventFilter) - [LuaPreRobotMinedEntityEventFilter](LuaPreRobotMinedEntityEventFilter) - [LuaRobotBuiltEntityEventFilter](LuaRobotBuiltEntityEventFilter) - [LuaPostEntityDiedEventFilter](LuaPostEntityDiedEventFilter) - [LuaEntityDiedEventFilter](LuaEntityDiedEventFilter) - [LuaScriptRaisedReviveEventFilter](LuaScriptRaisedReviveEventFilter) - [LuaPrePlayerMinedEntityEventFilter](LuaPrePlayerMinedEntityEventFilter) - [LuaEntityMarkedForDeconstructionEventFilter](LuaEntityMarkedForDeconstructionEventFilter) - [LuaPreGhostDeconstructedEventFilter](LuaPreGhostDeconstructedEventFilter) - [LuaEntityDeconstructionCancelledEventFilter](LuaEntityDeconstructionCancelledEventFilter) - [LuaEntityMarkedForUpgradeEventFilter](LuaEntityMarkedForUpgradeEventFilter) - [LuaSectorScannedEventFilter](LuaSectorScannedEventFilter) - [LuaRobotMinedEntityEventFilter](LuaRobotMinedEntityEventFilter) - [LuaScriptRaisedDestroyEventFilter](LuaScriptRaisedDestroyEventFilter) - [LuaUpgradeCancelledEventFilter](LuaUpgradeCancelledEventFilter) - [LuaScriptRaisedBuiltEventFilter](LuaScriptRaisedBuiltEventFilter) - [LuaPlayerBuiltEntityEventFilter](LuaPlayerBuiltEntityEventFilter) - [LuaPlayerRepairedEntityEventFilter](LuaPlayerRepairedEntityEventFilter)
 
----@alias LuaScriptRaisedReviveEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaScriptRaisedReviveEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaScriptRaisedReviveEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaScriptRaisedReviveEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaScriptRaisedReviveEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaScriptRaisedReviveEventFilter LuaScriptRaisedReviveEventFilterType | LuaScriptRaisedReviveEventFilterName | LuaScriptRaisedReviveEventFilterGhostType | LuaScriptRaisedReviveEventFilterGhostName
 
----@alias LuaEntityDiedEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaEntityDiedEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityDiedEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityDiedEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityDiedEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaEntityDiedEventFilter LuaEntityDiedEventFilterType | LuaEntityDiedEventFilterName | LuaEntityDiedEventFilterGhostType | LuaEntityDiedEventFilterGhostName
 
----@alias LuaEntityMarkedForDeconstructionEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaEntityMarkedForDeconstructionEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityMarkedForDeconstructionEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityMarkedForDeconstructionEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityMarkedForDeconstructionEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaEntityMarkedForDeconstructionEventFilter LuaEntityMarkedForDeconstructionEventFilterType | LuaEntityMarkedForDeconstructionEventFilterName | LuaEntityMarkedForDeconstructionEventFilterGhostType | LuaEntityMarkedForDeconstructionEventFilterGhostName
 
----@alias LuaPreGhostDeconstructedEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaPreGhostDeconstructedEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPreGhostDeconstructedEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPreGhostDeconstructedEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPreGhostDeconstructedEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaPreGhostDeconstructedEventFilter LuaPreGhostDeconstructedEventFilterType | LuaPreGhostDeconstructedEventFilterName | LuaPreGhostDeconstructedEventFilterGhostType | LuaPreGhostDeconstructedEventFilterGhostName
 
----@alias LuaScriptRaisedDestroyEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaScriptRaisedDestroyEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaScriptRaisedDestroyEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaScriptRaisedDestroyEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaScriptRaisedDestroyEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaScriptRaisedDestroyEventFilter LuaScriptRaisedDestroyEventFilterType | LuaScriptRaisedDestroyEventFilterName | LuaScriptRaisedDestroyEventFilterGhostType | LuaScriptRaisedDestroyEventFilterGhostName
 
----@alias LuaUpgradeCancelledEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaUpgradeCancelledEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaUpgradeCancelledEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaUpgradeCancelledEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaUpgradeCancelledEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaUpgradeCancelledEventFilter LuaUpgradeCancelledEventFilterType | LuaUpgradeCancelledEventFilterName | LuaUpgradeCancelledEventFilterGhostType | LuaUpgradeCancelledEventFilterGhostName
 
----@alias LuaPlayerRepairedEntityEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaPlayerRepairedEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPlayerRepairedEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPlayerRepairedEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPlayerRepairedEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaPlayerRepairedEntityEventFilter LuaPlayerRepairedEntityEventFilterType | LuaPlayerRepairedEntityEventFilterName | LuaPlayerRepairedEntityEventFilterGhostType | LuaPlayerRepairedEntityEventFilterGhostName
 
----@alias LuaEntityMarkedForUpgradeEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaEntityMarkedForUpgradeEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityMarkedForUpgradeEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityMarkedForUpgradeEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityMarkedForUpgradeEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaEntityMarkedForUpgradeEventFilter LuaEntityMarkedForUpgradeEventFilterType | LuaEntityMarkedForUpgradeEventFilterName | LuaEntityMarkedForUpgradeEventFilterGhostType | LuaEntityMarkedForUpgradeEventFilterGhostName
 
----@alias LuaPostEntityDiedEventFilter type
-
----@class type
+---@class LuaPostEntityDiedEventFilterType
 ---@field type string The prototype type
 
+---@alias LuaPostEntityDiedEventFilter LuaPostEntityDiedEventFilterType
 
----@alias LuaPreRobotMinedEntityEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaPreRobotMinedEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPreRobotMinedEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPreRobotMinedEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPreRobotMinedEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaPreRobotMinedEntityEventFilter LuaPreRobotMinedEntityEventFilterType | LuaPreRobotMinedEntityEventFilterName | LuaPreRobotMinedEntityEventFilterGhostType | LuaPreRobotMinedEntityEventFilterGhostName
 
----@alias LuaEntityClonedEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaEntityClonedEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityClonedEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityClonedEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityClonedEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaEntityClonedEventFilter LuaEntityClonedEventFilterType | LuaEntityClonedEventFilterName | LuaEntityClonedEventFilterGhostType | LuaEntityClonedEventFilterGhostName
 
----@alias LuaScriptRaisedBuiltEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaScriptRaisedBuiltEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaScriptRaisedBuiltEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaScriptRaisedBuiltEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaScriptRaisedBuiltEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaScriptRaisedBuiltEventFilter LuaScriptRaisedBuiltEventFilterType | LuaScriptRaisedBuiltEventFilterName | LuaScriptRaisedBuiltEventFilterGhostType | LuaScriptRaisedBuiltEventFilterGhostName
 
----@alias LuaRobotMinedEntityEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaRobotMinedEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaRobotMinedEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaRobotMinedEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaRobotMinedEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaRobotMinedEntityEventFilter LuaRobotMinedEntityEventFilterType | LuaRobotMinedEntityEventFilterName | LuaRobotMinedEntityEventFilterGhostType | LuaRobotMinedEntityEventFilterGhostName
 
----@alias LuaPrePlayerMinedEntityEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaPrePlayerMinedEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPrePlayerMinedEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPrePlayerMinedEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPrePlayerMinedEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaPrePlayerMinedEntityEventFilter LuaPrePlayerMinedEntityEventFilterType | LuaPrePlayerMinedEntityEventFilterName | LuaPrePlayerMinedEntityEventFilterGhostType | LuaPrePlayerMinedEntityEventFilterGhostName
 
----@alias LuaRobotBuiltEntityEventFilter type | name | ghost_type | ghost_name | force
-
----@class type
+---@class LuaRobotBuiltEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaRobotBuiltEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaRobotBuiltEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaRobotBuiltEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
----@class force
+---@class LuaRobotBuiltEntityEventFilterForce
 ---@field force string The entity force
 
+---@alias LuaRobotBuiltEntityEventFilter LuaRobotBuiltEntityEventFilterType | LuaRobotBuiltEntityEventFilterName | LuaRobotBuiltEntityEventFilterGhostType | LuaRobotBuiltEntityEventFilterGhostName | LuaRobotBuiltEntityEventFilterForce
 
----@alias LuaEntityDeconstructionCancelledEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaEntityDeconstructionCancelledEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityDeconstructionCancelledEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityDeconstructionCancelledEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityDeconstructionCancelledEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaEntityDeconstructionCancelledEventFilter LuaEntityDeconstructionCancelledEventFilterType | LuaEntityDeconstructionCancelledEventFilterName | LuaEntityDeconstructionCancelledEventFilterGhostType | LuaEntityDeconstructionCancelledEventFilterGhostName
 
----@alias LuaPlayerBuiltEntityEventFilter type | name | ghost_type | ghost_name | force
-
----@class type
+---@class LuaPlayerBuiltEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPlayerBuiltEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPlayerBuiltEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPlayerBuiltEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
----@class force
+---@class LuaPlayerBuiltEntityEventFilterForce
 ---@field force string The entity force
 
+---@alias LuaPlayerBuiltEntityEventFilter LuaPlayerBuiltEntityEventFilterType | LuaPlayerBuiltEntityEventFilterName | LuaPlayerBuiltEntityEventFilterGhostType | LuaPlayerBuiltEntityEventFilterGhostName | LuaPlayerBuiltEntityEventFilterForce
 
----@alias LuaPlayerMinedEntityEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaPlayerMinedEntityEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaPlayerMinedEntityEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaPlayerMinedEntityEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaPlayerMinedEntityEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaPlayerMinedEntityEventFilter LuaPlayerMinedEntityEventFilterType | LuaPlayerMinedEntityEventFilterName | LuaPlayerMinedEntityEventFilterGhostType | LuaPlayerMinedEntityEventFilterGhostName
 
----@alias LuaEntityDamagedEventFilter type | name | ghost_type | ghost_name | original-damage-amount | final-damage-amount | damage-type | final-health
-
----@class type
+---@class LuaEntityDamagedEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaEntityDamagedEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaEntityDamagedEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaEntityDamagedEventFilterGhostName
 ---@field name string The ghost prototype name
 
----@class original-damage-amount
+---@class LuaEntityDamagedEventFilterOriginalDamageAmount
 ---@field comparison ComparatorString
 ---@field value float The value to compare against.
 
----@class final-damage-amount
+---@class LuaEntityDamagedEventFilterFinalDamageAmount
 ---@field comparison ComparatorString
 ---@field value float The value to compare against.
 
----@class damage-type
+---@class LuaEntityDamagedEventFilterDamageType
 ---@field type string A [LuaDamagePrototype](LuaDamagePrototype) name
 
----@class final-health
+---@class LuaEntityDamagedEventFilterFinalHealth
 ---@field comparison ComparatorString
 ---@field value float The value to compare against.
 
+---@alias LuaEntityDamagedEventFilter LuaEntityDamagedEventFilterType | LuaEntityDamagedEventFilterName | LuaEntityDamagedEventFilterGhostType | LuaEntityDamagedEventFilterGhostName | LuaEntityDamagedEventFilterOriginalDamageAmount | LuaEntityDamagedEventFilterFinalDamageAmount | LuaEntityDamagedEventFilterDamageType | LuaEntityDamagedEventFilterFinalHealth
 
----@alias LuaSectorScannedEventFilter type | name | ghost_type | ghost_name
-
----@class type
+---@class LuaSectorScannedEventFilterType
 ---@field type string The prototype type
 
----@class name
+---@class LuaSectorScannedEventFilterName
 ---@field name string The prototype name
 
----@class ghost_type
+---@class LuaSectorScannedEventFilterGhostType
 ---@field type string The ghost prototype type
 
----@class ghost_name
+---@class LuaSectorScannedEventFilterGhostName
 ---@field name string The ghost prototype name
 
+---@alias LuaSectorScannedEventFilter LuaSectorScannedEventFilterType | LuaSectorScannedEventFilterName | LuaSectorScannedEventFilterGhostType | LuaSectorScannedEventFilterGhostName

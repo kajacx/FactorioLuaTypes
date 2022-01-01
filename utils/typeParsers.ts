@@ -1,10 +1,11 @@
 import { Method, Type } from '../definitions/types';
 import { LazyType } from '../processors/lazyProcessor';
+import { formatNameUnderscores } from './formatters';
 
 export const parseType = (type: Type, lazyTypes: LazyType[]): string => {
   if (typeof type === 'string') {
     if (type.match(/^defines\./)) {
-      return type.replace(/\./g, '_');
+      return formatNameUnderscores(type);
     }
     return type;
   }
@@ -14,13 +15,13 @@ export const parseType = (type: Type, lazyTypes: LazyType[]): string => {
       return `table<${parseType(type.key, lazyTypes)}, ${parseType(type.value, lazyTypes)}>`;
     case 'LuaLazyLoadedValue':
       const result = parseType(type.value, lazyTypes);
-      const stringified = `lazy_${result.replace(/[^A-Za-z]+/g, '_')}`.replace(/_$/, '').toLowerCase();
+      const stringified = formatNameUnderscores(`lazy_${result}`);
       lazyTypes.push({ type: result, stringified });
       return stringified;
     case 'array':
       return `${parseType(type.value, lazyTypes)}[]`;
     case 'function':
-      console.warn('Parsing a function with `parseType`, losing argument names, descriptions and return type.');
+      // TODO: Parsing a function with `parseType`, losing argument names, descriptions and return type
       const args = type.parameters.map((param, index) => `arg${index}: ${parseType(param, lazyTypes)}`).join(', ');
       return `fun(${args})`;
     case 'table':
