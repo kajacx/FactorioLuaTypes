@@ -41,8 +41,8 @@
 ---@field y uint
 
 ---@class GuiAnchor
----@field gui defines_relative_gui_type
----@field position defines_relative_gui_position
+---@field gui DefinesRelativeGuiType
+---@field position DefinesRelativeGuiPosition
 ---@field type string If provided, only anchors the GUI element when the opened things type matches the type.
 ---@field name string If provided, only anchors the GUI element when the opened thing matches the name. `name` takes precedence over `names`.
 ---@field names string[] If provided, only anchors the GUI element when the opened thing matches one of the names. When reading an anchor, `names` is always populated.
@@ -281,8 +281,8 @@
 ---@field max_failed_behavior_count uint If a behavior fails this many times, the enemy (or enemy group) is destroyed. This solves biters getting stuck within their own base.
 
 ---@class DifficultySettings Technology and recipe difficulty settings. Updating any of the attributes will immediately take effect in the game engine.
----@field recipe_difficulty defines_difficulty_settings_recipe_difficulty
----@field technology_difficulty defines_difficulty_settings_technology_difficulty
+---@field recipe_difficulty DefinesDifficultySettingsRecipeDifficulty
+---@field technology_difficulty DefinesDifficultySettingsTechnologyDifficulty
 ---@field technology_price_multiplier double A value in range [0.001, 1000].
 ---@field research_queue_setting string Either `"after-victory"`, `"always"` or `"never"`. Changing this to `"always"` or `"after-victory"` does not automatically unlock the research queue. See [LuaForce](LuaForce) for that.
 
@@ -312,7 +312,7 @@
 ---@field entity_number uint The entity's unique identifier in the blueprint.
 ---@field name string The prototype name of the entity.
 ---@field position Position The position of the entity.
----@field direction defines_direction The direction the entity is facing. Only present for entities that can face in different directions and when the entity is not facing north.
+---@field direction DefinesDirection The direction the entity is facing. Only present for entities that can face in different directions and when the entity is not facing north.
 ---@field tags Tags The entity tags of the entity, if there are any. Only relevant for entity ghosts.
 ---@field items table<string, uint> The items that the entity will request when revived, if there are any. It's a mapping of prototype names to amounts. Only relevant for entity ghosts.
 ---@field connections BlueprintCircuitConnection The circuit network connections of the entity, if there are any. Only relevant for entities that support circuit connections.
@@ -501,7 +501,7 @@
 
 ---@class HeatConnection
 ---@field position Vector
----@field direction defines_direction
+---@field direction DefinesDirection
 
 ---@class FluidBoxConnection A definition of a fluidbox connection point.
 ---@field type string The connection type: "input", "output", or "input-output".
@@ -563,18 +563,18 @@
 ---@field fulfilled boolean Whether the condition is currently fulfilled
 
 ---@class CircuitConnectionDefinition
----@field wire defines_wire_type Wire color, either [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green).
+---@field wire DefinesWireType Wire color, either [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green).
 ---@field target_entity LuaEntity
----@field source_circuit_id defines_circuit_connector_id
----@field target_circuit_id defines_circuit_connector_id
+---@field source_circuit_id DefinesCircuitConnectorId
+---@field target_circuit_id DefinesCircuitConnectorId
 
 ---@class WireConnectionDefinition
----@field wire defines_wire_type Wire color, either [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green).
+---@field wire DefinesWireType Wire color, either [defines.wire_type.red](defines.wire_type.red) or [defines.wire_type.green](defines.wire_type.green).
 ---@field target_entity LuaEntity The entity to (dis)connect the source entity with.
----@field source_circuit_id defines_circuit_connector_id Mandatory if the source entity has more than one circuit connection using circuit wire.
----@field target_circuit_id defines_circuit_connector_id Mandatory if the target entity has more than one circuit connection using circuit wire.
----@field source_wire_id defines_circuit_connector_id Mandatory if the source entity has more than one wire connection using copper wire.
----@field target_wire_id defines_circuit_connector_id Mandatory if the target entity has more than one wire connection using copper wire.
+---@field source_circuit_id DefinesCircuitConnectorId Mandatory if the source entity has more than one circuit connection using circuit wire.
+---@field target_circuit_id DefinesCircuitConnectorId Mandatory if the target entity has more than one circuit connection using circuit wire.
+---@field source_wire_id DefinesCircuitConnectorId Mandatory if the source entity has more than one wire connection using copper wire.
+---@field target_wire_id DefinesCircuitConnectorId Mandatory if the target entity has more than one wire connection using copper wire.
 
 ---@class InventoryFilter
 ---@field index uint Position of the corresponding filter slot.
@@ -586,7 +586,7 @@
 ---@field condition CollisionMask
 
 ---@class Command Commands can be given to enemies and unit groups.
----@field type defines_command Type of command. The remaining fields depend on the value of this field.
+---@field type DefinesCommand Type of command. The remaining fields depend on the value of this field.
 
 ---@class PathfinderFlags
 ---@field allow_destroy_friendly_entities boolean Allows pathing through friendly entities. Defaults to `false`.
@@ -639,7 +639,7 @@
 ---@class TrainScheduleRecord
 ---@field station string Name of the station.
 ---@field rail LuaEntity Rail to path to. Ignored if `station` is present.
----@field rail_direction defines_rail_direction When a train is allowed to reach rail target from any direction it will be `nil`. If rail has to be reached from specific direction, this value allows to choose the direction. This value corresponds to [LuaEntity::connected_rail_direction](LuaEntity::connected_rail_direction) of a TrainStop.
+---@field rail_direction DefinesRailDirection When a train is allowed to reach rail target from any direction it will be `nil`. If rail has to be reached from specific direction, this value allows to choose the direction. This value corresponds to [LuaEntity::connected_rail_direction](LuaEntity::connected_rail_direction) of a TrainStop.
 ---@field wait_conditions WaitCondition[]
 ---@field temporary boolean Only present when the station is temporary, the value is then always `true`.
 
@@ -662,8 +662,8 @@
 ---@field position Position The target position.
 
 ---@class RidingState
----@field acceleration defines_riding_acceleration
----@field direction defines_riding_direction
+---@field acceleration DefinesRidingAcceleration
+---@field direction DefinesRidingDirection
 
 ---@alias SpritePath any It is specified by [string](string). It can be either the name of a [sprite prototype](https://wiki.factorio.com/Prototype/Sprite) defined in the data stage or a path in form "type/name". The supported types are: - `"item"` - for example "item/iron-plate" is the icon sprite of iron plate - `"entity"` - for example "entity/small-biter" is the icon sprite of the small biter - `"technology"` - `"recipe"` - `"item-group"` - `"fluid"` - `"tile"` - `"virtual-signal"` - `"achievement"` - `"equipment"` - `"file"` - path to an image file located inside the current scenario. This file is not preloaded so it will be slower; for frequently used sprites, it is better to define sprite prototype and use it instead. - `"utility"` - sprite defined in the utility-sprites object, these are the pictures used by the game internally for the UI.
 
@@ -871,7 +871,7 @@
 ---@alias Alignment string A [string](string) that specifies where a gui element should be.
 
 ---@class EventData Information about the event that has been raised. The table can also contain other fields depending on the type of event. See [the list of Factorio events](events.html) for more information on these.
----@field name defines_events The identifier of the event this handler was registered to.
+---@field name DefinesEvents The identifier of the event this handler was registered to.
 ---@field tick uint The tick during which the event happened.
 ---@field mod_name string The name of the mod that raised the event if it was raised using [LuaBootstrap::raise_event](LuaBootstrap::raise_event).
 
@@ -984,7 +984,7 @@
 ---@alias CliffOrientation string
 
 ---@class ItemStackLocation
----@field inventory defines_inventory
+---@field inventory DefinesInventory
 ---@field slot uint
 
 ---@class VehicleAutomaticTargetingParameters

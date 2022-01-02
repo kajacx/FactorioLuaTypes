@@ -1,11 +1,11 @@
 import { Method, Type } from '../definitions/types';
 import { LazyType } from '../processors/lazyProcessor';
-import { formatNameUnderscores } from './formatters';
+import { formatNameCamelCase } from './formatters';
 
 export const parseType = (type: Type, lazyTypes: LazyType[]): string => {
   if (typeof type === 'string') {
     if (type.match(/^defines\./)) {
-      return formatNameUnderscores(type);
+      return formatNameCamelCase(type, true);
     }
     return type;
   }
@@ -15,7 +15,7 @@ export const parseType = (type: Type, lazyTypes: LazyType[]): string => {
       return `table<${parseType(type.key, lazyTypes)}, ${parseType(type.value, lazyTypes)}>`;
     case 'LuaLazyLoadedValue':
       const result = parseType(type.value, lazyTypes);
-      const stringified = formatNameUnderscores(`lazy_${result}`);
+      const stringified = formatNameCamelCase(`lazy_${result}`, true);
       lazyTypes.push({ type: result, stringified });
       return stringified;
     case 'array':
