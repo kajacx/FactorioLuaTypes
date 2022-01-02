@@ -61,3 +61,11 @@
 
 --- TODO: Add types to this
 ---@alias prototypes any
+
+--- TODO: Add types to this
+---@class Data
+---@field raw table<string, any[]>
+--- The `data` table expects a specific format for each item in the table. Missing properties will either fall back to
+--- default values or give an error indicating what's missing. Extra properties that the game isn't looking for are
+--- simply ignored.
+---@field extend fun(prototypes: any[])
