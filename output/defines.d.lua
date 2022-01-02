@@ -42,105 +42,105 @@
 ---@field wire_type wire_type
 
 ---@class alert_type
----@field custom defines_alert_type
----@field entity_destroyed defines_alert_type
----@field entity_under_attack defines_alert_type
----@field no_material_for_construction defines_alert_type
----@field no_storage defines_alert_type
----@field not_enough_construction_robots defines_alert_type
----@field not_enough_repair_packs defines_alert_type
----@field train_out_of_fuel defines_alert_type
----@field turret_fire defines_alert_type
+---@field custom DefinesAlertType
+---@field entity_destroyed DefinesAlertType
+---@field entity_under_attack DefinesAlertType
+---@field no_material_for_construction DefinesAlertType
+---@field no_storage DefinesAlertType
+---@field not_enough_construction_robots DefinesAlertType
+---@field not_enough_repair_packs DefinesAlertType
+---@field train_out_of_fuel DefinesAlertType
+---@field turret_fire DefinesAlertType
 
----@class defines_alert_type Enum value type for alert_type
+---@class DefinesAlertType Enum value type for alert_type
 
 ---@class behavior_result AI command exit status. See [LuaEntity::set_command](LuaEntity::set_command)
----@field deleted defines_behavior_result
----@field fail defines_behavior_result
----@field in_progress defines_behavior_result
----@field success defines_behavior_result
+---@field deleted DefinesBehaviorResult
+---@field fail DefinesBehaviorResult
+---@field in_progress DefinesBehaviorResult
+---@field success DefinesBehaviorResult
 
----@class defines_behavior_result Enum value type for behavior_result
+---@class DefinesBehaviorResult Enum value type for behavior_result
 
 ---@class build_check_type
----@field blueprint_ghost defines_build_check_type
----@field ghost_revive defines_build_check_type
----@field manual defines_build_check_type
----@field manual_ghost defines_build_check_type
----@field script defines_build_check_type
----@field script_ghost defines_build_check_type
+---@field blueprint_ghost DefinesBuildCheckType
+---@field ghost_revive DefinesBuildCheckType
+---@field manual DefinesBuildCheckType
+---@field manual_ghost DefinesBuildCheckType
+---@field script DefinesBuildCheckType
+---@field script_ghost DefinesBuildCheckType
 
----@class defines_build_check_type Enum value type for build_check_type
+---@class DefinesBuildCheckType Enum value type for build_check_type
 
 ---@class chain_signal_state State of a chain signal.
----@field all_open defines_chain_signal_state
----@field none defines_chain_signal_state
----@field none_open defines_chain_signal_state
----@field partially_open defines_chain_signal_state
+---@field all_open DefinesChainSignalState
+---@field none DefinesChainSignalState
+---@field none_open DefinesChainSignalState
+---@field partially_open DefinesChainSignalState
 
----@class defines_chain_signal_state Enum value type for chain_signal_state
+---@class DefinesChainSignalState Enum value type for chain_signal_state
 
 ---@class chunk_generated_status
----@field basic_tiles defines_chunk_generated_status
----@field corrected_tiles defines_chunk_generated_status
----@field custom_tiles defines_chunk_generated_status
----@field entities defines_chunk_generated_status
----@field nothing defines_chunk_generated_status
----@field tiles defines_chunk_generated_status
+---@field basic_tiles DefinesChunkGeneratedStatus
+---@field corrected_tiles DefinesChunkGeneratedStatus
+---@field custom_tiles DefinesChunkGeneratedStatus
+---@field entities DefinesChunkGeneratedStatus
+---@field nothing DefinesChunkGeneratedStatus
+---@field tiles DefinesChunkGeneratedStatus
 
----@class defines_chunk_generated_status Enum value type for chunk_generated_status
+---@class DefinesChunkGeneratedStatus Enum value type for chunk_generated_status
 
 ---@class circuit_condition_index
----@field arithmetic_combinator defines_circuit_condition_index
----@field constant_combinator defines_circuit_condition_index
----@field decider_combinator defines_circuit_condition_index
----@field inserter_circuit defines_circuit_condition_index
----@field inserter_logistic defines_circuit_condition_index
----@field lamp defines_circuit_condition_index
----@field offshore_pump defines_circuit_condition_index
----@field pump defines_circuit_condition_index
+---@field arithmetic_combinator DefinesCircuitConditionIndex
+---@field constant_combinator DefinesCircuitConditionIndex
+---@field decider_combinator DefinesCircuitConditionIndex
+---@field inserter_circuit DefinesCircuitConditionIndex
+---@field inserter_logistic DefinesCircuitConditionIndex
+---@field lamp DefinesCircuitConditionIndex
+---@field offshore_pump DefinesCircuitConditionIndex
+---@field pump DefinesCircuitConditionIndex
 
----@class defines_circuit_condition_index Enum value type for circuit_condition_index
+---@class DefinesCircuitConditionIndex Enum value type for circuit_condition_index
 
 ---@class circuit_connector_id
----@field accumulator defines_circuit_connector_id
----@field combinator_input defines_circuit_connector_id
----@field combinator_output defines_circuit_connector_id
----@field constant_combinator defines_circuit_connector_id
----@field container defines_circuit_connector_id
----@field electric_pole defines_circuit_connector_id
----@field inserter defines_circuit_connector_id
----@field lamp defines_circuit_connector_id
----@field offshore_pump defines_circuit_connector_id
----@field programmable_speaker defines_circuit_connector_id
----@field pump defines_circuit_connector_id
----@field rail_chain_signal defines_circuit_connector_id
----@field rail_signal defines_circuit_connector_id
----@field roboport defines_circuit_connector_id
----@field storage_tank defines_circuit_connector_id
----@field wall defines_circuit_connector_id
+---@field accumulator DefinesCircuitConnectorId
+---@field combinator_input DefinesCircuitConnectorId
+---@field combinator_output DefinesCircuitConnectorId
+---@field constant_combinator DefinesCircuitConnectorId
+---@field container DefinesCircuitConnectorId
+---@field electric_pole DefinesCircuitConnectorId
+---@field inserter DefinesCircuitConnectorId
+---@field lamp DefinesCircuitConnectorId
+---@field offshore_pump DefinesCircuitConnectorId
+---@field programmable_speaker DefinesCircuitConnectorId
+---@field pump DefinesCircuitConnectorId
+---@field rail_chain_signal DefinesCircuitConnectorId
+---@field rail_signal DefinesCircuitConnectorId
+---@field roboport DefinesCircuitConnectorId
+---@field storage_tank DefinesCircuitConnectorId
+---@field wall DefinesCircuitConnectorId
 
----@class defines_circuit_connector_id Enum value type for circuit_connector_id
+---@class DefinesCircuitConnectorId Enum value type for circuit_connector_id
 
 ---@class command Command given to units describing what they should do.
----@field attack defines_command Attack another entity.
----@field attack_area defines_command Go to a place and attack what you see.
----@field build_base defines_command Go to a position and build a base there.
----@field compound defines_command Chain commands together, see [defines.compound_command](defines.compound_command).
----@field flee defines_command Flee from another entity.
----@field go_to_location defines_command Go to a specific position.
----@field group defines_command Do what your group wants you to do.
----@field stop defines_command Stop moving and stay where you are.
----@field wander defines_command Chill.
+---@field attack DefinesCommand Attack another entity.
+---@field attack_area DefinesCommand Go to a place and attack what you see.
+---@field build_base DefinesCommand Go to a position and build a base there.
+---@field compound DefinesCommand Chain commands together, see [defines.compound_command](defines.compound_command).
+---@field flee DefinesCommand Flee from another entity.
+---@field go_to_location DefinesCommand Go to a specific position.
+---@field group DefinesCommand Do what your group wants you to do.
+---@field stop DefinesCommand Stop moving and stay where you are.
+---@field wander DefinesCommand Chill.
 
----@class defines_command Enum value type for command
+---@class DefinesCommand Enum value type for command
 
 ---@class compound_command How commands are joined together in a compound command (see [defines.command.compound](defines.command.compound)).
----@field logical_and defines_compound_command Fail on first failure. Only succeeds if all commands (executed one after another) succeed.
----@field logical_or defines_compound_command Succeed on first success. Only fails if all commands (executed one after another) fail.
----@field return_last defines_compound_command Execute all commands in sequence and fail or succeed depending on the return status of the last command.
+---@field logical_and DefinesCompoundCommand Fail on first failure. Only succeeds if all commands (executed one after another) succeed.
+---@field logical_or DefinesCompoundCommand Succeed on first success. Only fails if all commands (executed one after another) fail.
+---@field return_last DefinesCompoundCommand Execute all commands in sequence and fail or succeed depending on the return status of the last command.
 
----@class defines_compound_command Enum value type for compound_command
+---@class DefinesCompoundCommand Enum value type for compound_command
 
 ---@class control_behavior
 ---@field inserter inserter
@@ -155,86 +155,86 @@
 ---@field hand_read_mode hand_read_mode
 
 ---@class circuit_mode_of_operation
----@field enable_disable defines_control_behavior_inserter_circuit_mode_of_operation
----@field none defines_control_behavior_inserter_circuit_mode_of_operation
----@field read_hand_contents defines_control_behavior_inserter_circuit_mode_of_operation
----@field set_filters defines_control_behavior_inserter_circuit_mode_of_operation
----@field set_stack_size defines_control_behavior_inserter_circuit_mode_of_operation
+---@field enable_disable DefinesControlBehaviorInserterCircuitModeOfOperation
+---@field none DefinesControlBehaviorInserterCircuitModeOfOperation
+---@field read_hand_contents DefinesControlBehaviorInserterCircuitModeOfOperation
+---@field set_filters DefinesControlBehaviorInserterCircuitModeOfOperation
+---@field set_stack_size DefinesControlBehaviorInserterCircuitModeOfOperation
 
----@class defines_control_behavior_inserter_circuit_mode_of_operation Enum value type for circuit_mode_of_operation
+---@class DefinesControlBehaviorInserterCircuitModeOfOperation Enum value type for circuit_mode_of_operation
 
 ---@class hand_read_mode
----@field hold defines_control_behavior_inserter_hand_read_mode
----@field pulse defines_control_behavior_inserter_hand_read_mode
+---@field hold DefinesControlBehaviorInserterHandReadMode
+---@field pulse DefinesControlBehaviorInserterHandReadMode
 
----@class defines_control_behavior_inserter_hand_read_mode Enum value type for hand_read_mode
+---@class DefinesControlBehaviorInserterHandReadMode Enum value type for hand_read_mode
 
 ---@class logistic_container
 ---@field circuit_mode_of_operation circuit_mode_of_operation
 
 ---@class circuit_mode_of_operation
----@field send_contents defines_control_behavior_logistic_container_circuit_mode_of_operation
----@field set_requests defines_control_behavior_logistic_container_circuit_mode_of_operation
+---@field send_contents DefinesControlBehaviorLogisticContainerCircuitModeOfOperation
+---@field set_requests DefinesControlBehaviorLogisticContainerCircuitModeOfOperation
 
----@class defines_control_behavior_logistic_container_circuit_mode_of_operation Enum value type for circuit_mode_of_operation
+---@class DefinesControlBehaviorLogisticContainerCircuitModeOfOperation Enum value type for circuit_mode_of_operation
 
 ---@class lamp
 ---@field circuit_mode_of_operation circuit_mode_of_operation
 
 ---@class circuit_mode_of_operation
----@field use_colors defines_control_behavior_lamp_circuit_mode_of_operation
+---@field use_colors DefinesControlBehaviorLampCircuitModeOfOperation
 
----@class defines_control_behavior_lamp_circuit_mode_of_operation Enum value type for circuit_mode_of_operation
+---@class DefinesControlBehaviorLampCircuitModeOfOperation Enum value type for circuit_mode_of_operation
 
 ---@class mining_drill
 ---@field resource_read_mode resource_read_mode
 
 ---@class resource_read_mode
----@field entire_patch defines_control_behavior_mining_drill_resource_read_mode
----@field this_miner defines_control_behavior_mining_drill_resource_read_mode
+---@field entire_patch DefinesControlBehaviorMiningDrillResourceReadMode
+---@field this_miner DefinesControlBehaviorMiningDrillResourceReadMode
 
----@class defines_control_behavior_mining_drill_resource_read_mode Enum value type for resource_read_mode
+---@class DefinesControlBehaviorMiningDrillResourceReadMode Enum value type for resource_read_mode
 
 ---@class transport_belt
 ---@field content_read_mode content_read_mode
 
 ---@class content_read_mode
----@field hold defines_control_behavior_transport_belt_content_read_mode
----@field pulse defines_control_behavior_transport_belt_content_read_mode
+---@field hold DefinesControlBehaviorTransportBeltContentReadMode
+---@field pulse DefinesControlBehaviorTransportBeltContentReadMode
 
----@class defines_control_behavior_transport_belt_content_read_mode Enum value type for content_read_mode
+---@class DefinesControlBehaviorTransportBeltContentReadMode Enum value type for content_read_mode
 
 ---@class type
----@field accumulator defines_control_behavior_type [LuaAccumulatorControlBehavior](LuaAccumulatorControlBehavior)
----@field arithmetic_combinator defines_control_behavior_type [LuaArithmeticCombinatorControlBehavior](LuaArithmeticCombinatorControlBehavior)
----@field constant_combinator defines_control_behavior_type [LuaConstantCombinatorControlBehavior](LuaConstantCombinatorControlBehavior)
----@field container defines_control_behavior_type [LuaContainerControlBehavior](LuaContainerControlBehavior)
----@field decider_combinator defines_control_behavior_type [LuaDeciderCombinatorControlBehavior](LuaDeciderCombinatorControlBehavior)
----@field generic_on_off defines_control_behavior_type [LuaGenericOnOffControlBehavior](LuaGenericOnOffControlBehavior)
----@field inserter defines_control_behavior_type [LuaInserterControlBehavior](LuaInserterControlBehavior)
----@field lamp defines_control_behavior_type [LuaLampControlBehavior](LuaLampControlBehavior)
----@field logistic_container defines_control_behavior_type [LuaLogisticContainerControlBehavior](LuaLogisticContainerControlBehavior)
----@field mining_drill defines_control_behavior_type [LuaMiningDrillControlBehavior](LuaMiningDrillControlBehavior)
----@field programmable_speaker defines_control_behavior_type [LuaProgrammableSpeakerControlBehavior](LuaProgrammableSpeakerControlBehavior)
----@field rail_chain_signal defines_control_behavior_type [LuaRailChainSignalControlBehavior](LuaRailChainSignalControlBehavior)
----@field rail_signal defines_control_behavior_type [LuaRailSignalControlBehavior](LuaRailSignalControlBehavior)
----@field roboport defines_control_behavior_type [LuaRoboportControlBehavior](LuaRoboportControlBehavior)
----@field storage_tank defines_control_behavior_type [LuaStorageTankControlBehavior](LuaStorageTankControlBehavior)
----@field train_stop defines_control_behavior_type [LuaTrainStopControlBehavior](LuaTrainStopControlBehavior)
----@field transport_belt defines_control_behavior_type [LuaTransportBeltControlBehavior](LuaTransportBeltControlBehavior)
----@field wall defines_control_behavior_type [LuaWallControlBehavior](LuaWallControlBehavior)
+---@field accumulator DefinesControlBehaviorType [LuaAccumulatorControlBehavior](LuaAccumulatorControlBehavior)
+---@field arithmetic_combinator DefinesControlBehaviorType [LuaArithmeticCombinatorControlBehavior](LuaArithmeticCombinatorControlBehavior)
+---@field constant_combinator DefinesControlBehaviorType [LuaConstantCombinatorControlBehavior](LuaConstantCombinatorControlBehavior)
+---@field container DefinesControlBehaviorType [LuaContainerControlBehavior](LuaContainerControlBehavior)
+---@field decider_combinator DefinesControlBehaviorType [LuaDeciderCombinatorControlBehavior](LuaDeciderCombinatorControlBehavior)
+---@field generic_on_off DefinesControlBehaviorType [LuaGenericOnOffControlBehavior](LuaGenericOnOffControlBehavior)
+---@field inserter DefinesControlBehaviorType [LuaInserterControlBehavior](LuaInserterControlBehavior)
+---@field lamp DefinesControlBehaviorType [LuaLampControlBehavior](LuaLampControlBehavior)
+---@field logistic_container DefinesControlBehaviorType [LuaLogisticContainerControlBehavior](LuaLogisticContainerControlBehavior)
+---@field mining_drill DefinesControlBehaviorType [LuaMiningDrillControlBehavior](LuaMiningDrillControlBehavior)
+---@field programmable_speaker DefinesControlBehaviorType [LuaProgrammableSpeakerControlBehavior](LuaProgrammableSpeakerControlBehavior)
+---@field rail_chain_signal DefinesControlBehaviorType [LuaRailChainSignalControlBehavior](LuaRailChainSignalControlBehavior)
+---@field rail_signal DefinesControlBehaviorType [LuaRailSignalControlBehavior](LuaRailSignalControlBehavior)
+---@field roboport DefinesControlBehaviorType [LuaRoboportControlBehavior](LuaRoboportControlBehavior)
+---@field storage_tank DefinesControlBehaviorType [LuaStorageTankControlBehavior](LuaStorageTankControlBehavior)
+---@field train_stop DefinesControlBehaviorType [LuaTrainStopControlBehavior](LuaTrainStopControlBehavior)
+---@field transport_belt DefinesControlBehaviorType [LuaTransportBeltControlBehavior](LuaTransportBeltControlBehavior)
+---@field wall DefinesControlBehaviorType [LuaWallControlBehavior](LuaWallControlBehavior)
 
----@class defines_control_behavior_type Enum value type for type
+---@class DefinesControlBehaviorType Enum value type for type
 
 ---@class controllers
----@field character defines_controllers The controller controls a character. This is the default controller in freeplay.
----@field cutscene defines_controllers The player can't interact with the world, and the camera pans around in a predefined manner.
----@field editor defines_controllers The Editor Controller near ultimate power to do almost anything in the game.
----@field ghost defines_controllers Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen.
----@field god defines_controllers The controller isn't tied to a character. This is the default controller in sandbox.
----@field spectator defines_controllers Can't change anything in the world but can view anything.
+---@field character DefinesControllers The controller controls a character. This is the default controller in freeplay.
+---@field cutscene DefinesControllers The player can't interact with the world, and the camera pans around in a predefined manner.
+---@field editor DefinesControllers The Editor Controller near ultimate power to do almost anything in the game.
+---@field ghost DefinesControllers Can't interact with the world, can only observe. Used in the multiplayer waiting-to-respawn screen.
+---@field god DefinesControllers The controller isn't tied to a character. This is the default controller in sandbox.
+---@field spectator DefinesControllers Can't change anything in the world but can view anything.
 
----@class defines_controllers Enum value type for controllers
+---@class DefinesControllers Enum value type for controllers
 
 ---@class deconstruction_item
 ---@field entity_filter_mode entity_filter_mode
@@ -242,806 +242,806 @@
 ---@field tile_selection_mode tile_selection_mode
 
 ---@class entity_filter_mode
----@field blacklist defines_deconstruction_item_entity_filter_mode
----@field whitelist defines_deconstruction_item_entity_filter_mode
+---@field blacklist DefinesDeconstructionItemEntityFilterMode
+---@field whitelist DefinesDeconstructionItemEntityFilterMode
 
----@class defines_deconstruction_item_entity_filter_mode Enum value type for entity_filter_mode
+---@class DefinesDeconstructionItemEntityFilterMode Enum value type for entity_filter_mode
 
 ---@class tile_filter_mode
----@field blacklist defines_deconstruction_item_tile_filter_mode
----@field whitelist defines_deconstruction_item_tile_filter_mode
+---@field blacklist DefinesDeconstructionItemTileFilterMode
+---@field whitelist DefinesDeconstructionItemTileFilterMode
 
----@class defines_deconstruction_item_tile_filter_mode Enum value type for tile_filter_mode
+---@class DefinesDeconstructionItemTileFilterMode Enum value type for tile_filter_mode
 
 ---@class tile_selection_mode
----@field always defines_deconstruction_item_tile_selection_mode
----@field never defines_deconstruction_item_tile_selection_mode
----@field normal defines_deconstruction_item_tile_selection_mode
----@field only defines_deconstruction_item_tile_selection_mode
+---@field always DefinesDeconstructionItemTileSelectionMode
+---@field never DefinesDeconstructionItemTileSelectionMode
+---@field normal DefinesDeconstructionItemTileSelectionMode
+---@field only DefinesDeconstructionItemTileSelectionMode
 
----@class defines_deconstruction_item_tile_selection_mode Enum value type for tile_selection_mode
+---@class DefinesDeconstructionItemTileSelectionMode Enum value type for tile_selection_mode
 
 ---@class difficulty
----@field easy defines_difficulty
----@field hard defines_difficulty
----@field normal defines_difficulty
+---@field easy DefinesDifficulty
+---@field hard DefinesDifficulty
+---@field normal DefinesDifficulty
 
----@class defines_difficulty Enum value type for difficulty
+---@class DefinesDifficulty Enum value type for difficulty
 
 ---@class difficulty_settings
 ---@field recipe_difficulty recipe_difficulty
 ---@field technology_difficulty technology_difficulty
 
 ---@class recipe_difficulty
----@field expensive defines_difficulty_settings_recipe_difficulty
----@field normal defines_difficulty_settings_recipe_difficulty
+---@field expensive DefinesDifficultySettingsRecipeDifficulty
+---@field normal DefinesDifficultySettingsRecipeDifficulty
 
----@class defines_difficulty_settings_recipe_difficulty Enum value type for recipe_difficulty
+---@class DefinesDifficultySettingsRecipeDifficulty Enum value type for recipe_difficulty
 
 ---@class technology_difficulty
----@field expensive defines_difficulty_settings_technology_difficulty
----@field normal defines_difficulty_settings_technology_difficulty
+---@field expensive DefinesDifficultySettingsTechnologyDifficulty
+---@field normal DefinesDifficultySettingsTechnologyDifficulty
 
----@class defines_difficulty_settings_technology_difficulty Enum value type for technology_difficulty
+---@class DefinesDifficultySettingsTechnologyDifficulty Enum value type for technology_difficulty
 
 ---@class direction
----@field east defines_direction
----@field north defines_direction
----@field northeast defines_direction
----@field northwest defines_direction
----@field south defines_direction
----@field southeast defines_direction
----@field southwest defines_direction
----@field west defines_direction
+---@field east DefinesDirection
+---@field north DefinesDirection
+---@field northeast DefinesDirection
+---@field northwest DefinesDirection
+---@field south DefinesDirection
+---@field southeast DefinesDirection
+---@field southwest DefinesDirection
+---@field west DefinesDirection
 
----@class defines_direction Enum value type for direction
+---@class DefinesDirection Enum value type for direction
 
 ---@class disconnect_reason
----@field afk defines_disconnect_reason
----@field banned defines_disconnect_reason
----@field cannot_keep_up defines_disconnect_reason
----@field desync_limit_reached defines_disconnect_reason
----@field dropped defines_disconnect_reason
----@field kicked defines_disconnect_reason
----@field kicked_and_deleted defines_disconnect_reason
----@field quit defines_disconnect_reason
----@field reconnect defines_disconnect_reason
----@field switching_servers defines_disconnect_reason
----@field wrong_input defines_disconnect_reason
+---@field afk DefinesDisconnectReason
+---@field banned DefinesDisconnectReason
+---@field cannot_keep_up DefinesDisconnectReason
+---@field desync_limit_reached DefinesDisconnectReason
+---@field dropped DefinesDisconnectReason
+---@field kicked DefinesDisconnectReason
+---@field kicked_and_deleted DefinesDisconnectReason
+---@field quit DefinesDisconnectReason
+---@field reconnect DefinesDisconnectReason
+---@field switching_servers DefinesDisconnectReason
+---@field wrong_input DefinesDisconnectReason
 
----@class defines_disconnect_reason Enum value type for disconnect_reason
+---@class DefinesDisconnectReason Enum value type for disconnect_reason
 
 ---@class distraction
----@field by_anything defines_distraction Attack closer enemy entities, including entities "built" by player (belts, inserters, chests).
----@field by_damage defines_distraction Attack when attacked.
----@field by_enemy defines_distraction Attack closer enemy entities with force.
----@field none defines_distraction Perform command even if someone attacks the unit.
+---@field by_anything DefinesDistraction Attack closer enemy entities, including entities "built" by player (belts, inserters, chests).
+---@field by_damage DefinesDistraction Attack when attacked.
+---@field by_enemy DefinesDistraction Attack closer enemy entities with force.
+---@field none DefinesDistraction Perform command even if someone attacks the unit.
 
----@class defines_distraction Enum value type for distraction
+---@class DefinesDistraction Enum value type for distraction
 
 ---@class entity_status
----@field cant_divide_segments defines_entity_status Used by rail signals.
----@field charging defines_entity_status Used by accumulators.
----@field closed_by_circuit_network defines_entity_status
----@field disabled defines_entity_status Used by constant combinators: Combinator is turned off via switch in GUI.
----@field disabled_by_control_behavior defines_entity_status
----@field disabled_by_script defines_entity_status
----@field discharging defines_entity_status Used by accumulators.
----@field fluid_ingredient_shortage defines_entity_status Used by crafting machines.
----@field full_output defines_entity_status Used by crafting machines, boilers, burner energy sources and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox.
----@field fully_charged defines_entity_status Used by accumulators.
----@field item_ingredient_shortage defines_entity_status Used by crafting machines.
----@field launching_rocket defines_entity_status Used by the rocket silo.
----@field low_input_fluid defines_entity_status Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out.
----@field low_power defines_entity_status
----@field low_temperature defines_entity_status Used by heat energy sources.
----@field marked_for_deconstruction defines_entity_status
----@field missing_required_fluid defines_entity_status Used by mining drills when the mining fluid is missing.
----@field missing_science_packs defines_entity_status Used by labs.
----@field networks_connected defines_entity_status Used by power switches.
----@field networks_disconnected defines_entity_status Used by power switches.
----@field no_ammo defines_entity_status Used by ammo turrets.
----@field no_fuel defines_entity_status
----@field no_ingredients defines_entity_status Used by furnaces.
----@field no_input_fluid defines_entity_status Used by boilers, fluid turrets and fluid energy sources: Boiler has no fluid to work with.
----@field no_minable_resources defines_entity_status Used by mining drills.
----@field no_modules_to_transmit defines_entity_status Used by beacons.
----@field no_power defines_entity_status
----@field no_recipe defines_entity_status Used by assembling machines.
----@field no_research_in_progress defines_entity_status Used by labs.
----@field normal defines_entity_status
----@field not_connected_to_rail defines_entity_status Used by rail signals.
----@field not_plugged_in_electric_network defines_entity_status Used by generators and solar panels.
----@field opened_by_circuit_network defines_entity_status
----@field out_of_logistic_network defines_entity_status Used by logistic containers.
----@field preparing_rocket_for_launch defines_entity_status Used by the rocket silo.
----@field recharging_after_power_outage defines_entity_status Used by roboports.
----@field turned_off_during_daytime defines_entity_status Used by lamps.
----@field waiting_for_source_items defines_entity_status Used by inserters.
----@field waiting_for_space_in_destination defines_entity_status Used by inserters and mining drills.
----@field waiting_for_target_to_be_built defines_entity_status Used by inserters targeting entity ghosts.
----@field waiting_for_train defines_entity_status Used by inserters targeting rails.
----@field waiting_to_launch_rocket defines_entity_status Used by the rocket silo.
----@field working defines_entity_status
+---@field cant_divide_segments DefinesEntityStatus Used by rail signals.
+---@field charging DefinesEntityStatus Used by accumulators.
+---@field closed_by_circuit_network DefinesEntityStatus
+---@field disabled DefinesEntityStatus Used by constant combinators: Combinator is turned off via switch in GUI.
+---@field disabled_by_control_behavior DefinesEntityStatus
+---@field disabled_by_script DefinesEntityStatus
+---@field discharging DefinesEntityStatus Used by accumulators.
+---@field fluid_ingredient_shortage DefinesEntityStatus Used by crafting machines.
+---@field full_output DefinesEntityStatus Used by crafting machines, boilers, burner energy sources and reactors: Reactor/burner has full burnt result inventory, boiler has full output fluidbox.
+---@field fully_charged DefinesEntityStatus Used by accumulators.
+---@field item_ingredient_shortage DefinesEntityStatus Used by crafting machines.
+---@field launching_rocket DefinesEntityStatus Used by the rocket silo.
+---@field low_input_fluid DefinesEntityStatus Used by boilers and fluid turrets: Boiler still has some fluid but is about to run out.
+---@field low_power DefinesEntityStatus
+---@field low_temperature DefinesEntityStatus Used by heat energy sources.
+---@field marked_for_deconstruction DefinesEntityStatus
+---@field missing_required_fluid DefinesEntityStatus Used by mining drills when the mining fluid is missing.
+---@field missing_science_packs DefinesEntityStatus Used by labs.
+---@field networks_connected DefinesEntityStatus Used by power switches.
+---@field networks_disconnected DefinesEntityStatus Used by power switches.
+---@field no_ammo DefinesEntityStatus Used by ammo turrets.
+---@field no_fuel DefinesEntityStatus
+---@field no_ingredients DefinesEntityStatus Used by furnaces.
+---@field no_input_fluid DefinesEntityStatus Used by boilers, fluid turrets and fluid energy sources: Boiler has no fluid to work with.
+---@field no_minable_resources DefinesEntityStatus Used by mining drills.
+---@field no_modules_to_transmit DefinesEntityStatus Used by beacons.
+---@field no_power DefinesEntityStatus
+---@field no_recipe DefinesEntityStatus Used by assembling machines.
+---@field no_research_in_progress DefinesEntityStatus Used by labs.
+---@field normal DefinesEntityStatus
+---@field not_connected_to_rail DefinesEntityStatus Used by rail signals.
+---@field not_plugged_in_electric_network DefinesEntityStatus Used by generators and solar panels.
+---@field opened_by_circuit_network DefinesEntityStatus
+---@field out_of_logistic_network DefinesEntityStatus Used by logistic containers.
+---@field preparing_rocket_for_launch DefinesEntityStatus Used by the rocket silo.
+---@field recharging_after_power_outage DefinesEntityStatus Used by roboports.
+---@field turned_off_during_daytime DefinesEntityStatus Used by lamps.
+---@field waiting_for_source_items DefinesEntityStatus Used by inserters.
+---@field waiting_for_space_in_destination DefinesEntityStatus Used by inserters and mining drills.
+---@field waiting_for_target_to_be_built DefinesEntityStatus Used by inserters targeting entity ghosts.
+---@field waiting_for_train DefinesEntityStatus Used by inserters targeting rails.
+---@field waiting_to_launch_rocket DefinesEntityStatus Used by the rocket silo.
+---@field working DefinesEntityStatus
 
----@class defines_entity_status Enum value type for entity_status
+---@class DefinesEntityStatus Enum value type for entity_status
 
 ---@class events See the [events page](events.html) for more info on what events contain and when they get raised.
----@field on_ai_command_completed defines_events
----@field on_area_cloned defines_events
----@field on_biter_base_built defines_events
----@field on_brush_cloned defines_events
----@field on_build_base_arrived defines_events
----@field on_built_entity defines_events
----@field on_cancelled_deconstruction defines_events
----@field on_cancelled_upgrade defines_events
----@field on_character_corpse_expired defines_events
----@field on_chart_tag_added defines_events
----@field on_chart_tag_modified defines_events
----@field on_chart_tag_removed defines_events
----@field on_chunk_charted defines_events
----@field on_chunk_deleted defines_events
----@field on_chunk_generated defines_events
----@field on_combat_robot_expired defines_events
----@field on_console_chat defines_events
----@field on_console_command defines_events
----@field on_cutscene_cancelled defines_events
----@field on_cutscene_waypoint_reached defines_events
----@field on_difficulty_settings_changed defines_events
----@field on_entity_cloned defines_events
----@field on_entity_damaged defines_events
----@field on_entity_destroyed defines_events
----@field on_entity_died defines_events
----@field on_entity_logistic_slot_changed defines_events
----@field on_entity_renamed defines_events
----@field on_entity_settings_pasted defines_events
----@field on_entity_spawned defines_events
----@field on_equipment_inserted defines_events
----@field on_equipment_removed defines_events
----@field on_force_cease_fire_changed defines_events
----@field on_force_created defines_events
----@field on_force_friends_changed defines_events
----@field on_force_reset defines_events
----@field on_forces_merged defines_events
----@field on_forces_merging defines_events
----@field on_game_created_from_scenario defines_events
----@field on_gui_checked_state_changed defines_events
----@field on_gui_click defines_events
----@field on_gui_closed defines_events
----@field on_gui_confirmed defines_events
----@field on_gui_elem_changed defines_events
----@field on_gui_location_changed defines_events
----@field on_gui_opened defines_events
----@field on_gui_selected_tab_changed defines_events
----@field on_gui_selection_state_changed defines_events
----@field on_gui_switch_state_changed defines_events
----@field on_gui_text_changed defines_events
----@field on_gui_value_changed defines_events
----@field on_land_mine_armed defines_events
----@field on_lua_shortcut defines_events
----@field on_marked_for_deconstruction defines_events
----@field on_marked_for_upgrade defines_events
----@field on_market_item_purchased defines_events
----@field on_mod_item_opened defines_events
----@field on_permission_group_added defines_events
----@field on_permission_group_deleted defines_events
----@field on_permission_group_edited defines_events
----@field on_permission_string_imported defines_events
----@field on_picked_up_item defines_events
----@field on_player_alt_selected_area defines_events
----@field on_player_ammo_inventory_changed defines_events
----@field on_player_armor_inventory_changed defines_events
----@field on_player_banned defines_events
----@field on_player_built_tile defines_events
----@field on_player_cancelled_crafting defines_events
----@field on_player_changed_force defines_events
----@field on_player_changed_position defines_events
----@field on_player_changed_surface defines_events
----@field on_player_cheat_mode_disabled defines_events
----@field on_player_cheat_mode_enabled defines_events
----@field on_player_clicked_gps_tag defines_events
----@field on_player_configured_blueprint defines_events
----@field on_player_configured_spider_remote defines_events
----@field on_player_crafted_item defines_events
----@field on_player_created defines_events
----@field on_player_cursor_stack_changed defines_events
----@field on_player_deconstructed_area defines_events
----@field on_player_demoted defines_events
----@field on_player_died defines_events
----@field on_player_display_resolution_changed defines_events
----@field on_player_display_scale_changed defines_events
----@field on_player_driving_changed_state defines_events
----@field on_player_dropped_item defines_events
----@field on_player_fast_transferred defines_events
----@field on_player_flushed_fluid defines_events
----@field on_player_gun_inventory_changed defines_events
----@field on_player_joined_game defines_events
----@field on_player_kicked defines_events
----@field on_player_left_game defines_events
----@field on_player_main_inventory_changed defines_events
----@field on_player_mined_entity defines_events
----@field on_player_mined_item defines_events
----@field on_player_mined_tile defines_events
----@field on_player_muted defines_events
----@field on_player_pipette defines_events
----@field on_player_placed_equipment defines_events
----@field on_player_promoted defines_events
----@field on_player_removed defines_events
----@field on_player_removed_equipment defines_events
----@field on_player_repaired_entity defines_events
----@field on_player_respawned defines_events
----@field on_player_rotated_entity defines_events
----@field on_player_selected_area defines_events
----@field on_player_set_quick_bar_slot defines_events
----@field on_player_setup_blueprint defines_events
----@field on_player_toggled_alt_mode defines_events
----@field on_player_toggled_map_editor defines_events
----@field on_player_trash_inventory_changed defines_events
----@field on_player_unbanned defines_events
----@field on_player_unmuted defines_events
----@field on_player_used_capsule defines_events
----@field on_player_used_spider_remote defines_events
----@field on_post_entity_died defines_events
----@field on_pre_build defines_events
----@field on_pre_chunk_deleted defines_events
----@field on_pre_entity_settings_pasted defines_events
----@field on_pre_ghost_deconstructed defines_events
----@field on_pre_permission_group_deleted defines_events
----@field on_pre_permission_string_imported defines_events
----@field on_pre_player_crafted_item defines_events
----@field on_pre_player_died defines_events
----@field on_pre_player_left_game defines_events
----@field on_pre_player_mined_item defines_events
----@field on_pre_player_removed defines_events
----@field on_pre_player_toggled_map_editor defines_events
----@field on_pre_robot_exploded_cliff defines_events
----@field on_pre_script_inventory_resized defines_events
----@field on_pre_surface_cleared defines_events
----@field on_pre_surface_deleted defines_events
----@field on_research_finished defines_events
----@field on_research_reversed defines_events
----@field on_research_started defines_events
----@field on_resource_depleted defines_events
----@field on_robot_built_entity defines_events
----@field on_robot_built_tile defines_events
----@field on_robot_exploded_cliff defines_events
----@field on_robot_mined defines_events
----@field on_robot_mined_entity defines_events
----@field on_robot_mined_tile defines_events
----@field on_robot_pre_mined defines_events
----@field on_rocket_launch_ordered defines_events
----@field on_rocket_launched defines_events
----@field on_runtime_mod_setting_changed defines_events
----@field on_script_inventory_resized defines_events
----@field on_script_path_request_finished defines_events
----@field on_script_trigger_effect defines_events
----@field on_sector_scanned defines_events
----@field on_selected_entity_changed defines_events
----@field on_spider_command_completed defines_events
----@field on_string_translated defines_events
----@field on_surface_cleared defines_events
----@field on_surface_created defines_events
----@field on_surface_deleted defines_events
----@field on_surface_imported defines_events
----@field on_surface_renamed defines_events
----@field on_technology_effects_reset defines_events
----@field on_tick defines_events
----@field on_train_changed_state defines_events
----@field on_train_created defines_events
----@field on_train_schedule_changed defines_events
----@field on_trigger_created_entity defines_events
----@field on_trigger_fired_artillery defines_events
----@field on_unit_added_to_group defines_events
----@field on_unit_group_created defines_events
----@field on_unit_group_finished_gathering defines_events
----@field on_unit_removed_from_group defines_events
----@field on_worker_robot_expired defines_events
----@field script_raised_built defines_events
----@field script_raised_destroy defines_events
----@field script_raised_revive defines_events
----@field script_raised_set_tiles defines_events
+---@field on_ai_command_completed DefinesEvents
+---@field on_area_cloned DefinesEvents
+---@field on_biter_base_built DefinesEvents
+---@field on_brush_cloned DefinesEvents
+---@field on_build_base_arrived DefinesEvents
+---@field on_built_entity DefinesEvents
+---@field on_cancelled_deconstruction DefinesEvents
+---@field on_cancelled_upgrade DefinesEvents
+---@field on_character_corpse_expired DefinesEvents
+---@field on_chart_tag_added DefinesEvents
+---@field on_chart_tag_modified DefinesEvents
+---@field on_chart_tag_removed DefinesEvents
+---@field on_chunk_charted DefinesEvents
+---@field on_chunk_deleted DefinesEvents
+---@field on_chunk_generated DefinesEvents
+---@field on_combat_robot_expired DefinesEvents
+---@field on_console_chat DefinesEvents
+---@field on_console_command DefinesEvents
+---@field on_cutscene_cancelled DefinesEvents
+---@field on_cutscene_waypoint_reached DefinesEvents
+---@field on_difficulty_settings_changed DefinesEvents
+---@field on_entity_cloned DefinesEvents
+---@field on_entity_damaged DefinesEvents
+---@field on_entity_destroyed DefinesEvents
+---@field on_entity_died DefinesEvents
+---@field on_entity_logistic_slot_changed DefinesEvents
+---@field on_entity_renamed DefinesEvents
+---@field on_entity_settings_pasted DefinesEvents
+---@field on_entity_spawned DefinesEvents
+---@field on_equipment_inserted DefinesEvents
+---@field on_equipment_removed DefinesEvents
+---@field on_force_cease_fire_changed DefinesEvents
+---@field on_force_created DefinesEvents
+---@field on_force_friends_changed DefinesEvents
+---@field on_force_reset DefinesEvents
+---@field on_forces_merged DefinesEvents
+---@field on_forces_merging DefinesEvents
+---@field on_game_created_from_scenario DefinesEvents
+---@field on_gui_checked_state_changed DefinesEvents
+---@field on_gui_click DefinesEvents
+---@field on_gui_closed DefinesEvents
+---@field on_gui_confirmed DefinesEvents
+---@field on_gui_elem_changed DefinesEvents
+---@field on_gui_location_changed DefinesEvents
+---@field on_gui_opened DefinesEvents
+---@field on_gui_selected_tab_changed DefinesEvents
+---@field on_gui_selection_state_changed DefinesEvents
+---@field on_gui_switch_state_changed DefinesEvents
+---@field on_gui_text_changed DefinesEvents
+---@field on_gui_value_changed DefinesEvents
+---@field on_land_mine_armed DefinesEvents
+---@field on_lua_shortcut DefinesEvents
+---@field on_marked_for_deconstruction DefinesEvents
+---@field on_marked_for_upgrade DefinesEvents
+---@field on_market_item_purchased DefinesEvents
+---@field on_mod_item_opened DefinesEvents
+---@field on_permission_group_added DefinesEvents
+---@field on_permission_group_deleted DefinesEvents
+---@field on_permission_group_edited DefinesEvents
+---@field on_permission_string_imported DefinesEvents
+---@field on_picked_up_item DefinesEvents
+---@field on_player_alt_selected_area DefinesEvents
+---@field on_player_ammo_inventory_changed DefinesEvents
+---@field on_player_armor_inventory_changed DefinesEvents
+---@field on_player_banned DefinesEvents
+---@field on_player_built_tile DefinesEvents
+---@field on_player_cancelled_crafting DefinesEvents
+---@field on_player_changed_force DefinesEvents
+---@field on_player_changed_position DefinesEvents
+---@field on_player_changed_surface DefinesEvents
+---@field on_player_cheat_mode_disabled DefinesEvents
+---@field on_player_cheat_mode_enabled DefinesEvents
+---@field on_player_clicked_gps_tag DefinesEvents
+---@field on_player_configured_blueprint DefinesEvents
+---@field on_player_configured_spider_remote DefinesEvents
+---@field on_player_crafted_item DefinesEvents
+---@field on_player_created DefinesEvents
+---@field on_player_cursor_stack_changed DefinesEvents
+---@field on_player_deconstructed_area DefinesEvents
+---@field on_player_demoted DefinesEvents
+---@field on_player_died DefinesEvents
+---@field on_player_display_resolution_changed DefinesEvents
+---@field on_player_display_scale_changed DefinesEvents
+---@field on_player_driving_changed_state DefinesEvents
+---@field on_player_dropped_item DefinesEvents
+---@field on_player_fast_transferred DefinesEvents
+---@field on_player_flushed_fluid DefinesEvents
+---@field on_player_gun_inventory_changed DefinesEvents
+---@field on_player_joined_game DefinesEvents
+---@field on_player_kicked DefinesEvents
+---@field on_player_left_game DefinesEvents
+---@field on_player_main_inventory_changed DefinesEvents
+---@field on_player_mined_entity DefinesEvents
+---@field on_player_mined_item DefinesEvents
+---@field on_player_mined_tile DefinesEvents
+---@field on_player_muted DefinesEvents
+---@field on_player_pipette DefinesEvents
+---@field on_player_placed_equipment DefinesEvents
+---@field on_player_promoted DefinesEvents
+---@field on_player_removed DefinesEvents
+---@field on_player_removed_equipment DefinesEvents
+---@field on_player_repaired_entity DefinesEvents
+---@field on_player_respawned DefinesEvents
+---@field on_player_rotated_entity DefinesEvents
+---@field on_player_selected_area DefinesEvents
+---@field on_player_set_quick_bar_slot DefinesEvents
+---@field on_player_setup_blueprint DefinesEvents
+---@field on_player_toggled_alt_mode DefinesEvents
+---@field on_player_toggled_map_editor DefinesEvents
+---@field on_player_trash_inventory_changed DefinesEvents
+---@field on_player_unbanned DefinesEvents
+---@field on_player_unmuted DefinesEvents
+---@field on_player_used_capsule DefinesEvents
+---@field on_player_used_spider_remote DefinesEvents
+---@field on_post_entity_died DefinesEvents
+---@field on_pre_build DefinesEvents
+---@field on_pre_chunk_deleted DefinesEvents
+---@field on_pre_entity_settings_pasted DefinesEvents
+---@field on_pre_ghost_deconstructed DefinesEvents
+---@field on_pre_permission_group_deleted DefinesEvents
+---@field on_pre_permission_string_imported DefinesEvents
+---@field on_pre_player_crafted_item DefinesEvents
+---@field on_pre_player_died DefinesEvents
+---@field on_pre_player_left_game DefinesEvents
+---@field on_pre_player_mined_item DefinesEvents
+---@field on_pre_player_removed DefinesEvents
+---@field on_pre_player_toggled_map_editor DefinesEvents
+---@field on_pre_robot_exploded_cliff DefinesEvents
+---@field on_pre_script_inventory_resized DefinesEvents
+---@field on_pre_surface_cleared DefinesEvents
+---@field on_pre_surface_deleted DefinesEvents
+---@field on_research_finished DefinesEvents
+---@field on_research_reversed DefinesEvents
+---@field on_research_started DefinesEvents
+---@field on_resource_depleted DefinesEvents
+---@field on_robot_built_entity DefinesEvents
+---@field on_robot_built_tile DefinesEvents
+---@field on_robot_exploded_cliff DefinesEvents
+---@field on_robot_mined DefinesEvents
+---@field on_robot_mined_entity DefinesEvents
+---@field on_robot_mined_tile DefinesEvents
+---@field on_robot_pre_mined DefinesEvents
+---@field on_rocket_launch_ordered DefinesEvents
+---@field on_rocket_launched DefinesEvents
+---@field on_runtime_mod_setting_changed DefinesEvents
+---@field on_script_inventory_resized DefinesEvents
+---@field on_script_path_request_finished DefinesEvents
+---@field on_script_trigger_effect DefinesEvents
+---@field on_sector_scanned DefinesEvents
+---@field on_selected_entity_changed DefinesEvents
+---@field on_spider_command_completed DefinesEvents
+---@field on_string_translated DefinesEvents
+---@field on_surface_cleared DefinesEvents
+---@field on_surface_created DefinesEvents
+---@field on_surface_deleted DefinesEvents
+---@field on_surface_imported DefinesEvents
+---@field on_surface_renamed DefinesEvents
+---@field on_technology_effects_reset DefinesEvents
+---@field on_tick DefinesEvents
+---@field on_train_changed_state DefinesEvents
+---@field on_train_created DefinesEvents
+---@field on_train_schedule_changed DefinesEvents
+---@field on_trigger_created_entity DefinesEvents
+---@field on_trigger_fired_artillery DefinesEvents
+---@field on_unit_added_to_group DefinesEvents
+---@field on_unit_group_created DefinesEvents
+---@field on_unit_group_finished_gathering DefinesEvents
+---@field on_unit_removed_from_group DefinesEvents
+---@field on_worker_robot_expired DefinesEvents
+---@field script_raised_built DefinesEvents
+---@field script_raised_destroy DefinesEvents
+---@field script_raised_revive DefinesEvents
+---@field script_raised_set_tiles DefinesEvents
 
----@class defines_events Enum value type for events
+---@class DefinesEvents Enum value type for events
 
 ---@class flow_precision_index
----@field fifty_hours defines_flow_precision_index
----@field five_seconds defines_flow_precision_index
----@field one_hour defines_flow_precision_index
----@field one_minute defines_flow_precision_index
----@field one_thousand_hours defines_flow_precision_index
----@field ten_hours defines_flow_precision_index
----@field ten_minutes defines_flow_precision_index
----@field two_hundred_fifty_hours defines_flow_precision_index
+---@field fifty_hours DefinesFlowPrecisionIndex
+---@field five_seconds DefinesFlowPrecisionIndex
+---@field one_hour DefinesFlowPrecisionIndex
+---@field one_minute DefinesFlowPrecisionIndex
+---@field one_thousand_hours DefinesFlowPrecisionIndex
+---@field ten_hours DefinesFlowPrecisionIndex
+---@field ten_minutes DefinesFlowPrecisionIndex
+---@field two_hundred_fifty_hours DefinesFlowPrecisionIndex
 
----@class defines_flow_precision_index Enum value type for flow_precision_index
+---@class DefinesFlowPrecisionIndex Enum value type for flow_precision_index
 
 ---@class group_state
----@field attacking_distraction defines_group_state
----@field attacking_target defines_group_state
----@field finished defines_group_state
----@field gathering defines_group_state
----@field moving defines_group_state
----@field pathfinding defines_group_state
----@field wander_in_group defines_group_state
+---@field attacking_distraction DefinesGroupState
+---@field attacking_target DefinesGroupState
+---@field finished DefinesGroupState
+---@field gathering DefinesGroupState
+---@field moving DefinesGroupState
+---@field pathfinding DefinesGroupState
+---@field wander_in_group DefinesGroupState
 
----@class defines_group_state Enum value type for group_state
+---@class DefinesGroupState Enum value type for group_state
 
 ---@class gui_type
----@field achievement defines_gui_type
----@field blueprint_library defines_gui_type
----@field bonus defines_gui_type
----@field controller defines_gui_type
----@field custom defines_gui_type
----@field entity defines_gui_type
----@field equipment defines_gui_type
----@field item defines_gui_type
----@field logistic defines_gui_type
----@field none defines_gui_type
----@field other_player defines_gui_type
----@field permissions defines_gui_type
----@field player_management defines_gui_type
----@field production defines_gui_type
----@field research defines_gui_type
----@field server_management defines_gui_type
----@field tile defines_gui_type
----@field trains defines_gui_type
----@field tutorials defines_gui_type
+---@field achievement DefinesGuiType
+---@field blueprint_library DefinesGuiType
+---@field bonus DefinesGuiType
+---@field controller DefinesGuiType
+---@field custom DefinesGuiType
+---@field entity DefinesGuiType
+---@field equipment DefinesGuiType
+---@field item DefinesGuiType
+---@field logistic DefinesGuiType
+---@field none DefinesGuiType
+---@field other_player DefinesGuiType
+---@field permissions DefinesGuiType
+---@field player_management DefinesGuiType
+---@field production DefinesGuiType
+---@field research DefinesGuiType
+---@field server_management DefinesGuiType
+---@field tile DefinesGuiType
+---@field trains DefinesGuiType
+---@field tutorials DefinesGuiType
 
----@class defines_gui_type Enum value type for gui_type
+---@class DefinesGuiType Enum value type for gui_type
 
 ---@class input_action
----@field activate_copy defines_input_action
----@field activate_cut defines_input_action
----@field activate_paste defines_input_action
----@field add_permission_group defines_input_action
----@field add_train_station defines_input_action
----@field admin_action defines_input_action
----@field alt_select_area defines_input_action
----@field alt_select_blueprint_entities defines_input_action
----@field alternative_copy defines_input_action
----@field begin_mining defines_input_action
----@field begin_mining_terrain defines_input_action
----@field build defines_input_action
----@field build_rail defines_input_action
----@field build_terrain defines_input_action
----@field cancel_craft defines_input_action
----@field cancel_deconstruct defines_input_action
----@field cancel_new_blueprint defines_input_action
----@field cancel_research defines_input_action
----@field cancel_upgrade defines_input_action
----@field change_active_character_tab defines_input_action
----@field change_active_item_group_for_crafting defines_input_action
----@field change_active_item_group_for_filters defines_input_action
----@field change_active_quick_bar defines_input_action
----@field change_arithmetic_combinator_parameters defines_input_action
----@field change_decider_combinator_parameters defines_input_action
----@field change_entity_label defines_input_action
----@field change_item_description defines_input_action
----@field change_item_label defines_input_action
----@field change_multiplayer_config defines_input_action
----@field change_picking_state defines_input_action
----@field change_programmable_speaker_alert_parameters defines_input_action
----@field change_programmable_speaker_circuit_parameters defines_input_action
----@field change_programmable_speaker_parameters defines_input_action
----@field change_riding_state defines_input_action
----@field change_shooting_state defines_input_action
----@field change_train_stop_station defines_input_action
----@field change_train_wait_condition defines_input_action
----@field change_train_wait_condition_data defines_input_action
----@field clear_cursor defines_input_action
----@field connect_rolling_stock defines_input_action
----@field copy defines_input_action
----@field copy_entity_settings defines_input_action
----@field copy_opened_blueprint defines_input_action
----@field copy_opened_item defines_input_action
----@field craft defines_input_action
----@field cursor_split defines_input_action
----@field cursor_transfer defines_input_action
----@field custom_input defines_input_action
----@field cycle_blueprint_book_backwards defines_input_action
----@field cycle_blueprint_book_forwards defines_input_action
----@field deconstruct defines_input_action
----@field delete_blueprint_library defines_input_action
----@field delete_blueprint_record defines_input_action
----@field delete_custom_tag defines_input_action
----@field delete_permission_group defines_input_action
----@field destroy_item defines_input_action
----@field destroy_opened_item defines_input_action
----@field disconnect_rolling_stock defines_input_action
----@field drag_train_schedule defines_input_action
----@field drag_train_wait_condition defines_input_action
----@field drop_blueprint_record defines_input_action
----@field drop_item defines_input_action
----@field edit_blueprint_tool_preview defines_input_action
----@field edit_custom_tag defines_input_action
----@field edit_permission_group defines_input_action
----@field export_blueprint defines_input_action
----@field fast_entity_split defines_input_action
----@field fast_entity_transfer defines_input_action
----@field flush_opened_entity_fluid defines_input_action
----@field flush_opened_entity_specific_fluid defines_input_action
----@field go_to_train_station defines_input_action
----@field grab_blueprint_record defines_input_action
----@field gui_checked_state_changed defines_input_action
----@field gui_click defines_input_action
----@field gui_confirmed defines_input_action
----@field gui_elem_changed defines_input_action
----@field gui_location_changed defines_input_action
----@field gui_selected_tab_changed defines_input_action
----@field gui_selection_state_changed defines_input_action
----@field gui_switch_state_changed defines_input_action
----@field gui_text_changed defines_input_action
----@field gui_value_changed defines_input_action
----@field import_blueprint defines_input_action
----@field import_blueprint_string defines_input_action
----@field import_blueprints_filtered defines_input_action
----@field import_permissions_string defines_input_action
----@field inventory_split defines_input_action
----@field inventory_transfer defines_input_action
----@field launch_rocket defines_input_action
----@field lua_shortcut defines_input_action
----@field map_editor_action defines_input_action
----@field market_offer defines_input_action
----@field mod_settings_changed defines_input_action
----@field open_achievements_gui defines_input_action
----@field open_blueprint_library_gui defines_input_action
----@field open_blueprint_record defines_input_action
----@field open_bonus_gui defines_input_action
----@field open_character_gui defines_input_action
----@field open_current_vehicle_gui defines_input_action
----@field open_equipment defines_input_action
----@field open_gui defines_input_action
----@field open_item defines_input_action
----@field open_logistic_gui defines_input_action
----@field open_mod_item defines_input_action
----@field open_parent_of_opened_item defines_input_action
----@field open_production_gui defines_input_action
----@field open_technology_gui defines_input_action
----@field open_tips_and_tricks_gui defines_input_action
----@field open_train_gui defines_input_action
----@field open_train_station_gui defines_input_action
----@field open_trains_gui defines_input_action
----@field paste_entity_settings defines_input_action
----@field place_equipment defines_input_action
----@field quick_bar_pick_slot defines_input_action
----@field quick_bar_set_selected_page defines_input_action
----@field quick_bar_set_slot defines_input_action
----@field reassign_blueprint defines_input_action
----@field remove_cables defines_input_action
----@field remove_train_station defines_input_action
----@field reset_assembling_machine defines_input_action
----@field reset_item defines_input_action
----@field rotate_entity defines_input_action
----@field select_area defines_input_action
----@field select_blueprint_entities defines_input_action
----@field select_entity_slot defines_input_action
----@field select_item defines_input_action
----@field select_mapper_slot defines_input_action
----@field select_next_valid_gun defines_input_action
----@field select_tile_slot defines_input_action
----@field send_spidertron defines_input_action
----@field set_auto_launch_rocket defines_input_action
----@field set_autosort_inventory defines_input_action
----@field set_behavior_mode defines_input_action
----@field set_car_weapons_control defines_input_action
----@field set_circuit_condition defines_input_action
----@field set_circuit_mode_of_operation defines_input_action
----@field set_controller_logistic_trash_filter_item defines_input_action
----@field set_deconstruction_item_tile_selection_mode defines_input_action
----@field set_deconstruction_item_trees_and_rocks_only defines_input_action
----@field set_entity_color defines_input_action
----@field set_entity_energy_property defines_input_action
----@field set_entity_logistic_trash_filter_item defines_input_action
----@field set_filter defines_input_action
----@field set_flat_controller_gui defines_input_action
----@field set_heat_interface_mode defines_input_action
----@field set_heat_interface_temperature defines_input_action
----@field set_infinity_container_filter_item defines_input_action
----@field set_infinity_container_remove_unfiltered_items defines_input_action
----@field set_infinity_pipe_filter defines_input_action
----@field set_inserter_max_stack_size defines_input_action
----@field set_inventory_bar defines_input_action
----@field set_linked_container_link_i_d defines_input_action
----@field set_logistic_filter_item defines_input_action
----@field set_logistic_filter_signal defines_input_action
----@field set_player_color defines_input_action
----@field set_recipe_notifications defines_input_action
----@field set_request_from_buffers defines_input_action
----@field set_research_finished_stops_game defines_input_action
----@field set_signal defines_input_action
----@field set_splitter_priority defines_input_action
----@field set_train_stopped defines_input_action
----@field set_trains_limit defines_input_action
----@field set_vehicle_automatic_targeting_parameters defines_input_action
----@field setup_assembling_machine defines_input_action
----@field setup_blueprint defines_input_action
----@field setup_single_blueprint_record defines_input_action
----@field smart_pipette defines_input_action
----@field spawn_item defines_input_action
----@field stack_split defines_input_action
----@field stack_transfer defines_input_action
----@field start_repair defines_input_action
----@field start_research defines_input_action
----@field start_walking defines_input_action
----@field stop_building_by_moving defines_input_action
----@field switch_connect_to_logistic_network defines_input_action
----@field switch_constant_combinator_state defines_input_action
----@field switch_inserter_filter_mode_state defines_input_action
----@field switch_power_switch_state defines_input_action
----@field switch_to_rename_stop_gui defines_input_action
----@field take_equipment defines_input_action
----@field toggle_deconstruction_item_entity_filter_mode defines_input_action
----@field toggle_deconstruction_item_tile_filter_mode defines_input_action
----@field toggle_driving defines_input_action
----@field toggle_enable_vehicle_logistics_while_moving defines_input_action
----@field toggle_entity_logistic_requests defines_input_action
----@field toggle_equipment_movement_bonus defines_input_action
----@field toggle_map_editor defines_input_action
----@field toggle_personal_logistic_requests defines_input_action
----@field toggle_personal_roboport defines_input_action
----@field toggle_show_entity_info defines_input_action
----@field translate_string defines_input_action
----@field undo defines_input_action
----@field upgrade defines_input_action
----@field upgrade_opened_blueprint_by_item defines_input_action
----@field upgrade_opened_blueprint_by_record defines_input_action
----@field use_artillery_remote defines_input_action
----@field use_item defines_input_action
----@field wire_dragging defines_input_action
----@field write_to_console defines_input_action
+---@field activate_copy DefinesInputAction
+---@field activate_cut DefinesInputAction
+---@field activate_paste DefinesInputAction
+---@field add_permission_group DefinesInputAction
+---@field add_train_station DefinesInputAction
+---@field admin_action DefinesInputAction
+---@field alt_select_area DefinesInputAction
+---@field alt_select_blueprint_entities DefinesInputAction
+---@field alternative_copy DefinesInputAction
+---@field begin_mining DefinesInputAction
+---@field begin_mining_terrain DefinesInputAction
+---@field build DefinesInputAction
+---@field build_rail DefinesInputAction
+---@field build_terrain DefinesInputAction
+---@field cancel_craft DefinesInputAction
+---@field cancel_deconstruct DefinesInputAction
+---@field cancel_new_blueprint DefinesInputAction
+---@field cancel_research DefinesInputAction
+---@field cancel_upgrade DefinesInputAction
+---@field change_active_character_tab DefinesInputAction
+---@field change_active_item_group_for_crafting DefinesInputAction
+---@field change_active_item_group_for_filters DefinesInputAction
+---@field change_active_quick_bar DefinesInputAction
+---@field change_arithmetic_combinator_parameters DefinesInputAction
+---@field change_decider_combinator_parameters DefinesInputAction
+---@field change_entity_label DefinesInputAction
+---@field change_item_description DefinesInputAction
+---@field change_item_label DefinesInputAction
+---@field change_multiplayer_config DefinesInputAction
+---@field change_picking_state DefinesInputAction
+---@field change_programmable_speaker_alert_parameters DefinesInputAction
+---@field change_programmable_speaker_circuit_parameters DefinesInputAction
+---@field change_programmable_speaker_parameters DefinesInputAction
+---@field change_riding_state DefinesInputAction
+---@field change_shooting_state DefinesInputAction
+---@field change_train_stop_station DefinesInputAction
+---@field change_train_wait_condition DefinesInputAction
+---@field change_train_wait_condition_data DefinesInputAction
+---@field clear_cursor DefinesInputAction
+---@field connect_rolling_stock DefinesInputAction
+---@field copy DefinesInputAction
+---@field copy_entity_settings DefinesInputAction
+---@field copy_opened_blueprint DefinesInputAction
+---@field copy_opened_item DefinesInputAction
+---@field craft DefinesInputAction
+---@field cursor_split DefinesInputAction
+---@field cursor_transfer DefinesInputAction
+---@field custom_input DefinesInputAction
+---@field cycle_blueprint_book_backwards DefinesInputAction
+---@field cycle_blueprint_book_forwards DefinesInputAction
+---@field deconstruct DefinesInputAction
+---@field delete_blueprint_library DefinesInputAction
+---@field delete_blueprint_record DefinesInputAction
+---@field delete_custom_tag DefinesInputAction
+---@field delete_permission_group DefinesInputAction
+---@field destroy_item DefinesInputAction
+---@field destroy_opened_item DefinesInputAction
+---@field disconnect_rolling_stock DefinesInputAction
+---@field drag_train_schedule DefinesInputAction
+---@field drag_train_wait_condition DefinesInputAction
+---@field drop_blueprint_record DefinesInputAction
+---@field drop_item DefinesInputAction
+---@field edit_blueprint_tool_preview DefinesInputAction
+---@field edit_custom_tag DefinesInputAction
+---@field edit_permission_group DefinesInputAction
+---@field export_blueprint DefinesInputAction
+---@field fast_entity_split DefinesInputAction
+---@field fast_entity_transfer DefinesInputAction
+---@field flush_opened_entity_fluid DefinesInputAction
+---@field flush_opened_entity_specific_fluid DefinesInputAction
+---@field go_to_train_station DefinesInputAction
+---@field grab_blueprint_record DefinesInputAction
+---@field gui_checked_state_changed DefinesInputAction
+---@field gui_click DefinesInputAction
+---@field gui_confirmed DefinesInputAction
+---@field gui_elem_changed DefinesInputAction
+---@field gui_location_changed DefinesInputAction
+---@field gui_selected_tab_changed DefinesInputAction
+---@field gui_selection_state_changed DefinesInputAction
+---@field gui_switch_state_changed DefinesInputAction
+---@field gui_text_changed DefinesInputAction
+---@field gui_value_changed DefinesInputAction
+---@field import_blueprint DefinesInputAction
+---@field import_blueprint_string DefinesInputAction
+---@field import_blueprints_filtered DefinesInputAction
+---@field import_permissions_string DefinesInputAction
+---@field inventory_split DefinesInputAction
+---@field inventory_transfer DefinesInputAction
+---@field launch_rocket DefinesInputAction
+---@field lua_shortcut DefinesInputAction
+---@field map_editor_action DefinesInputAction
+---@field market_offer DefinesInputAction
+---@field mod_settings_changed DefinesInputAction
+---@field open_achievements_gui DefinesInputAction
+---@field open_blueprint_library_gui DefinesInputAction
+---@field open_blueprint_record DefinesInputAction
+---@field open_bonus_gui DefinesInputAction
+---@field open_character_gui DefinesInputAction
+---@field open_current_vehicle_gui DefinesInputAction
+---@field open_equipment DefinesInputAction
+---@field open_gui DefinesInputAction
+---@field open_item DefinesInputAction
+---@field open_logistic_gui DefinesInputAction
+---@field open_mod_item DefinesInputAction
+---@field open_parent_of_opened_item DefinesInputAction
+---@field open_production_gui DefinesInputAction
+---@field open_technology_gui DefinesInputAction
+---@field open_tips_and_tricks_gui DefinesInputAction
+---@field open_train_gui DefinesInputAction
+---@field open_train_station_gui DefinesInputAction
+---@field open_trains_gui DefinesInputAction
+---@field paste_entity_settings DefinesInputAction
+---@field place_equipment DefinesInputAction
+---@field quick_bar_pick_slot DefinesInputAction
+---@field quick_bar_set_selected_page DefinesInputAction
+---@field quick_bar_set_slot DefinesInputAction
+---@field reassign_blueprint DefinesInputAction
+---@field remove_cables DefinesInputAction
+---@field remove_train_station DefinesInputAction
+---@field reset_assembling_machine DefinesInputAction
+---@field reset_item DefinesInputAction
+---@field rotate_entity DefinesInputAction
+---@field select_area DefinesInputAction
+---@field select_blueprint_entities DefinesInputAction
+---@field select_entity_slot DefinesInputAction
+---@field select_item DefinesInputAction
+---@field select_mapper_slot DefinesInputAction
+---@field select_next_valid_gun DefinesInputAction
+---@field select_tile_slot DefinesInputAction
+---@field send_spidertron DefinesInputAction
+---@field set_auto_launch_rocket DefinesInputAction
+---@field set_autosort_inventory DefinesInputAction
+---@field set_behavior_mode DefinesInputAction
+---@field set_car_weapons_control DefinesInputAction
+---@field set_circuit_condition DefinesInputAction
+---@field set_circuit_mode_of_operation DefinesInputAction
+---@field set_controller_logistic_trash_filter_item DefinesInputAction
+---@field set_deconstruction_item_tile_selection_mode DefinesInputAction
+---@field set_deconstruction_item_trees_and_rocks_only DefinesInputAction
+---@field set_entity_color DefinesInputAction
+---@field set_entity_energy_property DefinesInputAction
+---@field set_entity_logistic_trash_filter_item DefinesInputAction
+---@field set_filter DefinesInputAction
+---@field set_flat_controller_gui DefinesInputAction
+---@field set_heat_interface_mode DefinesInputAction
+---@field set_heat_interface_temperature DefinesInputAction
+---@field set_infinity_container_filter_item DefinesInputAction
+---@field set_infinity_container_remove_unfiltered_items DefinesInputAction
+---@field set_infinity_pipe_filter DefinesInputAction
+---@field set_inserter_max_stack_size DefinesInputAction
+---@field set_inventory_bar DefinesInputAction
+---@field set_linked_container_link_i_d DefinesInputAction
+---@field set_logistic_filter_item DefinesInputAction
+---@field set_logistic_filter_signal DefinesInputAction
+---@field set_player_color DefinesInputAction
+---@field set_recipe_notifications DefinesInputAction
+---@field set_request_from_buffers DefinesInputAction
+---@field set_research_finished_stops_game DefinesInputAction
+---@field set_signal DefinesInputAction
+---@field set_splitter_priority DefinesInputAction
+---@field set_train_stopped DefinesInputAction
+---@field set_trains_limit DefinesInputAction
+---@field set_vehicle_automatic_targeting_parameters DefinesInputAction
+---@field setup_assembling_machine DefinesInputAction
+---@field setup_blueprint DefinesInputAction
+---@field setup_single_blueprint_record DefinesInputAction
+---@field smart_pipette DefinesInputAction
+---@field spawn_item DefinesInputAction
+---@field stack_split DefinesInputAction
+---@field stack_transfer DefinesInputAction
+---@field start_repair DefinesInputAction
+---@field start_research DefinesInputAction
+---@field start_walking DefinesInputAction
+---@field stop_building_by_moving DefinesInputAction
+---@field switch_connect_to_logistic_network DefinesInputAction
+---@field switch_constant_combinator_state DefinesInputAction
+---@field switch_inserter_filter_mode_state DefinesInputAction
+---@field switch_power_switch_state DefinesInputAction
+---@field switch_to_rename_stop_gui DefinesInputAction
+---@field take_equipment DefinesInputAction
+---@field toggle_deconstruction_item_entity_filter_mode DefinesInputAction
+---@field toggle_deconstruction_item_tile_filter_mode DefinesInputAction
+---@field toggle_driving DefinesInputAction
+---@field toggle_enable_vehicle_logistics_while_moving DefinesInputAction
+---@field toggle_entity_logistic_requests DefinesInputAction
+---@field toggle_equipment_movement_bonus DefinesInputAction
+---@field toggle_map_editor DefinesInputAction
+---@field toggle_personal_logistic_requests DefinesInputAction
+---@field toggle_personal_roboport DefinesInputAction
+---@field toggle_show_entity_info DefinesInputAction
+---@field translate_string DefinesInputAction
+---@field undo DefinesInputAction
+---@field upgrade DefinesInputAction
+---@field upgrade_opened_blueprint_by_item DefinesInputAction
+---@field upgrade_opened_blueprint_by_record DefinesInputAction
+---@field use_artillery_remote DefinesInputAction
+---@field use_item DefinesInputAction
+---@field wire_dragging DefinesInputAction
+---@field write_to_console DefinesInputAction
 
----@class defines_input_action Enum value type for input_action
+---@class DefinesInputAction Enum value type for input_action
 
 ---@class inventory
----@field artillery_turret_ammo defines_inventory
----@field artillery_wagon_ammo defines_inventory
----@field assembling_machine_input defines_inventory
----@field assembling_machine_modules defines_inventory
----@field assembling_machine_output defines_inventory
----@field beacon_modules defines_inventory
----@field burnt_result defines_inventory
----@field car_ammo defines_inventory
----@field car_trunk defines_inventory
----@field cargo_wagon defines_inventory
----@field character_ammo defines_inventory
----@field character_armor defines_inventory
----@field character_corpse defines_inventory
----@field character_guns defines_inventory
----@field character_main defines_inventory
----@field character_trash defines_inventory
----@field character_vehicle defines_inventory
----@field chest defines_inventory
----@field editor_ammo defines_inventory
----@field editor_armor defines_inventory
----@field editor_guns defines_inventory
----@field editor_main defines_inventory
----@field fuel defines_inventory
----@field furnace_modules defines_inventory
----@field furnace_result defines_inventory
----@field furnace_source defines_inventory
----@field god_main defines_inventory
----@field item_main defines_inventory
----@field lab_input defines_inventory
----@field lab_modules defines_inventory
----@field mining_drill_modules defines_inventory
----@field roboport_material defines_inventory
----@field roboport_robot defines_inventory
----@field robot_cargo defines_inventory
----@field robot_repair defines_inventory
----@field rocket defines_inventory
----@field rocket_silo_result defines_inventory
----@field rocket_silo_rocket defines_inventory
----@field spider_ammo defines_inventory
----@field spider_trash defines_inventory
----@field spider_trunk defines_inventory
----@field turret_ammo defines_inventory
+---@field artillery_turret_ammo DefinesInventory
+---@field artillery_wagon_ammo DefinesInventory
+---@field assembling_machine_input DefinesInventory
+---@field assembling_machine_modules DefinesInventory
+---@field assembling_machine_output DefinesInventory
+---@field beacon_modules DefinesInventory
+---@field burnt_result DefinesInventory
+---@field car_ammo DefinesInventory
+---@field car_trunk DefinesInventory
+---@field cargo_wagon DefinesInventory
+---@field character_ammo DefinesInventory
+---@field character_armor DefinesInventory
+---@field character_corpse DefinesInventory
+---@field character_guns DefinesInventory
+---@field character_main DefinesInventory
+---@field character_trash DefinesInventory
+---@field character_vehicle DefinesInventory
+---@field chest DefinesInventory
+---@field editor_ammo DefinesInventory
+---@field editor_armor DefinesInventory
+---@field editor_guns DefinesInventory
+---@field editor_main DefinesInventory
+---@field fuel DefinesInventory
+---@field furnace_modules DefinesInventory
+---@field furnace_result DefinesInventory
+---@field furnace_source DefinesInventory
+---@field god_main DefinesInventory
+---@field item_main DefinesInventory
+---@field lab_input DefinesInventory
+---@field lab_modules DefinesInventory
+---@field mining_drill_modules DefinesInventory
+---@field roboport_material DefinesInventory
+---@field roboport_robot DefinesInventory
+---@field robot_cargo DefinesInventory
+---@field robot_repair DefinesInventory
+---@field rocket DefinesInventory
+---@field rocket_silo_result DefinesInventory
+---@field rocket_silo_rocket DefinesInventory
+---@field spider_ammo DefinesInventory
+---@field spider_trash DefinesInventory
+---@field spider_trunk DefinesInventory
+---@field turret_ammo DefinesInventory
 
----@class defines_inventory Enum value type for inventory
+---@class DefinesInventory Enum value type for inventory
 
 ---@class logistic_member_index
----@field character_provider defines_logistic_member_index
----@field character_requester defines_logistic_member_index
----@field character_storage defines_logistic_member_index
----@field generic_on_off_behavior defines_logistic_member_index
----@field logistic_container defines_logistic_member_index
----@field vehicle_storage defines_logistic_member_index
+---@field character_provider DefinesLogisticMemberIndex
+---@field character_requester DefinesLogisticMemberIndex
+---@field character_storage DefinesLogisticMemberIndex
+---@field generic_on_off_behavior DefinesLogisticMemberIndex
+---@field logistic_container DefinesLogisticMemberIndex
+---@field vehicle_storage DefinesLogisticMemberIndex
 
----@class defines_logistic_member_index Enum value type for logistic_member_index
+---@class DefinesLogisticMemberIndex Enum value type for logistic_member_index
 
 ---@class logistic_mode
----@field active_provider defines_logistic_mode
----@field buffer defines_logistic_mode
----@field none defines_logistic_mode
----@field passive_provider defines_logistic_mode
----@field requester defines_logistic_mode
----@field storage defines_logistic_mode
+---@field active_provider DefinesLogisticMode
+---@field buffer DefinesLogisticMode
+---@field none DefinesLogisticMode
+---@field passive_provider DefinesLogisticMode
+---@field requester DefinesLogisticMode
+---@field storage DefinesLogisticMode
 
----@class defines_logistic_mode Enum value type for logistic_mode
+---@class DefinesLogisticMode Enum value type for logistic_mode
 
 ---@class mouse_button_type
----@field left defines_mouse_button_type
----@field middle defines_mouse_button_type
----@field none defines_mouse_button_type
----@field right defines_mouse_button_type
+---@field left DefinesMouseButtonType
+---@field middle DefinesMouseButtonType
+---@field none DefinesMouseButtonType
+---@field right DefinesMouseButtonType
 
----@class defines_mouse_button_type Enum value type for mouse_button_type
+---@class DefinesMouseButtonType Enum value type for mouse_button_type
 
 ---@class rail_connection_direction
----@field left defines_rail_connection_direction
----@field none defines_rail_connection_direction
----@field right defines_rail_connection_direction
----@field straight defines_rail_connection_direction
+---@field left DefinesRailConnectionDirection
+---@field none DefinesRailConnectionDirection
+---@field right DefinesRailConnectionDirection
+---@field straight DefinesRailConnectionDirection
 
----@class defines_rail_connection_direction Enum value type for rail_connection_direction
+---@class DefinesRailConnectionDirection Enum value type for rail_connection_direction
 
 ---@class rail_direction
----@field back defines_rail_direction
----@field front defines_rail_direction
+---@field back DefinesRailDirection
+---@field front DefinesRailDirection
 
----@class defines_rail_direction Enum value type for rail_direction
+---@class DefinesRailDirection Enum value type for rail_direction
 
 ---@class relative_gui_position
----@field bottom defines_relative_gui_position
----@field left defines_relative_gui_position
----@field right defines_relative_gui_position
----@field top defines_relative_gui_position
+---@field bottom DefinesRelativeGuiPosition
+---@field left DefinesRelativeGuiPosition
+---@field right DefinesRelativeGuiPosition
+---@field top DefinesRelativeGuiPosition
 
----@class defines_relative_gui_position Enum value type for relative_gui_position
+---@class DefinesRelativeGuiPosition Enum value type for relative_gui_position
 
 ---@class relative_gui_type
----@field accumulator_gui defines_relative_gui_type
----@field achievement_gui defines_relative_gui_type
----@field additional_entity_info_gui defines_relative_gui_type
----@field admin_gui defines_relative_gui_type
----@field arithmetic_combinator_gui defines_relative_gui_type
----@field armor_gui defines_relative_gui_type
----@field assembling_machine_gui defines_relative_gui_type
----@field assembling_machine_select_recipe_gui defines_relative_gui_type
----@field beacon_gui defines_relative_gui_type
----@field blueprint_book_gui defines_relative_gui_type
----@field blueprint_library_gui defines_relative_gui_type
----@field blueprint_setup_gui defines_relative_gui_type
----@field bonus_gui defines_relative_gui_type
----@field burner_equipment_gui defines_relative_gui_type
----@field car_gui defines_relative_gui_type
----@field constant_combinator_gui defines_relative_gui_type
----@field container_gui defines_relative_gui_type
----@field controller_gui defines_relative_gui_type
----@field decider_combinator_gui defines_relative_gui_type
----@field deconstruction_item_gui defines_relative_gui_type
----@field electric_energy_interface_gui defines_relative_gui_type
----@field electric_network_gui defines_relative_gui_type
----@field entity_variations_gui defines_relative_gui_type
----@field entity_with_energy_source_gui defines_relative_gui_type
----@field equipment_grid_gui defines_relative_gui_type
----@field furnace_gui defines_relative_gui_type
----@field generic_on_off_entity_gui defines_relative_gui_type
----@field heat_interface_gui defines_relative_gui_type
----@field infinity_pipe_gui defines_relative_gui_type
----@field inserter_gui defines_relative_gui_type
----@field item_with_inventory_gui defines_relative_gui_type
----@field lab_gui defines_relative_gui_type
----@field lamp_gui defines_relative_gui_type
----@field linked_container_gui defines_relative_gui_type
----@field loader_gui defines_relative_gui_type
----@field logistic_gui defines_relative_gui_type
----@field market_gui defines_relative_gui_type
----@field mining_drill_gui defines_relative_gui_type
----@field other_player_gui defines_relative_gui_type
----@field permissions_gui defines_relative_gui_type
----@field pipe_gui defines_relative_gui_type
----@field power_switch_gui defines_relative_gui_type
----@field production_gui defines_relative_gui_type
----@field programmable_speaker_gui defines_relative_gui_type
----@field rail_chain_signal_gui defines_relative_gui_type
----@field rail_signal_gui defines_relative_gui_type
----@field reactor_gui defines_relative_gui_type
----@field rename_stop_gui defines_relative_gui_type
----@field resource_entity_gui defines_relative_gui_type
----@field roboport_gui defines_relative_gui_type
----@field rocket_silo_gui defines_relative_gui_type
----@field server_config_gui defines_relative_gui_type
----@field spider_vehicle_gui defines_relative_gui_type
----@field splitter_gui defines_relative_gui_type
----@field standalone_character_gui defines_relative_gui_type
----@field storage_tank_gui defines_relative_gui_type
----@field tile_variations_gui defines_relative_gui_type
----@field train_gui defines_relative_gui_type
----@field train_stop_gui defines_relative_gui_type
----@field trains_gui defines_relative_gui_type
----@field transport_belt_gui defines_relative_gui_type
----@field upgrade_item_gui defines_relative_gui_type
----@field wall_gui defines_relative_gui_type
+---@field accumulator_gui DefinesRelativeGuiType
+---@field achievement_gui DefinesRelativeGuiType
+---@field additional_entity_info_gui DefinesRelativeGuiType
+---@field admin_gui DefinesRelativeGuiType
+---@field arithmetic_combinator_gui DefinesRelativeGuiType
+---@field armor_gui DefinesRelativeGuiType
+---@field assembling_machine_gui DefinesRelativeGuiType
+---@field assembling_machine_select_recipe_gui DefinesRelativeGuiType
+---@field beacon_gui DefinesRelativeGuiType
+---@field blueprint_book_gui DefinesRelativeGuiType
+---@field blueprint_library_gui DefinesRelativeGuiType
+---@field blueprint_setup_gui DefinesRelativeGuiType
+---@field bonus_gui DefinesRelativeGuiType
+---@field burner_equipment_gui DefinesRelativeGuiType
+---@field car_gui DefinesRelativeGuiType
+---@field constant_combinator_gui DefinesRelativeGuiType
+---@field container_gui DefinesRelativeGuiType
+---@field controller_gui DefinesRelativeGuiType
+---@field decider_combinator_gui DefinesRelativeGuiType
+---@field deconstruction_item_gui DefinesRelativeGuiType
+---@field electric_energy_interface_gui DefinesRelativeGuiType
+---@field electric_network_gui DefinesRelativeGuiType
+---@field entity_variations_gui DefinesRelativeGuiType
+---@field entity_with_energy_source_gui DefinesRelativeGuiType
+---@field equipment_grid_gui DefinesRelativeGuiType
+---@field furnace_gui DefinesRelativeGuiType
+---@field generic_on_off_entity_gui DefinesRelativeGuiType
+---@field heat_interface_gui DefinesRelativeGuiType
+---@field infinity_pipe_gui DefinesRelativeGuiType
+---@field inserter_gui DefinesRelativeGuiType
+---@field item_with_inventory_gui DefinesRelativeGuiType
+---@field lab_gui DefinesRelativeGuiType
+---@field lamp_gui DefinesRelativeGuiType
+---@field linked_container_gui DefinesRelativeGuiType
+---@field loader_gui DefinesRelativeGuiType
+---@field logistic_gui DefinesRelativeGuiType
+---@field market_gui DefinesRelativeGuiType
+---@field mining_drill_gui DefinesRelativeGuiType
+---@field other_player_gui DefinesRelativeGuiType
+---@field permissions_gui DefinesRelativeGuiType
+---@field pipe_gui DefinesRelativeGuiType
+---@field power_switch_gui DefinesRelativeGuiType
+---@field production_gui DefinesRelativeGuiType
+---@field programmable_speaker_gui DefinesRelativeGuiType
+---@field rail_chain_signal_gui DefinesRelativeGuiType
+---@field rail_signal_gui DefinesRelativeGuiType
+---@field reactor_gui DefinesRelativeGuiType
+---@field rename_stop_gui DefinesRelativeGuiType
+---@field resource_entity_gui DefinesRelativeGuiType
+---@field roboport_gui DefinesRelativeGuiType
+---@field rocket_silo_gui DefinesRelativeGuiType
+---@field server_config_gui DefinesRelativeGuiType
+---@field spider_vehicle_gui DefinesRelativeGuiType
+---@field splitter_gui DefinesRelativeGuiType
+---@field standalone_character_gui DefinesRelativeGuiType
+---@field storage_tank_gui DefinesRelativeGuiType
+---@field tile_variations_gui DefinesRelativeGuiType
+---@field train_gui DefinesRelativeGuiType
+---@field train_stop_gui DefinesRelativeGuiType
+---@field trains_gui DefinesRelativeGuiType
+---@field transport_belt_gui DefinesRelativeGuiType
+---@field upgrade_item_gui DefinesRelativeGuiType
+---@field wall_gui DefinesRelativeGuiType
 
----@class defines_relative_gui_type Enum value type for relative_gui_type
+---@class DefinesRelativeGuiType Enum value type for relative_gui_type
 
 ---@class render_mode
----@field chart defines_render_mode
----@field chart_zoomed_in defines_render_mode
----@field game defines_render_mode
+---@field chart DefinesRenderMode
+---@field chart_zoomed_in DefinesRenderMode
+---@field game DefinesRenderMode
 
----@class defines_render_mode Enum value type for render_mode
+---@class DefinesRenderMode Enum value type for render_mode
 
 ---@class rich_text_setting
----@field disabled defines_rich_text_setting
----@field enabled defines_rich_text_setting
----@field highlight defines_rich_text_setting
+---@field disabled DefinesRichTextSetting
+---@field enabled DefinesRichTextSetting
+---@field highlight DefinesRichTextSetting
 
----@class defines_rich_text_setting Enum value type for rich_text_setting
+---@class DefinesRichTextSetting Enum value type for rich_text_setting
 
 ---@class riding
 ---@field acceleration acceleration
 ---@field direction direction
 
 ---@class acceleration
----@field accelerating defines_riding_acceleration
----@field braking defines_riding_acceleration
----@field nothing defines_riding_acceleration
----@field reversing defines_riding_acceleration
+---@field accelerating DefinesRidingAcceleration
+---@field braking DefinesRidingAcceleration
+---@field nothing DefinesRidingAcceleration
+---@field reversing DefinesRidingAcceleration
 
----@class defines_riding_acceleration Enum value type for acceleration
+---@class DefinesRidingAcceleration Enum value type for acceleration
 
 ---@class direction
----@field left defines_riding_direction
----@field right defines_riding_direction
----@field straight defines_riding_direction
+---@field left DefinesRidingDirection
+---@field right DefinesRidingDirection
+---@field straight DefinesRidingDirection
 
----@class defines_riding_direction Enum value type for direction
+---@class DefinesRidingDirection Enum value type for direction
 
 ---@class shooting
----@field not_shooting defines_shooting
----@field shooting_enemies defines_shooting
----@field shooting_selected defines_shooting
+---@field not_shooting DefinesShooting
+---@field shooting_enemies DefinesShooting
+---@field shooting_selected DefinesShooting
 
----@class defines_shooting Enum value type for shooting
+---@class DefinesShooting Enum value type for shooting
 
 ---@class signal_state State of an ordinary rail signal.
----@field closed defines_signal_state Red.
----@field open defines_signal_state Green.
----@field reserved defines_signal_state Orange.
----@field reserved_by_circuit_network defines_signal_state Red - From circuit network.
+---@field closed DefinesSignalState Red.
+---@field open DefinesSignalState Green.
+---@field reserved DefinesSignalState Orange.
+---@field reserved_by_circuit_network DefinesSignalState Red - From circuit network.
 
----@class defines_signal_state Enum value type for signal_state
+---@class DefinesSignalState Enum value type for signal_state
 
 ---@class train_state
----@field arrive_signal defines_train_state Braking before a rail signal.
----@field arrive_station defines_train_state Braking before a station.
----@field destination_full defines_train_state Same as no_path but all candidate train stops are full
----@field manual_control defines_train_state Can move if user explicitly sits in and rides the train.
----@field manual_control_stop defines_train_state Switched to manual control and has to stop.
----@field no_path defines_train_state Has no path and is stopped.
----@field no_schedule defines_train_state Doesn't have anywhere to go.
----@field on_the_path defines_train_state Normal state -- following the path.
----@field path_lost defines_train_state Had path and lost it -- must stop.
----@field wait_signal defines_train_state Waiting at a signal.
----@field wait_station defines_train_state Waiting at a station.
+---@field arrive_signal DefinesTrainState Braking before a rail signal.
+---@field arrive_station DefinesTrainState Braking before a station.
+---@field destination_full DefinesTrainState Same as no_path but all candidate train stops are full
+---@field manual_control DefinesTrainState Can move if user explicitly sits in and rides the train.
+---@field manual_control_stop DefinesTrainState Switched to manual control and has to stop.
+---@field no_path DefinesTrainState Has no path and is stopped.
+---@field no_schedule DefinesTrainState Doesn't have anywhere to go.
+---@field on_the_path DefinesTrainState Normal state -- following the path.
+---@field path_lost DefinesTrainState Had path and lost it -- must stop.
+---@field wait_signal DefinesTrainState Waiting at a signal.
+---@field wait_station DefinesTrainState Waiting at a station.
 
----@class defines_train_state Enum value type for train_state
+---@class DefinesTrainState Enum value type for train_state
 
 ---@class transport_line
----@field left_line defines_transport_line
----@field left_split_line defines_transport_line
----@field left_underground_line defines_transport_line
----@field right_line defines_transport_line
----@field right_split_line defines_transport_line
----@field right_underground_line defines_transport_line
----@field secondary_left_line defines_transport_line
----@field secondary_left_split_line defines_transport_line
----@field secondary_right_line defines_transport_line
----@field secondary_right_split_line defines_transport_line
+---@field left_line DefinesTransportLine
+---@field left_split_line DefinesTransportLine
+---@field left_underground_line DefinesTransportLine
+---@field right_line DefinesTransportLine
+---@field right_split_line DefinesTransportLine
+---@field right_underground_line DefinesTransportLine
+---@field secondary_left_line DefinesTransportLine
+---@field secondary_left_split_line DefinesTransportLine
+---@field secondary_right_line DefinesTransportLine
+---@field secondary_right_split_line DefinesTransportLine
 
----@class defines_transport_line Enum value type for transport_line
+---@class DefinesTransportLine Enum value type for transport_line
 
 ---@class wire_connection_id
----@field electric_pole defines_wire_connection_id
----@field power_switch_left defines_wire_connection_id
----@field power_switch_right defines_wire_connection_id
+---@field electric_pole DefinesWireConnectionId
+---@field power_switch_left DefinesWireConnectionId
+---@field power_switch_right DefinesWireConnectionId
 
----@class defines_wire_connection_id Enum value type for wire_connection_id
+---@class DefinesWireConnectionId Enum value type for wire_connection_id
 
 ---@class wire_type
----@field copper defines_wire_type
----@field green defines_wire_type
----@field red defines_wire_type
+---@field copper DefinesWireType
+---@field green DefinesWireType
+---@field red DefinesWireType
 
----@class defines_wire_type Enum value type for wire_type
+---@class DefinesWireType Enum value type for wire_type
